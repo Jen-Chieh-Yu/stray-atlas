@@ -1,0 +1,62 @@
+# ==================================================================
+# Node / frontend
+# ==================================================================
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Vite cache
+.vite/
+
+# TypeScript incremental build info
+*.tsbuildinfo
+
+# Logs
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ==================================================================
+# Python
+# ==================================================================
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# ==================================================================
+# Secrets
+# ==================================================================
+.env
+.env.*
+!.env.example
+
+# ==================================================================
+# Editors / OS
+# ==================================================================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# ==================================================================
+# DELIBERATELY NOT IGNORED - do not "tidy up" the entries below.
+# ==================================================================
+#
+# data/
+#   The daily snapshot workflow commits data/raw/YYYY-MM-DD.csv.gz back
+#   into the repo. If data/ were ignored the workflow would silently
+#   store nothing, and the loss would only surface days later.
+#   See CLAUDE.md 6.3.
+#
+# public/data/
+#   Generated JSON / GeoJSON consumed by the frontend. GitHub Pages
+#   serves it as a static asset. Committed on purpose so the Pages deploy
+#   is decoupled from the Python pipeline: a broken pipeline leaves the
+#   site up with slightly stale data instead of failing the deploy.
+#   See CLAUDE.md 4.1.
+#
+# ==================================================================

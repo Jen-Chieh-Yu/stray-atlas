@@ -1,0 +1,28 @@
+# Normalize to LF inside the repository regardless of each machine's
+# core.autocrlf setting. Dev machine is Windows, CI is Linux; relying on
+# per-machine config means whoever clones without it produces CRLF diffs.
+# This complements CLAUDE.md 8, it does not replace it - still set
+# core.autocrlf=true locally so Windows checkouts get CRLF working copies.
+* text=auto eol=lf
+
+# Windows-only scripts must keep CRLF in the working tree.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary - never touch, never diff as text.
+*.csv.gz binary
+*.gz     binary
+*.zip    binary
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.webp   binary
+*.ico    binary
+*.woff   binary
+*.woff2  binary
+
+# Generated data: keep it out of diff noise and out of language stats.
+data/raw/**       linguist-generated=true
+public/data/**    linguist-generated=true
+package-lock.json linguist-generated=true -diff
