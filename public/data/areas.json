@@ -1,0 +1,90 @@
+{
+  "2": {
+    "name": "臺北市",
+    "shelters": 1
+  },
+  "3": {
+    "name": "新北市",
+    "shelters": 9
+  },
+  "4": {
+    "name": "基隆市",
+    "shelters": 1
+  },
+  "5": {
+    "name": "宜蘭縣",
+    "shelters": 1
+  },
+  "6": {
+    "name": "桃園市",
+    "shelters": 1
+  },
+  "7": {
+    "name": "新竹縣",
+    "shelters": 2
+  },
+  "8": {
+    "name": "新竹市",
+    "shelters": 1
+  },
+  "9": {
+    "name": "苗栗縣",
+    "shelters": 2
+  },
+  "10": {
+    "name": "臺中市",
+    "shelters": 2
+  },
+  "11": {
+    "name": "彰化縣",
+    "shelters": 2
+  },
+  "12": {
+    "name": "南投縣",
+    "shelters": 1
+  },
+  "13": {
+    "name": "雲林縣",
+    "shelters": 1
+  },
+  "14": {
+    "name": "嘉義縣",
+    "shelters": 1
+  },
+  "15": {
+    "name": "嘉義市",
+    "shelters": 1
+  },
+  "16": {
+    "name": "臺南市",
+    "shelters": 2
+  },
+  "17": {
+    "name": "高雄市",
+    "shelters": 2
+  },
+  "18": {
+    "name": "屏東縣",
+    "shelters": 1
+  },
+  "19": {
+    "name": "花蓮縣",
+    "shelters": 1
+  },
+  "20": {
+    "name": "臺東縣",
+    "shelters": 1
+  },
+  "21": {
+    "name": "澎湖縣",
+    "shelters": 1
+  },
+  "22": {
+    "name": "金門縣",
+    "shelters": 1
+  },
+  "23": {
+    "name": "連江縣",
+    "shelters": 2
+  }
+}

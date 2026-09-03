@@ -1,0 +1,155 @@
+{
+  "snapshot_date": "2026-09-03",
+  "generated_at_utc": "2026-09-03T04:25:10Z",
+  "source_file": "data/raw/2026-09-03.csv.gz",
+  "rows": 8265,
+  "columns_in_source": 28,
+  "columns_after_clean": 20,
+  "dropped_columns": [
+    {
+      "column": "animal_bacterin",
+      "reason": "zero_variance",
+      "distinct_values": 1,
+      "value": "F"
+    },
+    {
+      "column": "animal_title",
+      "reason": "all_blank",
+      "distinct_values": 0
+    },
+    {
+      "column": "animal_status",
+      "reason": "zero_variance",
+      "distinct_values": 1,
+      "value": "OPEN"
+    },
+    {
+      "column": "animal_caption",
+      "reason": "all_blank",
+      "distinct_values": 0
+    },
+    {
+      "column": "animal_closeddate",
+      "reason": "zero_variance",
+      "distinct_values": 1,
+      "value": "2999-12-31"
+    },
+    {
+      "column": "album_update",
+      "reason": "all_blank",
+      "distinct_values": 0
+    }
+  ],
+  "duplicate_columns": [
+    {
+      "dropped": "animal_place",
+      "identical_to": "shelter_name"
+    },
+    {
+      "dropped": "cDate",
+      "identical_to": "animal_update"
+    }
+  ],
+  "cleaning_actions": {
+    "opendate_sentinel_nulled": 65,
+    "opendate_in_the_future": 63,
+    "rows_without_createtime": 0
+  },
+  "coverage": {
+    "animal_id": 1.0,
+    "animal_subid": 1.0,
+    "animal_area_pkid": 1.0,
+    "animal_shelter_pkid": 1.0,
+    "animal_kind": 1.0,
+    "animal_Variety": 0.9994,
+    "animal_sex": 1.0,
+    "animal_bodytype": 1.0,
+    "animal_colour": 0.9693,
+    "animal_age": 0.9679,
+    "animal_sterilization": 1.0,
+    "animal_foundplace": 0.8737,
+    "animal_remark": 0.309,
+    "animal_opendate": 0.9616,
+    "animal_update": 0.8086,
+    "animal_createtime": 1.0,
+    "shelter_name": 1.0,
+    "album_file": 0.8209,
+    "shelter_address": 1.0,
+    "shelter_tel": 1.0
+  },
+  "variety_groups": {
+    "mixed": 7841,
+    "breed": 407,
+    "unknown": 17
+  },
+  "areas": 22,
+  "shelters": 37,
+  "shelter_pkid_collisions": [
+    {
+      "pkid": "63",
+      "shelter_names": [
+        "新竹縣動物保護教育園區",
+        "新竹縣動物保護防疫所"
+      ]
+    },
+    {
+      "pkid": "69",
+      "shelter_names": [
+        "彰化縣流浪狗中途之家",
+        "彰化縣流浪狗中途之家臨時收容所"
+      ]
+    },
+    {
+      "pkid": "81",
+      "shelter_names": [
+        "連江縣動物之家",
+        "連江縣流浪犬收容中心"
+      ]
+    },
+    {
+      "pkid": "96",
+      "shelter_names": [
+        "苗栗縣動物保護教育園區",
+        "苗栗縣生態保育教育中心(動物收容所)"
+      ]
+    }
+  ],
+  "shelter_address_variants": [
+    {
+      "shelter_name": "新北市瑞芳區公立動物之家",
+      "addresses": [
+        "新北市瑞芳區中坑路3號(瑞芳清潔隊廠區內)",
+        "新北市瑞芳區靜安路四段(106縣道74.5K清潔隊場區內)"
+      ]
+    },
+    {
+      "shelter_name": "臺南市動物之家善化站",
+      "addresses": [
+        "臺南市善化區昌隆里東勢寮1-19號",
+        "臺南市善化區昌隆里東勢寮1~19號"
+      ]
+    },
+    {
+      "shelter_name": "苗栗縣生態保育教育中心(動物收容所)",
+      "addresses": [
+        "苗栗縣銅鑼鄉朝陽村6鄰朝北55-1號(地圖：https://goo.gl/maps/Bd4sckpEPsrof7Qb8)",
+        "苗栗縣銅鑼鄉朝陽村6鄰朝北55-1號(地圖：https:／／goo.gl/maps/Bd4sckpEPsrof7Qb8)"
+      ]
+    }
+  ],
+  "days_in_shelter": {
+    "median": 348,
+    "p75": 1269,
+    "p90": 2705,
+    "max": 4676
+  },
+  "foundplace": {
+    "rows": 8265,
+    "nonblank_rows": 7221,
+    "unique_values": 4686,
+    "rows_with_county_name": 201,
+    "share_of_all_rows_with_county_name": 0.0243,
+    "rows_with_county_or_city_character": 369,
+    "share_of_nonblank_rows_with_county_or_city_character": 0.0511
+  }
+}
