@@ -1,0 +1,105 @@
+# Daily archive of the source stock snapshot. See CLAUDE.md section 3, stage 0.
+#
+# This workflow is the project's only source of time-series data: the feed drops
+# animals once they leave the shelter, so a day not archived is a day that can
+# never be recovered. It is therefore scheduled before anything else is built.
+name: Daily snapshot
+
+on:
+  schedule:
+    # 00:00 UTC = 08:00 Asia/Taipei. GitHub delays scheduled runs by tens of
+    # minutes under load and may skip them entirely; the filename is derived
+    # from the Taipei date at run time, so a delay never mislabels a file.
+    #
+    # Note: GitHub disables cron workflows in a repository with no activity for
+    # 60 days. The daily commit this job makes counts as activity, so the
+    # schedule sustains itself as long as it keeps succeeding.
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Re-download and overwrite today's snapshot"
+        type: boolean
+        default: false
+
+# Required so GITHUB_TOKEN can push the archived snapshot back to the branch.
+permissions:
+  contents: write
+
+# Never let a manual run collide with the scheduled one: both push to the same
+# branch. Queue instead of cancelling, so a run in progress still archives.
+concurrency:
+  group: daily-snapshot
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # No dependency install step: the script is standard library only, which
+      # keeps the daily job immune to package resolution breaking.
+      - name: Fetch snapshot
+        id: fetch
+        env:
+          # Optional repository variable; the script falls back to the URL
+          # published on https://data.gov.tw/dataset/85903 when unset.
+          SNAPSHOT_URL: ${{ vars.SNAPSHOT_URL }}
+          FORCE: ${{ inputs.force }}
+        run: |
+          if [ "${FORCE}" = "true" ]; then
+            python scripts/fetch_snapshot.py --force
+          else
+            python scripts/fetch_snapshot.py
+          fi
+
+      # always(): a failed fetch still writes a manifest row, and that row is
+      # what distinguishes "source was unchanged" from "the fetch broke" when
+      # stage 3 reconstructs labels from the snapshot series.
+      - name: Commit and push
+        if: always() && steps.fetch.outputs.status != 'skipped'
+        env:
+          COMMIT_MESSAGE: ${{ steps.fetch.outputs.commit_message }}
+        run: |
+          set -euo pipefail
+          if [ -z "${COMMIT_MESSAGE}" ]; then
+            echo "no commit message produced, nothing to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/raw
+          if git diff --cached --quiet; then
+            echo "working tree clean, nothing to commit"
+            exit 0
+          fi
+          git commit -m "${COMMIT_MESSAGE}"
+          for attempt in 1 2 3; do
+            if git pull --rebase --autostash origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}"; then
+              echo "pushed on attempt ${attempt}"
+              exit 0
+            fi
+            echo "push attempt ${attempt} failed, retrying"
+            sleep 10
+          done
+          echo "::error::could not push the snapshot after 3 attempts"
+          exit 1
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "| field | value |"
+            echo "| --- | --- |"
+            echo "| date | ${{ steps.fetch.outputs.date }} |"
+            echo "| status | ${{ steps.fetch.outputs.status }} |"
+          } >> "${GITHUB_STEP_SUMMARY}"
