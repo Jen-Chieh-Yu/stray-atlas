@@ -43,6 +43,21 @@ Thumbs.db
 !.vscode/extensions.json
 
 # ==================================================================
+# Reference source archives
+# ==================================================================
+#
+# tmp/ holds large source downloads that derived files are built from
+# and that the repository does not need: the 12.8 MB 鄉鎮市區界線
+# shapefile is re-downloadable from data.gov.tw dataset 7441, and what
+# the project depends on is data/reference/districts.json and
+# public/data/districts.geojson, both committed. See CLAUDE.md 4.1.
+#
+# This does not weaken the data/ rule below. data/ stays fully tracked;
+# tmp/ is a separate staging area precisely so that everything under
+# data/ can keep the invariant "if it is here, it is committed".
+/tmp/
+
+# ==================================================================
 # DELIBERATELY NOT IGNORED - do not "tidy up" the entries below.
 # ==================================================================
 #

@@ -1,0 +1,72 @@
+{
+  "snapshot_date": "2026-09-03",
+  "generated_at_utc": "2026-09-03T07:40:44Z",
+  "rows": 8265,
+  "district_reference": "loaded",
+  "place_kinds": {
+    "address": 4977,
+    "district": 1217,
+    "landmark": 911,
+    "blank": 1044,
+    "non_place": 116
+  },
+  "confidence": {
+    "high": {
+      "rows": 10,
+      "share": 0.0012
+    },
+    "medium": {
+      "rows": 1773,
+      "share": 0.2145
+    },
+    "low": {
+      "rows": 5322,
+      "share": 0.6439
+    },
+    "none": {
+      "rows": 1160,
+      "share": 0.1404
+    }
+  },
+  "county_source": {
+    "text": 197,
+    "shelter": 6908,
+    "none": 1160
+  },
+  "county_from_text_differs_from_shelter": 12,
+  "district": {
+    "extracted": 2994,
+    "verified_against_reference": 2990,
+    "not_in_that_county": 4
+  },
+  "samples": {
+    "high": [
+      "臺東縣長濱鄉忠勇村25-1號",
+      "新北市三峽區中山路365-13號",
+      "基隆市安樂區崇德路18號1樓",
+      "桃園市平鎮區龍南路244號",
+      "新北市糞箕湖95號"
+    ],
+    "medium": [
+      "南投縣南投市軍功里軍功路",
+      "新店區安忠路25號",
+      "外縣市龜山區優美街",
+      "汐止區南陽街117號5樓",
+      "新店區安和路三段100號"
+    ],
+    "low": [
+      "梅村路",
+      "三芝區埔坪里",
+      "石門區老梅里",
+      "三芝區埔頭里",
+      "南八里29號"
+    ],
+    "none": [
+      "動物之家",
+      "所內出生",
+      "所內生產",
+      "不擬續養",
+      "所內生產，媽媽1110241"
+    ]
+  }
+}
