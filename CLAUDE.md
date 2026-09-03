@@ -209,6 +209,56 @@ Assisted-by: Claude <noreply@anthropic.com>
 
 ---
 
+### 6.4 Commit message 格式
+
+- **標題**：`<prefix>: <英文祈使句摘要>`，72 字元以內，句尾不加句號
+- **內文一律條列**，不寫段落散文。每則條列一件事——改了什麼，或為何這樣改
+- 條列以 `- ` 開頭，句尾加句號；行寬 72 字元以內，換行處縮排對齊
+- 需要交代前提時，可在條列前加**一行**前言；超過一行請改寫成條列
+- 結尾空一行後加 §6.1 的 `Assisted-by: Claude <noreply@anthropic.com>`
+
+理由：這個 repo 的 history 會被面試官掃過。條列式在 `git log` 與 GitHub commit 頁面上三秒可讀完，散文式段落會被略過。
+
+範例。**標題與內文之間、內文與 trailer 之間各需一行空行**，缺了會讓 git 把整段當成標題：
+
+```
+feat: add daily snapshot workflow
+
+- Fetch the source CSV daily via GitHub Actions cron at 00:00 UTC.
+- Store bytes verbatim as data/raw/YYYY-MM-DD.csv.gz with a fixed
+  gzip mtime, so identical content yields identical bytes.
+- Retry four times with backoff, and fail loudly rather than
+  overwrite a good archive with an error page.
+- Record one row per day in data/raw/_manifest.csv, so a gap is
+  never ambiguous between "source unchanged" and "fetch broke".
+
+Assisted-by: Claude <noreply@anthropic.com>
+```
+
+### 6.5 AI 不得代為 commit 或 push
+
+AI 協作者**不得執行**任何改動 repo 狀態的 git 指令，包含但不限於 `git add`、`git commit`、`git push`、`git reset`、`git rebase`、`git checkout`。唯讀指令（`git status`、`git log`、`git diff`）不在此限。
+
+完成一段工作後，只輸出兩樣東西，由人類自行執行：
+
+1. 依 §6.4 格式寫好的 commit message
+2. 對應的 git 指令
+
+開發機為 Windows／PowerShell，**不支援 heredoc**（`<< 'EOF'`）。因此 AI 應將 message 寫入 `.git/` 底下的暫存檔——該目錄不受 git 追蹤，不會污染 `git status`——指令一律改用 `-F`：
+
+```powershell
+git add scripts/ .github/
+git commit -F .git/msg.txt
+git push origin main
+```
+
+理由：
+
+- 提交者對進入 history 的內容負全責。§6.1 的 `Assisted-by` 僅標示 AI 參與，不轉移責任，因此最後一道確認必須由人類執行
+- Cowork device shell 沒有 git 身分設定，commit 會失敗並留下 `.git/index.lock`，卡住後續所有 git 操作
+
+---
+
 ## 7. 授權現況
 
 **目前刻意維持 `No license`（保留所有權利），尚未選定開放授權條款。**
@@ -220,7 +270,7 @@ Assisted-by: Claude <noreply@anthropic.com>
 
 資料源授權則與程式碼授權無關，**無論如何都必須標示**：
 
-> `data/` 目錄下之資料來源為農業部「動物認養」開放資料，依政府資料開放授權條款第 1 版使用。
+> `data/` 目錄下之資料來源為農業部「動物認領養」開放資料，依政府資料開放授權條款第 1 版使用。
 
 若日後決定開放授權，會由人類決定並獨立成一個 commit。
 

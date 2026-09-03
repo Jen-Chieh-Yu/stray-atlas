@@ -2,14 +2,14 @@
 
 臺灣公立動物收容所開放資料的分析與互動視覺化。
 
-<!-- TODO: 部署後補上 Demo 連結 https://<github-user>.github.io/stray-atlas/ -->
+<!-- TODO: GitHub Pages 部署後把下方 Demo 換成 https://jen-chieh-yu.github.io/stray-atlas/ -->
 **Demo**：`TODO`
 
 ---
 
 ## 這個專案在做什麼
 
-農業部「動物認養」開放資料每日更新，內容是**此刻仍開放認養**的動物名冊。本專案每日自動保存快照、清理欄位、將自由文字的尋獲地補全為可定位的地址，並以互動地圖與分析頁呈現收容所的滯留狀況。
+農業部「動物認領養」開放資料每日更新，內容是**此刻仍開放認養**的動物名冊。本專案每日自動保存快照、清理欄位、將自由文字的尋獲地補全為可定位的地址，並以互動地圖與分析頁呈現收容所的滯留狀況。
 
 這份資料有幾個反直覺的陷阱，處理不當會得到看似漂亮但站不住腳的結論。**如何避開這些陷阱，是本專案想展示的重點**，勝過任何單一結論。詳見〈資料限制〉與〈我踩過的統計陷阱〉。
 
@@ -29,11 +29,15 @@
 
 ## 快速開始
 
-<!-- TODO: 專案 scaffold 完成後補齊實際指令與版本需求 -->
+抓一份當日快照（Python 3.9+，無外部相依套件）：
 
 ```bash
-TODO
+python scripts/fetch_snapshot.py
 ```
+
+<!-- TODO: 前端 scaffold 完成後補上 npm ci / npm run dev 與版本需求 -->
+
+前端尚未 scaffold。
 
 ---
 
@@ -44,7 +48,7 @@ TODO
 ```
 stray-atlas/
 ├── .github/workflows/     每日快照、Pages 部署
-├── data/raw/              每日快照 YYYY-MM-DD.csv.gz（進 git，見 CLAUDE.md §6.3）
+├── data/raw/              每日快照 YYYY-MM-DD.csv.gz 與 _manifest.csv（進 git，見 CLAUDE.md §6.3）
 ├── scripts/               Python 前處理與分析
 ├── public/data/           產出的 JSON / GeoJSON（前端資料契約，見 CLAUDE.md §4.1）
 └── src/                   Vue 前端
@@ -56,9 +60,28 @@ stray-atlas/
 
 | 項目 | 內容 |
 |---|---|
-| 名稱 | 動物認養（農業部 開放資料） |
+| 名稱 | 動物認領養（農業部） |
+| 來源 | [政府資料開放平臺 dataset/85903](https://data.gov.tw/dataset/85903) |
+| 授權 | 政府資料開放授權條款－第 1 版 |
 | 更新頻率 | 每 1 天 |
 | 快照規模 | 8,242 列 × 28 欄（2026-09-01） |
+
+### 每日快照機制
+
+`.github/workflows/daily-snapshot.yml` 每日臺灣時間 08:00 執行 `scripts/fetch_snapshot.py`：下載當日 CSV、驗證必要欄位與筆數下限、以固定 mtime 壓成 `data/raw/YYYY-MM-DD.csv.gz`，再 commit 回 repo。下載失敗重試 4 次（5／15／45 秒退避），當日檔案已存在則直接跳過、不打來源網站。
+
+`data/raw/` 保存的是**來源的原始位元組**（含 UTF-8 BOM 與 CRLF），刻意不做正規化——這個目錄的用途是可稽核的存檔，若在寫入時改寫編碼，日後就無法分辨變動來自來源還是本專案。讀取時請用 `encoding='utf-8-sig'`。
+
+`data/raw/_manifest.csv` 逐日記錄 `date,status,rows,bytes,sha256,fetched_at_utc`。當日內容與前一份快照完全相同時不重複存檔，只在 manifest 記一列 `unchanged`；抓取失敗記 `failed`。**因此 `data/raw/` 出現缺日不等於當天沒有資料**，manifest 才是判斷依據——階段 3 以「消失的 `animal_id`」建構離所標籤時必須以它為準，否則會把「來源沒變」誤讀成「全部動物同時離所」。
+
+手動補抓：
+
+```bash
+python scripts/fetch_snapshot.py            # 抓當日快照
+python scripts/fetch_snapshot.py --force    # 覆蓋當日已存在的檔案
+```
+
+來源網址若變更，設定 repo variable `SNAPSHOT_URL` 即可覆寫，不需改程式。
 
 ---
 
@@ -133,4 +156,4 @@ stray-atlas/
 
 資料源授權與程式碼授權無關，另行標示：
 
-> `data/` 目錄下之資料來源為農業部「動物認養」開放資料，依政府資料開放授權條款第 1 版使用。
+> `data/` 目錄下之資料來源為農業部「動物認領養」開放資料，依政府資料開放授權條款第 1 版使用。
