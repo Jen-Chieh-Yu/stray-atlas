@@ -1,0 +1,162 @@
+/* Design tokens.
+ *
+ * Dark values are declared twice on purpose: once under the media query for
+ * the OS setting, and once under [data-theme='dark'] for the in-page toggle,
+ * which has to win in both directions. The media block is guarded with
+ * :not([data-theme='light']) so an explicit light choice beats an OS set to
+ * dark.
+ *
+ * Warm direction, chosen 2026-09-03. The sequential ramp is a single orange
+ * hue, light to dark, and both modes were validated with the data-viz
+ * palette checker against the surfaces below: monotone lightness, adjacent
+ * ΔL ≥ 0.06, single hue, and the step nearest the surface clearing 2:1 so the
+ * lowest county never dissolves into the page.
+ */
+:root {
+  color-scheme: light;
+
+  --plane: #f7f2ea;
+  --surface: #fdfaf6;
+  --surface-sunk: #f2ebe1;
+
+  --ink: #1c1917;
+  --ink-secondary: #57534e;
+  --ink-muted: #8a8178;
+  --hairline: #e6ddd0;
+
+  --ramp-1: #eda17a;
+  --ramp-2: #e28654;
+  --ramp-3: #d66a27;
+  --ramp-4: #b85a21;
+  --ramp-5: #984e24;
+  --ramp-6: #794224;
+  --no-data: #e9e2d6;
+  /* Emphasis colour for numbers in running text. Deliberately a step darker
+     than --ramp-4 so it clears text contrast on the surface, and it inverts
+     with the ramp so it stays readable on the dark surface too. */
+  --accent-text: #984e24;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font: system-ui, -apple-system, 'Segoe UI', 'Noto Sans TC', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+
+    --plane: #12110f;
+    --surface: #1a1917;
+    --surface-sunk: #23211e;
+
+    --ink: #faf7f2;
+    --ink-secondary: #c9c1b6;
+    --ink-muted: #948b80;
+    --hairline: #332f2a;
+
+    --ramp-1: #824624;
+    --ramp-2: #a25223;
+    --ramp-3: #c35e20;
+    --ramp-4: #da7338;
+    --ramp-5: #e69062;
+    --ramp-6: #f1ab88;
+    --no-data: #2b2824;
+    --accent-text: #e69062;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --plane: #12110f;
+  --surface: #1a1917;
+  --surface-sunk: #23211e;
+
+  --ink: #faf7f2;
+  --ink-secondary: #c9c1b6;
+  --ink-muted: #948b80;
+  --hairline: #332f2a;
+
+  --ramp-1: #824624;
+  --ramp-2: #a25223;
+  --ramp-3: #c35e20;
+  --ramp-4: #da7338;
+  --ramp-5: #e69062;
+  --ramp-6: #f1ab88;
+  --no-data: #2b2824;
+  --accent-text: #e69062;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--plane);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.35;
+  margin: 0;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: inherit;
+}
+
+/* Shared shell pieces. Kept global because every view uses them and scoped
+   copies would drift apart. */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+
+.chip {
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 0.3rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  color: var(--ink-secondary);
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.chip:hover {
+  border-color: var(--ramp-3);
+}
+
+.chip.on {
+  background: var(--ramp-4);
+  border-color: var(--ramp-4);
+  color: #fff;
+}
+
+.chip.small {
+  font-size: 0.82rem;
+  padding: 0.2rem 0.7rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

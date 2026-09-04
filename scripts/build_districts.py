@@ -7,7 +7,8 @@ Source: 內政部, published as dataset 7441 on https://data.gov.tw/dataset/7441
 
 Outputs:
     data/reference/districts.json   county -> district names, used by geocode.py
-    public/data/districts.geojson   simplified boundaries for the frontend
+    public/data/districts.geojson   simplified district boundaries
+    public/data/counties.geojson    the same boundaries dissolved to 22 counties
 
 This is a one-off tool, not part of the daily pipeline, so unlike
 fetch_snapshot.py and clean.py it is allowed an external dependency:
@@ -36,6 +37,7 @@ from tempfile import TemporaryDirectory
 ROOT = Path(__file__).resolve().parents[1]
 DISTRICTS_PATH = ROOT / "data" / "reference" / "districts.json"
 GEOJSON_PATH = ROOT / "public" / "data" / "districts.geojson"
+COUNTIES_PATH = ROOT / "public" / "data" / "counties.geojson"
 
 EXPECTED_COUNTIES = 22
 EXPECTED_DISTRICTS = 368
@@ -80,6 +82,126 @@ def simplify(points: list[tuple[float, float]], tolerance: float) -> list[tuple[
             stack.append((start, index))
             stack.append((index, end))
     return [point for point, keeper in zip(points, keep) if keeper]
+
+
+def wind(ring, counter_clockwise: bool):
+    """RFC 7946 winding: exterior rings counter-clockwise, holes clockwise.
+
+    The published files follow the RFC so they are valid GeoJSON for anything
+    that reads them. d3-geo predates the RFC and uses the opposite spherical
+    convention, so the frontend reverses every ring once at load; see
+    src/composables/useAtlasData.ts. Getting this wrong is not subtle: an
+    inverted exterior ring means "everything outside this shape" and renders
+    as a rectangle covering the viewport.
+    """
+    if (ring_area(ring) > 0) != counter_clockwise:
+        ring.reverse()
+    return ring
+
+
+def ring_area(ring) -> float:
+    total = 0.0
+    for (x1, y1), (x2, y2) in zip(ring, ring[1:]):
+        total += x1 * y2 - x2 * y1
+    return total / 2
+
+
+def point_in_ring(point, ring) -> bool:
+    x, y = point
+    inside = False
+    for (x1, y1), (x2, y2) in zip(ring, ring[1:]):
+        if (y1 > y) != (y2 > y) and x < (x2 - x1) * (y - y1) / (y2 - y1) + x1:
+            inside = not inside
+    return inside
+
+
+def dissolve_county(shapes, tolerance: float) -> list[list[list[list[float]]]]:
+    """Merge a county's district polygons into its outline.
+
+    Done by edge cancellation on the UNSIMPLIFIED geometry: an edge shared by
+    two districts appears exactly twice and is dropped, leaving only the
+    county's own boundary. The source is topologically clean — 507,552 of its
+    639,722 undirected edges appear twice and the rest are coastline — so this
+    works without a geometry library.
+
+    Simplification must come after the merge, not before: Douglas-Peucker
+    applied to each district independently would thin a shared border two
+    different ways and leave slivers along it.
+    """
+    counts: dict = {}
+    for shape in shapes:
+        parts = list(shape.parts) + [len(shape.points)]
+        for start, end in zip(parts, parts[1:]):
+            ring = [(round(x, 7), round(y, 7)) for x, y in shape.points[start:end]]
+            for p, q in zip(ring, ring[1:]):
+                if p != q:
+                    key = (p, q) if p <= q else (q, p)
+                    counts[key] = counts.get(key, 0) + 1
+
+    neighbours: dict = {}
+    for (p, q), n in counts.items():
+        if n == 1:
+            neighbours.setdefault(p, []).append(q)
+            neighbours.setdefault(q, []).append(p)
+
+    used: set = set()
+    rings = []
+    for start in list(neighbours):
+        while neighbours[start]:
+            ring = [start]
+            current, previous = start, None
+            while True:
+                step = None
+                for candidate in neighbours[current]:
+                    key = (current, candidate) if current <= candidate else (candidate, current)
+                    if key in used:
+                        continue
+                    if candidate == previous and len(neighbours[current]) > 1:
+                        continue
+                    step = candidate
+                    break
+                if step is None:
+                    break
+                used.add((current, step) if current <= step else (step, current))
+                ring.append(step)
+                previous, current = current, step
+                if current == start:
+                    break
+            if len(ring) >= 4 and ring[0] == ring[-1]:
+                rings.append(ring)
+            else:
+                break
+
+    simplified = []
+    for ring in rings:
+        thinned = simplify(
+            [(round(x, COORDINATE_PRECISION), round(y, COORDINATE_PRECISION)) for x, y in ring],
+            tolerance,
+        )
+        if len(thinned) >= 4:
+            if thinned[0] != thinned[-1]:
+                thinned.append(thinned[0])
+            simplified.append([[x, y] for x, y in thinned])
+    simplified = [list(ring) for ring in simplified]
+
+    # Nest enclaves as holes rather than separate polygons, or 臺北市 would be
+    # painted over by 新北市 and 嘉義市 by 嘉義縣.
+    simplified.sort(key=lambda ring: -abs(ring_area(ring)))
+    taken = [False] * len(simplified)
+    polygons = []
+    for i, outer in enumerate(simplified):
+        if taken[i]:
+            continue
+        taken[i] = True
+        polygon = [outer]
+        for j in range(i + 1, len(simplified)):
+            if not taken[j] and point_in_ring(simplified[j][0], outer):
+                polygon.append(simplified[j])
+                taken[j] = True
+        polygons.append(
+            [wind(ring, counter_clockwise=(index == 0)) for index, ring in enumerate(polygon)]
+        )
+    return polygons
 
 
 def read_shapefile(base: Path):
@@ -134,7 +256,10 @@ def build(source: Path, tolerance: float, write: bool) -> None:
                 # A ring needs four points to close; anything less is a sliver
                 # that simplification has collapsed.
                 if len(ring) >= 4:
-                    rings.append([[x, y] for x, y in ring])
+                    closed = [[x, y] for x, y in ring]
+                    if closed[0] != closed[-1]:
+                        closed.append(closed[0])
+                    rings.append(wind(closed, counter_clockwise=True))
             vertices += sum(len(ring) for ring in rings)
             if rings:
                 features.append(
@@ -175,6 +300,28 @@ def build(source: Path, tolerance: float, write: bool) -> None:
         GEOJSON_PATH.parent.mkdir(parents=True, exist_ok=True)
         GEOJSON_PATH.write_text(payload + "\n", encoding="utf-8", newline="\n")
         log(f"wrote {GEOJSON_PATH.relative_to(ROOT)}")
+
+        by_county: dict = {}
+        for record, shape in zip(records, shapes):
+            by_county.setdefault(record["COUNTYNAME"], []).append(shape)
+        county_features = [
+            {
+                "type": "Feature",
+                "properties": {"county": county},
+                "geometry": {
+                    "type": "MultiPolygon",
+                    "coordinates": dissolve_county(county_shapes, tolerance),
+                },
+            }
+            for county, county_shapes in by_county.items()
+        ]
+        county_payload = json.dumps(
+            {"type": "FeatureCollection", "features": county_features},
+            ensure_ascii=False,
+            separators=(",", ":"),
+        )
+        COUNTIES_PATH.write_text(county_payload + "\n", encoding="utf-8", newline="\n")
+        log(f"wrote {COUNTIES_PATH.relative_to(ROOT)} ({len(county_payload) / 1024:.0f} KB)")
 
 
 def main() -> int:

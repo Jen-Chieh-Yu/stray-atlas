@@ -1,0 +1,2789 @@
+{
+ "snapshot_date": "2026-09-03",
+ "generated_at_utc": "2026-09-04T04:12:25Z",
+ "buckets": [
+  {
+   "label": "30 天內",
+   "min": 0,
+   "max": 30
+  },
+  {
+   "label": "31–90 天",
+   "min": 31,
+   "max": 90
+  },
+  {
+   "label": "91–180 天",
+   "min": 91,
+   "max": 180
+  },
+  {
+   "label": "181–365 天",
+   "min": 181,
+   "max": 365
+  },
+  {
+   "label": "1–2 年",
+   "min": 366,
+   "max": 730
+  },
+  {
+   "label": "2–4 年",
+   "min": 731,
+   "max": 1460
+  },
+  {
+   "label": "4 年以上",
+   "min": 1461,
+   "max": null
+  }
+ ],
+ "kinds": [
+  "狗",
+  "貓",
+  "其他"
+ ],
+ "shelters": [
+  {
+   "id": "e32bd54eef",
+   "name": "臺北市動物之家",
+   "county": "臺北市",
+   "area_pkid": "2",
+   "addresses": [
+    "臺北市內湖區安美街191號"
+   ],
+   "tel": "(02)87913254",
+   "all": {
+    "count": 978,
+    "median_days": 992,
+    "mean_days": 1336,
+    "min_days": 1,
+    "max_days": 4561,
+    "histogram": [
+     57,
+     47,
+     42,
+     105,
+     154,
+     208,
+     365
+    ]
+   },
+   "狗": {
+    "count": 687,
+    "median_days": 1544,
+    "mean_days": 1698,
+    "min_days": 5,
+    "max_days": 4561,
+    "histogram": [
+     18,
+     21,
+     20,
+     52,
+     77,
+     142,
+     357
+    ]
+   },
+   "貓": {
+    "count": 291,
+    "median_days": 382,
+    "mean_days": 482,
+    "min_days": 1,
+    "max_days": 2029,
+    "histogram": [
+     39,
+     26,
+     22,
+     53,
+     77,
+     66,
+     8
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "036ddab65f",
+   "name": "新北市五股區公立動物之家",
+   "county": "新北市",
+   "area_pkid": "3",
+   "addresses": [
+    "新北市五股區外寮路9-9號"
+   ],
+   "tel": "(02)82925265",
+   "all": {
+    "count": 725,
+    "median_days": 248,
+    "mean_days": 532,
+    "min_days": 1,
+    "max_days": 4068,
+    "histogram": [
+     47,
+     97,
+     120,
+     222,
+     124,
+     32,
+     83
+    ]
+   },
+   "狗": {
+    "count": 329,
+    "median_days": 386,
+    "mean_days": 923,
+    "min_days": 2,
+    "max_days": 4068,
+    "histogram": [
+     16,
+     25,
+     41,
+     74,
+     59,
+     31,
+     83
+    ]
+   },
+   "貓": {
+    "count": 396,
+    "median_days": 191,
+    "mean_days": 207,
+    "min_days": 1,
+    "max_days": 1105,
+    "histogram": [
+     31,
+     72,
+     79,
+     148,
+     65,
+     1,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "612844c74e",
+   "name": "新北市新店區公立動物之家",
+   "county": "新北市",
+   "area_pkid": "3",
+   "addresses": [
+    "新北市新店區安泰路235號"
+   ],
+   "tel": "(02)22159462",
+   "all": {
+    "count": 568,
+    "median_days": 225,
+    "mean_days": 538,
+    "min_days": 1,
+    "max_days": 3325,
+    "histogram": [
+     46,
+     84,
+     103,
+     200,
+     22,
+     48,
+     65
+    ]
+   },
+   "狗": {
+    "count": 226,
+    "median_days": 471,
+    "mean_days": 1008,
+    "min_days": 6,
+    "max_days": 3325,
+    "histogram": [
+     17,
+     29,
+     27,
+     38,
+     19,
+     31,
+     65
+    ]
+   },
+   "貓": {
+    "count": 342,
+    "median_days": 191,
+    "mean_days": 228,
+    "min_days": 1,
+    "max_days": 1457,
+    "histogram": [
+     29,
+     55,
+     76,
+     162,
+     3,
+     17,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "ff18cf76ba",
+   "name": "新北市八里區公立動物之家",
+   "county": "新北市",
+   "area_pkid": "3",
+   "addresses": [
+    "新北市八里區長坑里6鄰長坑道路36號"
+   ],
+   "tel": "(02)26194428",
+   "all": {
+    "count": 551,
+    "median_days": 207,
+    "mean_days": 458,
+    "min_days": 2,
+    "max_days": 4018,
+    "histogram": [
+     42,
+     73,
+     139,
+     213,
+     16,
+     17,
+     51
+    ]
+   },
+   "狗": {
+    "count": 107,
+    "median_days": 994,
+    "mean_days": 1471,
+    "min_days": 4,
+    "max_days": 4018,
+    "histogram": [
+     4,
+     12,
+     11,
+     19,
+     6,
+     7,
+     48
+    ]
+   },
+   "貓": {
+    "count": 444,
+    "median_days": 174,
+    "mean_days": 214,
+    "min_days": 2,
+    "max_days": 2675,
+    "histogram": [
+     38,
+     61,
+     128,
+     194,
+     10,
+     10,
+     3
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "ff5aaa6763",
+   "name": "新北市中和區公立動物之家",
+   "county": "新北市",
+   "area_pkid": "3",
+   "addresses": [
+    "新北市中和區興南路三段100號"
+   ],
+   "tel": "(02)86685547",
+   "all": {
+    "count": 224,
+    "median_days": 2057,
+    "mean_days": 2033,
+    "min_days": 5,
+    "max_days": 4676,
+    "histogram": [
+     4,
+     7,
+     9,
+     22,
+     24,
+     31,
+     127
+    ]
+   },
+   "狗": {
+    "count": 206,
+    "median_days": 2305,
+    "mean_days": 2156,
+    "min_days": 5,
+    "max_days": 4676,
+    "histogram": [
+     3,
+     6,
+     7,
+     21,
+     19,
+     23,
+     127
+    ]
+   },
+   "貓": {
+    "count": 18,
+    "median_days": 455,
+    "mean_days": 631,
+    "min_days": 7,
+    "max_days": 1344,
+    "histogram": [
+     1,
+     1,
+     2,
+     1,
+     5,
+     8,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "dc67aab234",
+   "name": "新北市板橋區公立動物之家",
+   "county": "新北市",
+   "area_pkid": "3",
+   "addresses": [
+    "新北市板橋區板城路28-1號"
+   ],
+   "tel": "(02)89662158",
+   "all": {
+    "count": 212,
+    "median_days": 1067,
+    "mean_days": 1225,
+    "min_days": 1,
+    "max_days": 4034,
+    "histogram": [
+     25,
+     10,
+     25,
+     9,
+     20,
+     39,
+     84
+    ]
+   },
+   "狗": {
+    "count": 155,
+    "median_days": 1542,
+    "mean_days": 1517,
+    "min_days": 1,
+    "max_days": 4034,
+    "histogram": [
+     9,
+     8,
+     14,
+     2,
+     13,
+     31,
+     78
+    ]
+   },
+   "貓": {
+    "count": 57,
+    "median_days": 162,
+    "mean_days": 430,
+    "min_days": 1,
+    "max_days": 1586,
+    "histogram": [
+     16,
+     2,
+     11,
+     7,
+     7,
+     8,
+     6
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "9623d3b1d1",
+   "name": "新北市三芝區公立動物之家",
+   "county": "新北市",
+   "area_pkid": "3",
+   "addresses": [
+    "新北市三芝區青山路(龍巖人本旁)"
+   ],
+   "tel": "(02)26365436",
+   "all": {
+    "count": 197,
+    "median_days": 192,
+    "mean_days": 502,
+    "min_days": 0,
+    "max_days": 4333,
+    "histogram": [
+     8,
+     19,
+     64,
+     76,
+     7,
+     3,
+     20
+    ]
+   },
+   "狗": {
+    "count": 63,
+    "median_days": 266,
+    "mean_days": 1180,
+    "min_days": 0,
+    "max_days": 4333,
+    "histogram": [
+     2,
+     6,
+     12,
+     16,
+     4,
+     3,
+     20
+    ]
+   },
+   "貓": {
+    "count": 134,
+    "median_days": 175,
+    "mean_days": 184,
+    "min_days": 0,
+    "max_days": 483,
+    "histogram": [
+     6,
+     13,
+     52,
+     60,
+     3,
+     0,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "1266cec33d",
+   "name": "新北市淡水區公立動物之家",
+   "county": "新北市",
+   "area_pkid": "3",
+   "addresses": [
+    "新北市淡水區下圭柔山91之3號"
+   ],
+   "tel": "(02)26267558",
+   "all": {
+    "count": 124,
+    "median_days": 263,
+    "mean_days": 810,
+    "min_days": 7,
+    "max_days": 3915,
+    "histogram": [
+     2,
+     6,
+     16,
+     59,
+     6,
+     6,
+     29
+    ]
+   },
+   "狗": {
+    "count": 58,
+    "median_days": 1386,
+    "mean_days": 1445,
+    "min_days": 7,
+    "max_days": 3915,
+    "histogram": [
+     2,
+     2,
+     3,
+     12,
+     6,
+     6,
+     27
+    ]
+   },
+   "貓": {
+    "count": 66,
+    "median_days": 228,
+    "mean_days": 253,
+    "min_days": 39,
+    "max_days": 1540,
+    "histogram": [
+     0,
+     4,
+     13,
+     47,
+     0,
+     0,
+     2
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "96309cff5a",
+   "name": "新北市瑞芳區公立動物之家",
+   "county": "新北市",
+   "area_pkid": "3",
+   "addresses": [
+    "新北市瑞芳區中坑路3號(瑞芳清潔隊廠區內)",
+    "新北市瑞芳區靜安路四段(106縣道74.5K清潔隊場區內)"
+   ],
+   "tel": "(02)24063481",
+   "all": {
+    "count": 68,
+    "median_days": 1230,
+    "mean_days": 1489,
+    "min_days": 6,
+    "max_days": 4068,
+    "histogram": [
+     6,
+     2,
+     3,
+     7,
+     3,
+     15,
+     32
+    ]
+   },
+   "狗": {
+    "count": 62,
+    "median_days": 1636,
+    "mean_days": 1590,
+    "min_days": 6,
+    "max_days": 4068,
+    "histogram": [
+     3,
+     2,
+     3,
+     7,
+     2,
+     13,
+     32
+    ]
+   },
+   "貓": {
+    "count": 6,
+    "median_days": 338,
+    "mean_days": 444,
+    "min_days": 14,
+    "max_days": 1154,
+    "histogram": [
+     3,
+     0,
+     0,
+     0,
+     1,
+     2,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "a970f5698d",
+   "name": "新北市政府動物保護防疫處",
+   "county": "新北市",
+   "area_pkid": "3",
+   "addresses": [
+    "新北市板橋區四川路一段157巷2號"
+   ],
+   "tel": "(02)29596353",
+   "all": {
+    "count": 6,
+    "median_days": 355,
+    "mean_days": 400,
+    "min_days": 80,
+    "max_days": 834,
+    "histogram": [
+     0,
+     1,
+     0,
+     2,
+     2,
+     1,
+     0
+    ]
+   },
+   "狗": {
+    "count": 5,
+    "median_days": 392,
+    "mean_days": 464,
+    "min_days": 318,
+    "max_days": 834,
+    "histogram": [
+     0,
+     0,
+     0,
+     2,
+     2,
+     1,
+     0
+    ]
+   },
+   "貓": {
+    "count": 1,
+    "median_days": 80,
+    "mean_days": 80,
+    "min_days": 80,
+    "max_days": 80,
+    "histogram": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "200d66f85d",
+   "name": "基隆市寵物銀行",
+   "county": "基隆市",
+   "area_pkid": "4",
+   "addresses": [
+    "基隆市七堵區大華三路45-12號(欣欣安樂園旁)"
+   ],
+   "tel": "(02)24560148",
+   "all": {
+    "count": 156,
+    "median_days": 112,
+    "mean_days": 370,
+    "min_days": 2,
+    "max_days": 2995,
+    "histogram": [
+     29,
+     33,
+     25,
+     27,
+     19,
+     12,
+     11
+    ]
+   },
+   "狗": {
+    "count": 99,
+    "median_days": 260,
+    "mean_days": 518,
+    "min_days": 10,
+    "max_days": 2995,
+    "histogram": [
+     13,
+     15,
+     10,
+     21,
+     18,
+     11,
+     11
+    ]
+   },
+   "貓": {
+    "count": 57,
+    "median_days": 88,
+    "mean_days": 113,
+    "min_days": 2,
+    "max_days": 750,
+    "histogram": [
+     16,
+     18,
+     15,
+     6,
+     1,
+     1,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "ec9eec2921",
+   "name": "宜蘭縣流浪動物中途之家",
+   "county": "宜蘭縣",
+   "area_pkid": "5",
+   "addresses": [
+    "宜蘭縣五結鄉成興村利寶路60號"
+   ],
+   "tel": "(03)9602350620",
+   "all": {
+    "count": 228,
+    "median_days": 184,
+    "mean_days": 298,
+    "min_days": 1,
+    "max_days": 2036,
+    "histogram": [
+     29,
+     38,
+     42,
+     60,
+     32,
+     20,
+     7
+    ]
+   },
+   "狗": {
+    "count": 187,
+    "median_days": 183,
+    "mean_days": 272,
+    "min_days": 6,
+    "max_days": 2036,
+    "histogram": [
+     19,
+     36,
+     37,
+     59,
+     20,
+     9,
+     7
+    ]
+   },
+   "貓": {
+    "count": 40,
+    "median_days": 427,
+    "mean_days": 424,
+    "min_days": 1,
+    "max_days": 1053,
+    "histogram": [
+     9,
+     2,
+     5,
+     1,
+     12,
+     11,
+     0
+    ]
+   },
+   "其他": {
+    "count": 1,
+    "median_days": 22,
+    "mean_days": 22,
+    "min_days": 22,
+    "max_days": 22,
+    "histogram": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "e1942dfc8c",
+   "name": "桃園市動物保護教育園區",
+   "county": "桃園市",
+   "area_pkid": "6",
+   "addresses": [
+    "桃園市新屋區永興里3鄰藻礁路1668號"
+   ],
+   "tel": "(03)4861760",
+   "all": {
+    "count": 504,
+    "median_days": 1713,
+    "mean_days": 1691,
+    "min_days": 3,
+    "max_days": 3513,
+    "histogram": [
+     35,
+     24,
+     30,
+     18,
+     56,
+     65,
+     276
+    ]
+   },
+   "狗": {
+    "count": 406,
+    "median_days": 2119,
+    "mean_days": 1933,
+    "min_days": 3,
+    "max_days": 3513,
+    "histogram": [
+     20,
+     9,
+     20,
+     8,
+     41,
+     51,
+     257
+    ]
+   },
+   "貓": {
+    "count": 98,
+    "median_days": 323,
+    "mean_days": 689,
+    "min_days": 4,
+    "max_days": 2619,
+    "histogram": [
+     15,
+     15,
+     10,
+     10,
+     15,
+     14,
+     19
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "c5e859af84",
+   "name": "新竹縣動物保護教育園區",
+   "county": "新竹縣",
+   "area_pkid": "7",
+   "addresses": [
+    "新竹縣竹北市縣政五街192號"
+   ],
+   "tel": "(03)5519548",
+   "all": {
+    "count": 133,
+    "median_days": 665,
+    "mean_days": 840,
+    "min_days": 1,
+    "max_days": 2578,
+    "histogram": [
+     27,
+     10,
+     3,
+     2,
+     29,
+     30,
+     32
+    ]
+   },
+   "狗": {
+    "count": 104,
+    "median_days": 913,
+    "mean_days": 989,
+    "min_days": 1,
+    "max_days": 2578,
+    "histogram": [
+     16,
+     3,
+     2,
+     2,
+     25,
+     24,
+     32
+    ]
+   },
+   "貓": {
+    "count": 29,
+    "median_days": 46,
+    "mean_days": 306,
+    "min_days": 2,
+    "max_days": 1149,
+    "histogram": [
+     11,
+     7,
+     1,
+     0,
+     4,
+     6,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "079deb31ca",
+   "name": "新竹縣動物保護防疫所",
+   "county": "新竹縣",
+   "area_pkid": "7",
+   "addresses": [
+    "新竹縣竹北市縣政五街192號"
+   ],
+   "tel": "(03)5519548",
+   "all": {
+    "count": 8,
+    "median_days": 1181,
+    "mean_days": 1202,
+    "min_days": 1150,
+    "max_days": 1375,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     8,
+     0
+    ]
+   },
+   "狗": {
+    "count": 6,
+    "median_days": 1184,
+    "mean_days": 1209,
+    "min_days": 1150,
+    "max_days": 1375,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     6,
+     0
+    ]
+   },
+   "貓": {
+    "count": 2,
+    "median_days": 1181,
+    "mean_days": 1181,
+    "min_days": 1179,
+    "max_days": 1183,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "a97f993ff3",
+   "name": "新竹市動物保護教育園區",
+   "county": "新竹市",
+   "area_pkid": "8",
+   "addresses": [
+    "新竹市南寮里海濱路250號"
+   ],
+   "tel": "(03)5368329",
+   "all": {
+    "count": 148,
+    "median_days": 1552,
+    "mean_days": 1476,
+    "min_days": 3,
+    "max_days": 4083,
+    "histogram": [
+     14,
+     19,
+     6,
+     7,
+     8,
+     16,
+     78
+    ]
+   },
+   "狗": {
+    "count": 131,
+    "median_days": 1630,
+    "mean_days": 1652,
+    "min_days": 3,
+    "max_days": 4083,
+    "histogram": [
+     9,
+     14,
+     3,
+     5,
+     6,
+     16,
+     78
+    ]
+   },
+   "貓": {
+    "count": 13,
+    "median_days": 100,
+    "mean_days": 145,
+    "min_days": 13,
+    "max_days": 430,
+    "histogram": [
+     1,
+     5,
+     3,
+     2,
+     2,
+     0,
+     0
+    ]
+   },
+   "其他": {
+    "count": 4,
+    "median_days": 8,
+    "mean_days": 10,
+    "min_days": 6,
+    "max_days": 17,
+    "histogram": [
+     4,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "87e430aeaa",
+   "name": "苗栗縣動物保護教育園區",
+   "county": "苗栗縣",
+   "area_pkid": "9",
+   "addresses": [
+    "苗栗縣銅鑼鄉朝陽村6鄰朝北55-1號(地圖：https:／／goo.gl/maps/Bd4sckpEPsrof7Qb8)"
+   ],
+   "tel": "(037)558228",
+   "all": {
+    "count": 174,
+    "median_days": 260,
+    "mean_days": 381,
+    "min_days": 1,
+    "max_days": 1190,
+    "histogram": [
+     12,
+     40,
+     24,
+     26,
+     37,
+     35,
+     0
+    ]
+   },
+   "狗": {
+    "count": 125,
+    "median_days": 232,
+    "mean_days": 330,
+    "min_days": 1,
+    "max_days": 1190,
+    "histogram": [
+     10,
+     29,
+     18,
+     24,
+     25,
+     19,
+     0
+    ]
+   },
+   "貓": {
+    "count": 49,
+    "median_days": 385,
+    "mean_days": 510,
+    "min_days": 6,
+    "max_days": 1147,
+    "histogram": [
+     2,
+     11,
+     6,
+     2,
+     12,
+     16,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "918a0ffd24",
+   "name": "苗栗縣生態保育教育中心(動物收容所)",
+   "county": "苗栗縣",
+   "area_pkid": "9",
+   "addresses": [
+    "苗栗縣銅鑼鄉朝陽村6鄰朝北55-1號(地圖：https://goo.gl/maps/Bd4sckpEPsrof7Qb8)",
+    "苗栗縣銅鑼鄉朝陽村6鄰朝北55-1號(地圖：https:／／goo.gl/maps/Bd4sckpEPsrof7Qb8)"
+   ],
+   "tel": "(037)558228",
+   "all": {
+    "count": 14,
+    "median_days": 1208,
+    "mean_days": 1270,
+    "min_days": 1158,
+    "max_days": 1407,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     14,
+     0
+    ]
+   },
+   "狗": {
+    "count": 9,
+    "median_days": 1205,
+    "mean_days": 1243,
+    "min_days": 1186,
+    "max_days": 1394,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     9,
+     0
+    ]
+   },
+   "貓": {
+    "count": 5,
+    "median_days": 1372,
+    "mean_days": 1319,
+    "min_days": 1158,
+    "max_days": 1407,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     5,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "91337660a0",
+   "name": "臺中市動物之家后里園區",
+   "county": "臺中市",
+   "area_pkid": "10",
+   "addresses": [
+    "臺中市后里區堤防路370號"
+   ],
+   "tel": "(04)25588024",
+   "all": {
+    "count": 42,
+    "median_days": 179,
+    "mean_days": 394,
+    "min_days": 14,
+    "max_days": 1898,
+    "histogram": [
+     3,
+     9,
+     9,
+     5,
+     10,
+     3,
+     3
+    ]
+   },
+   "狗": {
+    "count": 30,
+    "median_days": 184,
+    "mean_days": 423,
+    "min_days": 15,
+    "max_days": 1898,
+    "histogram": [
+     1,
+     7,
+     7,
+     3,
+     7,
+     3,
+     2
+    ]
+   },
+   "貓": {
+    "count": 12,
+    "median_days": 163,
+    "mean_days": 321,
+    "min_days": 14,
+    "max_days": 1465,
+    "histogram": [
+     2,
+     2,
+     2,
+     2,
+     3,
+     0,
+     1
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "0b478125a3",
+   "name": "臺中市動物之家南屯園區",
+   "county": "臺中市",
+   "area_pkid": "10",
+   "addresses": [
+    "臺中市南屯區中台路601號"
+   ],
+   "tel": "(04)23850976",
+   "all": {
+    "count": 23,
+    "median_days": 696,
+    "mean_days": 728,
+    "min_days": 368,
+    "max_days": 1928,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     15,
+     7,
+     1
+    ]
+   },
+   "狗": {
+    "count": 21,
+    "median_days": 683,
+    "mean_days": 686,
+    "min_days": 368,
+    "max_days": 1928,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     15,
+     5,
+     1
+    ]
+   },
+   "貓": {
+    "count": 2,
+    "median_days": 1175,
+    "mean_days": 1175,
+    "min_days": 1172,
+    "max_days": 1178,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     2,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "ad3f398c00",
+   "name": "彰化縣流浪狗中途之家臨時收容所",
+   "county": "彰化縣",
+   "area_pkid": "11",
+   "addresses": [
+    "彰化縣芳苑鄉文津段436-4地號（座標緯度及經度：23.932676， 120.367307）"
+   ],
+   "tel": "(09)",
+   "all": {
+    "count": 196,
+    "median_days": 41,
+    "mean_days": 108,
+    "min_days": 1,
+    "max_days": 1302,
+    "histogram": [
+     67,
+     84,
+     22,
+     6,
+     12,
+     5,
+     0
+    ]
+   },
+   "狗": {
+    "count": 184,
+    "median_days": 41,
+    "mean_days": 114,
+    "min_days": 1,
+    "max_days": 1302,
+    "histogram": [
+     59,
+     80,
+     22,
+     6,
+     12,
+     5,
+     0
+    ]
+   },
+   "貓": {
+    "count": 12,
+    "median_days": 18,
+    "mean_days": 22,
+    "min_days": 6,
+    "max_days": 50,
+    "histogram": [
+     8,
+     4,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "5a6e2744e5",
+   "name": "彰化縣流浪狗中途之家",
+   "county": "彰化縣",
+   "area_pkid": "11",
+   "addresses": [
+    "彰化縣員林市大峰里阿寶巷426號(大門入口請由彰化縣芬園鄉大彰路一段875巷進入走到底)"
+   ],
+   "tel": "(04)8590638",
+   "all": {
+    "count": 157,
+    "median_days": 386,
+    "mean_days": 503,
+    "min_days": 78,
+    "max_days": 1522,
+    "histogram": [
+     0,
+     3,
+     32,
+     41,
+     49,
+     23,
+     9
+    ]
+   },
+   "狗": {
+    "count": 156,
+    "median_days": 379,
+    "mean_days": 499,
+    "min_days": 78,
+    "max_days": 1522,
+    "histogram": [
+     0,
+     3,
+     32,
+     41,
+     49,
+     22,
+     9
+    ]
+   },
+   "貓": {
+    "count": 1,
+    "median_days": 1137,
+    "mean_days": 1137,
+    "min_days": 1137,
+    "max_days": 1137,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "3578faa084",
+   "name": "南投縣公立動物收容所",
+   "county": "南投縣",
+   "area_pkid": "12",
+   "addresses": [
+    "南投縣南投市嶺興路36-1號"
+   ],
+   "tel": "(049)2225440",
+   "all": {
+    "count": 336,
+    "median_days": 876,
+    "mean_days": 1519,
+    "min_days": 1,
+    "max_days": 4257,
+    "histogram": [
+     49,
+     10,
+     27,
+     29,
+     41,
+     39,
+     141
+    ]
+   },
+   "狗": {
+    "count": 278,
+    "median_days": 1519,
+    "mean_days": 1800,
+    "min_days": 7,
+    "max_days": 4257,
+    "histogram": [
+     21,
+     7,
+     15,
+     23,
+     34,
+     37,
+     141
+    ]
+   },
+   "貓": {
+    "count": 58,
+    "median_days": 46,
+    "mean_days": 173,
+    "min_days": 1,
+    "max_days": 1288,
+    "histogram": [
+     28,
+     3,
+     12,
+     6,
+     7,
+     2,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "142b8109f8",
+   "name": "雲林縣流浪動物收容所",
+   "county": "雲林縣",
+   "area_pkid": "13",
+   "addresses": [
+    "雲林縣斗六市雲林路二段517號"
+   ],
+   "tel": "(05)5523300",
+   "all": {
+    "count": 370,
+    "median_days": 1189,
+    "mean_days": 1409,
+    "min_days": 13,
+    "max_days": 3480,
+    "histogram": [
+     3,
+     15,
+     20,
+     44,
+     52,
+     79,
+     157
+    ]
+   },
+   "狗": {
+    "count": 357,
+    "median_days": 1266,
+    "mean_days": 1447,
+    "min_days": 13,
+    "max_days": 3480,
+    "histogram": [
+     3,
+     11,
+     18,
+     44,
+     47,
+     77,
+     157
+    ]
+   },
+   "貓": {
+    "count": 12,
+    "median_days": 378,
+    "mean_days": 388,
+    "min_days": 37,
+    "max_days": 988,
+    "histogram": [
+     0,
+     3,
+     2,
+     0,
+     5,
+     2,
+     0
+    ]
+   },
+   "其他": {
+    "count": 1,
+    "median_days": 71,
+    "mean_days": 71,
+    "min_days": 71,
+    "max_days": 71,
+    "histogram": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "d3d44d0bb7",
+   "name": "嘉義縣動物保護教育園區",
+   "county": "嘉義縣",
+   "area_pkid": "14",
+   "addresses": [
+    "嘉義縣民雄鄉松山村後山仔37之2號"
+   ],
+   "tel": "(05)2721119",
+   "all": {
+    "count": 13,
+    "median_days": 302,
+    "mean_days": 371,
+    "min_days": 8,
+    "max_days": 1373,
+    "histogram": [
+     2,
+     0,
+     1,
+     4,
+     5,
+     1,
+     0
+    ]
+   },
+   "狗": {
+    "count": 13,
+    "median_days": 302,
+    "mean_days": 371,
+    "min_days": 8,
+    "max_days": 1373,
+    "histogram": [
+     2,
+     0,
+     1,
+     4,
+     5,
+     1,
+     0
+    ]
+   },
+   "貓": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "84e2c2d004",
+   "name": "嘉義市動物保護教育園區",
+   "county": "嘉義市",
+   "area_pkid": "15",
+   "addresses": [
+    "嘉義市彌陀路31號"
+   ],
+   "tel": "(05)2168661",
+   "all": {
+    "count": 25,
+    "median_days": 151,
+    "mean_days": 279,
+    "min_days": 16,
+    "max_days": 1102,
+    "histogram": [
+     1,
+     5,
+     7,
+     7,
+     2,
+     3,
+     0
+    ]
+   },
+   "狗": {
+    "count": 24,
+    "median_days": 133,
+    "mean_days": 280,
+    "min_days": 16,
+    "max_days": 1102,
+    "histogram": [
+     1,
+     5,
+     7,
+     6,
+     2,
+     3,
+     0
+    ]
+   },
+   "貓": {
+    "count": 1,
+    "median_days": 269,
+    "mean_days": 269,
+    "min_days": 269,
+    "max_days": 269,
+    "histogram": [
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "f02e1227af",
+   "name": "臺南市動物之家善化站",
+   "county": "臺南市",
+   "area_pkid": "16",
+   "addresses": [
+    "臺南市善化區昌隆里東勢寮1-19號",
+    "臺南市善化區昌隆里東勢寮1~19號"
+   ],
+   "tel": "(06)5832399",
+   "all": {
+    "count": 339,
+    "median_days": 160,
+    "mean_days": 497,
+    "min_days": 1,
+    "max_days": 2619,
+    "histogram": [
+     69,
+     52,
+     61,
+     37,
+     22,
+     65,
+     33
+    ]
+   },
+   "狗": {
+    "count": 311,
+    "median_days": 171,
+    "mean_days": 501,
+    "min_days": 1,
+    "max_days": 2619,
+    "histogram": [
+     65,
+     45,
+     56,
+     36,
+     17,
+     63,
+     29
+    ]
+   },
+   "貓": {
+    "count": 27,
+    "median_days": 131,
+    "mean_days": 451,
+    "min_days": 2,
+    "max_days": 1513,
+    "histogram": [
+     4,
+     7,
+     5,
+     1,
+     4,
+     2,
+     4
+    ]
+   },
+   "其他": {
+    "count": 1,
+    "median_days": 414,
+    "mean_days": 414,
+    "min_days": 414,
+    "max_days": 414,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "2800f5b8cb",
+   "name": "臺南市動物之家灣裡站",
+   "county": "臺南市",
+   "area_pkid": "16",
+   "addresses": [
+    "臺南市南區省躬里14鄰萬年路580巷92號"
+   ],
+   "tel": "(06)2964439",
+   "all": {
+    "count": 130,
+    "median_days": 255,
+    "mean_days": 526,
+    "min_days": 12,
+    "max_days": 4027,
+    "histogram": [
+     6,
+     25,
+     21,
+     22,
+     27,
+     19,
+     10
+    ]
+   },
+   "狗": {
+    "count": 87,
+    "median_days": 532,
+    "mean_days": 699,
+    "min_days": 30,
+    "max_days": 4027,
+    "histogram": [
+     1,
+     2,
+     13,
+     19,
+     25,
+     18,
+     9
+    ]
+   },
+   "貓": {
+    "count": 43,
+    "median_days": 77,
+    "mean_days": 177,
+    "min_days": 12,
+    "max_days": 2226,
+    "histogram": [
+     5,
+     23,
+     8,
+     3,
+     2,
+     1,
+     1
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "ec94558b96",
+   "name": "高雄市燕巢動物保護關愛園區",
+   "county": "高雄市",
+   "area_pkid": "17",
+   "addresses": [
+    "高雄市燕巢區師大路98號"
+   ],
+   "tel": "(07)6051002",
+   "all": {
+    "count": 468,
+    "median_days": 155,
+    "mean_days": 241,
+    "min_days": 6,
+    "max_days": 1539,
+    "histogram": [
+     125,
+     39,
+     85,
+     145,
+     49,
+     22,
+     3
+    ]
+   },
+   "狗": {
+    "count": 465,
+    "median_days": 155,
+    "mean_days": 242,
+    "min_days": 6,
+    "max_days": 1539,
+    "histogram": [
+     122,
+     39,
+     85,
+     145,
+     49,
+     22,
+     3
+    ]
+   },
+   "貓": {
+    "count": 3,
+    "median_days": 20,
+    "mean_days": 18,
+    "min_days": 13,
+    "max_days": 20,
+    "histogram": [
+     3,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "e29d9cccaa",
+   "name": "高雄市壽山動物保護教育園區",
+   "county": "高雄市",
+   "area_pkid": "17",
+   "addresses": [
+    "高雄市鼓山區萬壽路350號"
+   ],
+   "tel": "(07)5519059",
+   "all": {
+    "count": 142,
+    "median_days": 148,
+    "mean_days": 364,
+    "min_days": 1,
+    "max_days": 2306,
+    "histogram": [
+     21,
+     32,
+     27,
+     8,
+     25,
+     27,
+     2
+    ]
+   },
+   "狗": {
+    "count": 121,
+    "median_days": 134,
+    "mean_days": 319,
+    "min_days": 1,
+    "max_days": 2306,
+    "histogram": [
+     20,
+     27,
+     25,
+     7,
+     24,
+     16,
+     2
+    ]
+   },
+   "貓": {
+    "count": 20,
+    "median_days": 1043,
+    "mean_days": 652,
+    "min_days": 40,
+    "max_days": 1190,
+    "histogram": [
+     0,
+     5,
+     2,
+     1,
+     1,
+     11,
+     0
+    ]
+   },
+   "其他": {
+    "count": 1,
+    "median_days": 29,
+    "mean_days": 29,
+    "min_days": 29,
+    "max_days": 29,
+    "histogram": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "84063d5e30",
+   "name": "屏東縣公立犬貓中途之家",
+   "county": "屏東縣",
+   "area_pkid": "18",
+   "addresses": [
+    "屏東縣內埔鄉學府路1號(屏東科技大學內)"
+   ],
+   "tel": "(72)",
+   "all": {
+    "count": 73,
+    "median_days": 1540,
+    "mean_days": 1832,
+    "min_days": 192,
+    "max_days": 2922,
+    "histogram": [
+     0,
+     0,
+     0,
+     2,
+     2,
+     29,
+     40
+    ]
+   },
+   "狗": {
+    "count": 71,
+    "median_days": 1767,
+    "mean_days": 1861,
+    "min_days": 192,
+    "max_days": 2922,
+    "histogram": [
+     0,
+     0,
+     0,
+     2,
+     1,
+     28,
+     40
+    ]
+   },
+   "貓": {
+    "count": 1,
+    "median_days": 988,
+    "mean_days": 988,
+    "min_days": 988,
+    "max_days": 988,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ]
+   },
+   "其他": {
+    "count": 1,
+    "median_days": 579,
+    "mean_days": 579,
+    "min_days": 579,
+    "max_days": 579,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "29795a5301",
+   "name": "花蓮縣狗貓躍動園區",
+   "county": "花蓮縣",
+   "area_pkid": "19",
+   "addresses": [
+    "花蓮縣鳳林鎮林榮里永豐路255號"
+   ],
+   "tel": "(03)8421452",
+   "all": {
+    "count": 162,
+    "median_days": 230,
+    "mean_days": 437,
+    "min_days": 9,
+    "max_days": 2126,
+    "histogram": [
+     11,
+     20,
+     38,
+     30,
+     25,
+     35,
+     3
+    ]
+   },
+   "狗": {
+    "count": 129,
+    "median_days": 273,
+    "mean_days": 491,
+    "min_days": 13,
+    "max_days": 2126,
+    "histogram": [
+     2,
+     15,
+     29,
+     28,
+     19,
+     33,
+     3
+    ]
+   },
+   "貓": {
+    "count": 33,
+    "median_days": 105,
+    "mean_days": 223,
+    "min_days": 9,
+    "max_days": 1226,
+    "histogram": [
+     9,
+     5,
+     9,
+     2,
+     6,
+     2,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "a25e924406",
+   "name": "臺東縣動物收容中心",
+   "county": "臺東縣",
+   "area_pkid": "20",
+   "addresses": [
+    "臺東縣臺東市中華路4段999巷600號"
+   ],
+   "tel": "(089)362011",
+   "all": {
+    "count": 77,
+    "median_days": 63,
+    "mean_days": 506,
+    "min_days": 0,
+    "max_days": 3088,
+    "histogram": [
+     33,
+     7,
+     3,
+     9,
+     4,
+     11,
+     10
+    ]
+   },
+   "狗": {
+    "count": 55,
+    "median_days": 160,
+    "mean_days": 593,
+    "min_days": 0,
+    "max_days": 3088,
+    "histogram": [
+     21,
+     6,
+     2,
+     9,
+     1,
+     6,
+     10
+    ]
+   },
+   "貓": {
+    "count": 22,
+    "median_days": 15,
+    "mean_days": 288,
+    "min_days": 1,
+    "max_days": 1053,
+    "histogram": [
+     12,
+     1,
+     1,
+     0,
+     3,
+     5,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "1b5bb4a344",
+   "name": "澎湖縣流浪動物收容中心",
+   "county": "澎湖縣",
+   "area_pkid": "21",
+   "addresses": [
+    "澎湖縣馬公市烏崁里260、261號"
+   ],
+   "tel": "(06)9213559",
+   "all": {
+    "count": 318,
+    "median_days": 891,
+    "mean_days": 949,
+    "min_days": 5,
+    "max_days": 3542,
+    "histogram": [
+     8,
+     19,
+     16,
+     24,
+     61,
+     118,
+     72
+    ]
+   },
+   "狗": {
+    "count": 302,
+    "median_days": 905,
+    "mean_days": 997,
+    "min_days": 9,
+    "max_days": 3542,
+    "histogram": [
+     4,
+     9,
+     14,
+     24,
+     61,
+     118,
+     72
+    ]
+   },
+   "貓": {
+    "count": 14,
+    "median_days": 41,
+    "mean_days": 40,
+    "min_days": 5,
+    "max_days": 87,
+    "histogram": [
+     4,
+     10,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "其他": {
+    "count": 2,
+    "median_days": 155,
+    "mean_days": 155,
+    "min_days": 155,
+    "max_days": 155,
+    "histogram": [
+     0,
+     0,
+     2,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "53ff346501",
+   "name": "金門縣動物收容中心",
+   "county": "金門縣",
+   "area_pkid": "22",
+   "addresses": [
+    "金門縣金湖鎮裕民農莊20號"
+   ],
+   "tel": "(082)336625",
+   "all": {
+    "count": 314,
+    "median_days": 506,
+    "mean_days": 711,
+    "min_days": 10,
+    "max_days": 3496,
+    "histogram": [
+     67,
+     49,
+     14,
+     17,
+     31,
+     96,
+     40
+    ]
+   },
+   "狗": {
+    "count": 168,
+    "median_days": 1110,
+    "mean_days": 1134,
+    "min_days": 17,
+    "max_days": 3496,
+    "histogram": [
+     3,
+     8,
+     9,
+     12,
+     19,
+     77,
+     40
+    ]
+   },
+   "貓": {
+    "count": 146,
+    "median_days": 35,
+    "mean_days": 224,
+    "min_days": 10,
+    "max_days": 1280,
+    "histogram": [
+     64,
+     41,
+     5,
+     5,
+     12,
+     19,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "5269d01497",
+   "name": "連江縣流浪犬收容中心",
+   "county": "連江縣",
+   "area_pkid": "23",
+   "addresses": [
+    "連江縣南竿鄉復興村223號"
+   ],
+   "tel": "(0836)25003",
+   "all": {
+    "count": 33,
+    "median_days": 806,
+    "mean_days": 857,
+    "min_days": 433,
+    "max_days": 1345,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     13,
+     20,
+     0
+    ]
+   },
+   "狗": {
+    "count": 29,
+    "median_days": 806,
+    "mean_days": 859,
+    "min_days": 442,
+    "max_days": 1345,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     12,
+     17,
+     0
+    ]
+   },
+   "貓": {
+    "count": 4,
+    "median_days": 789,
+    "mean_days": 839,
+    "min_days": 433,
+    "max_days": 1345,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     3,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "b1a951823e",
+   "name": "連江縣動物之家",
+   "county": "連江縣",
+   "area_pkid": "23",
+   "addresses": [
+    "連江縣南竿鄉復興村223號"
+   ],
+   "tel": "(0836)25003",
+   "all": {
+    "count": 29,
+    "median_days": 2031,
+    "mean_days": 1590,
+    "min_days": 129,
+    "max_days": 3075,
+    "histogram": [
+     0,
+     0,
+     9,
+     3,
+     0,
+     0,
+     17
+    ]
+   },
+   "狗": {
+    "count": 29,
+    "median_days": 2031,
+    "mean_days": 1590,
+    "min_days": 129,
+    "max_days": 3075,
+    "histogram": [
+     0,
+     0,
+     9,
+     3,
+     0,
+     0,
+     17
+    ]
+   },
+   "貓": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  }
+ ]
+}
