@@ -107,8 +107,13 @@ def download(url: str) -> bytes:
     raise RuntimeError(f"download failed after {ATTEMPTS} attempts: {last_error!r}")
 
 
-def validate(payload: bytes) -> int:
-    """Return the data row count, or raise if the payload is not the expected CSV."""
+def validate(payload: bytes) -> tuple[int, int]:
+    """Return (data row count, column count), or raise if this is not the expected CSV.
+
+    The column count is reported so the run summary can show it. A source that
+    silently gains or drops a column still passes the required-column check and
+    still stores a valid file; the number moving is the only early warning.
+    """
     try:
         text = payload.decode("utf-8-sig")
     except UnicodeDecodeError as error:
@@ -125,7 +130,7 @@ def validate(payload: bytes) -> int:
     if rows < MIN_ROWS:
         raise ValueError(f"only {rows} rows, expected at least {MIN_ROWS}")
     log(f"validated {rows} rows across {len(columns)} columns")
-    return rows
+    return rows, len(columns)
 
 
 def sha256(payload: bytes) -> str:
@@ -210,6 +215,62 @@ def previous_row_count() -> int | None:
     return None
 
 
+def human_bytes(size: int) -> str:
+    step = 1024.0
+    value = float(size)
+    for unit in ("B", "KiB", "MiB", "GiB"):
+        if value < step or unit == "GiB":
+            return f"{value:,.0f} {unit}" if unit == "B" else f"{value:,.1f} {unit}"
+        value /= step
+    return f"{size} B"
+
+
+def signed(value: int) -> str:
+    return f"+{value:,}" if value > 0 else f"{value:,}"
+
+
+def history_table(limit: int = 7) -> list[str]:
+    """The tail of the manifest, with the row-count move between snapshots.
+
+    This is the part of the summary that catches the failure mode a green run
+    hides: an endpoint that keeps answering with a well-formed but frozen file.
+    Every run then stores successfully and nothing looks wrong until the row
+    count and the digest are seen to have stopped moving.
+    """
+    entries = read_manifest()
+    if not entries:
+        return []
+    lines = ["", "#### Recent snapshots", "", "| date | status | rows | change | sha256 |", "| --- | --- | --- | --- | --- |"]
+    previous: int | None = None
+    deltas: dict[str, str] = {}
+    for row in entries:
+        if row[1] == "stored" and row[2].isdigit():
+            count = int(row[2])
+            deltas[row[0]] = signed(count - previous) if previous is not None else "—"
+            previous = count
+    for row in entries[-limit:]:
+        rows = f"{int(row[2]):,}" if row[2].isdigit() and int(row[2]) else "—"
+        digest = f"`{row[4][:12]}`" if row[4] else "—"
+        lines.append(f"| {row[0]} | {row[1]} | {rows} | {deltas.get(row[0], '—')} | {digest} |")
+    return lines
+
+
+def write_step_summary(date: str, status: str, **fields: str) -> None:
+    """Render the run summary. Written here rather than in the workflow because
+    this script is what holds the numbers; the workflow would only be able to
+    echo back the handful of values passed through GITHUB_OUTPUT."""
+    path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not path:
+        return
+    lines = ["### Snapshot", "", "| field | value |", "| --- | --- |"]
+    lines.append(f"| date | {date} |")
+    lines.append(f"| status | {status} |")
+    lines.extend(f"| {key.replace('_', ' ')} | {value} |" for key, value in fields.items() if value)
+    lines.extend(history_table())
+    with open(path, "a", encoding="utf-8") as handle:
+        handle.write("\n".join(lines) + "\n")
+
+
 def set_output(**values: str) -> None:
     path = os.environ.get("GITHUB_OUTPUT")
     if not path:
@@ -238,16 +299,22 @@ def main() -> int:
 
     if target.exists() and not args.force:
         log(f"{target.name} already exists, nothing to do")
+        write_step_summary(
+            date,
+            "skipped",
+            note=f"`{target.relative_to(ROOT).as_posix()}` already archived; nothing was fetched",
+        )
         set_output(status="skipped", date=date, commit_message="")
         return 0
 
     log(f"fetching {args.url}")
     try:
         payload = download(args.url)
-        rows = validate(payload)
+        rows, columns = validate(payload)
     except Exception as error:  # noqa: BLE001 - record the failure, then fail loudly
         log(f"::error::snapshot {date} failed: {error}")
         record(date, "failed", 0, 0, "")
+        write_step_summary(date, "failed", error=f"`{error}`", url=args.url)
         set_output(
             status="failed",
             date=date,
@@ -265,6 +332,15 @@ def main() -> int:
         if sha256(gzip.decompress(previous.read_bytes())) == digest:
             log(f"content identical to {previous.name}, not storing a duplicate")
             record(date, "unchanged", rows, len(payload), digest)
+            write_step_summary(
+                date,
+                "unchanged",
+                rows=f"{rows:,}",
+                columns=str(columns),
+                payload=f"{len(payload):,} bytes ({human_bytes(len(payload))})",
+                sha256=f"`{digest[:16]}`",
+                note=f"byte-identical to `{previous.name}`; no new file stored",
+            )
             set_output(
                 status="unchanged",
                 date=date,
@@ -275,6 +351,16 @@ def main() -> int:
     write_gzip(target, payload)
     record(date, "stored", rows, len(payload), digest)
     log(f"stored {target.relative_to(ROOT)} ({target.stat().st_size} bytes gzipped)")
+    write_step_summary(
+        date,
+        "stored",
+        rows=f"{rows:,}" + (f" ({signed(rows - expected)} vs previous)" if expected else ""),
+        columns=str(columns),
+        payload=f"{len(payload):,} bytes ({human_bytes(len(payload))})",
+        archived=f"`{target.relative_to(ROOT).as_posix()}` ({human_bytes(target.stat().st_size)})",
+        sha256=f"`{digest[:16]}`",
+        source=args.url,
+    )
     set_output(status="stored", date=date, commit_message=f"data: snapshot {date}")
     return 0
 

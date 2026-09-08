@@ -1,0 +1,84 @@
+# Build the Vite app and publish it to GitHub Pages. See CLAUDE.md section 3,
+# stage 1.
+#
+# Pages is served from the artifact this workflow uploads, not from a branch,
+# so nothing built ever lands in git history. The Pages source must be set to
+# "GitHub Actions" in the repository settings once; a workflow file cannot set
+# it for you.
+name: Deploy Pages
+
+on:
+  push:
+    branches: [main]
+    # The daily snapshot bot commits to main every morning and touches nothing
+    # under data/ that the site serves: the raw archive is an input to the
+    # build scripts, not an asset. Rebuilding on it would redeploy a
+    # byte-identical site 365 times a year. The generated site data lives in
+    # public/data/, which is not ignored here, so a rebuild of the JSON does
+    # deploy.
+    paths-ignore:
+      - "data/**"
+      - ".github/workflows/daily-snapshot.yml"
+  workflow_dispatch:
+
+# contents: read to check out; pages + id-token for the deployment's OIDC
+# handshake. Deliberately narrower than the snapshot workflow: this one has no
+# reason to write to the repository.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time. Queued runs collapse to the newest, but a run
+# already deploying is left alone rather than cancelled half-published.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: npm
+
+      # ci, not install: it installs exactly what package-lock.json pins and
+      # fails if the lockfile and package.json disagree, so a deploy can never
+      # quietly pick up a different dependency tree than the one tested.
+      - name: Install dependencies
+        run: npm ci
+
+      # npm run build is vue-tsc --build && vite build, so a type error fails
+      # the deploy rather than shipping a broken page.
+      - name: Build
+        run: npm run build
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

@@ -94,12 +94,14 @@ jobs:
           echo "::error::could not push the snapshot after 3 attempts"
           exit 1
 
-      - name: Summary
-        if: always()
+      # The fetch step writes the run summary itself: it is what holds the row
+      # count, the digest and the manifest, and a workflow step could only echo
+      # back whatever was passed through GITHUB_OUTPUT. This catches the one
+      # path that leaves no summary behind, an unexpected crash.
+      - name: Note an unrecorded failure
+        if: failure()
         run: |
-          {
-            echo "| field | value |"
-            echo "| --- | --- |"
-            echo "| date | ${{ steps.fetch.outputs.date }} |"
-            echo "| status | ${{ steps.fetch.outputs.status }} |"
-          } >> "${GITHUB_STEP_SUMMARY}"
+          echo "### Snapshot" >> "${GITHUB_STEP_SUMMARY}"
+          echo "" >> "${GITHUB_STEP_SUMMARY}"
+          echo "The run failed before recording a result. See the step log." \
+            >> "${GITHUB_STEP_SUMMARY}"
