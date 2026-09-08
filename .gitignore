@@ -58,6 +58,25 @@ Thumbs.db
 /tmp/
 
 # ==================================================================
+# Scratch notes and generated previews
+# ==================================================================
+#
+# .notes/ holds prototypes, mock-ups and screenshots produced while
+# working out a design: useful next to the code, worth nothing to a
+# reader of the repository, and heavy (a full-page PNG runs to several
+# hundred KB). Anything from here that turns out to be worth keeping
+# gets described in DESIGN.md rather than committed as an image.
+#
+# The desktop client writes its own deliveries to "Claude outputs/";
+# that name is ignored too so the folder cannot reappear and be swept
+# in by git add -A.
+/.notes/
+
+# Tarball used to move the tree into a sandbox for a build check.
+/_transfer.tgz
+/Claude outputs/
+
+# ==================================================================
 # DELIBERATELY NOT IGNORED - do not "tidy up" the entries below.
 # ==================================================================
 #

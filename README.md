@@ -2,8 +2,7 @@
 
 臺灣公立動物收容所開放資料的分析與互動視覺化。
 
-<!-- TODO: GitHub Pages 部署後把下方 Demo 換成 https://jen-chieh-yu.github.io/stray-atlas/ -->
-**Demo**：`TODO`
+**Demo**：<https://jen-chieh-yu.github.io/stray-atlas/>
 
 ---
 
@@ -35,24 +34,58 @@
 python scripts/fetch_snapshot.py
 ```
 
-<!-- TODO: 前端 scaffold 完成後補上 npm ci / npm run dev 與版本需求 -->
+由快照重建前端要吃的 JSON（同樣無外部相依，`build_districts.py` 例外，需要 `pyshp`）：
 
-前端尚未 scaffold。
+```bash
+python scripts/clean.py                 # 清理欄位、產生 areas.json / meta.json
+python scripts/build_stats.py           # stats/counties.json
+python scripts/build_shelters.py        # shelters.json + animals.json
+python scripts/build_shelter_points.py  # shelter-points.json（地圖圖釘）
+python scripts/build_distribution.py    # stats/distribution.json（分析頁）
+```
+
+跑前端（Node 22+）：
+
+```bash
+npm ci
+npm run dev       # http://localhost:5173/stray-atlas/
+npm run build     # 型別檢查 + 打包，產出 dist/
+npm run preview
+```
 
 ---
 
 ## 專案結構
 
-<!-- TODO: 隨實作補齊 -->
-
 ```
 stray-atlas/
-├── .github/workflows/     每日快照、Pages 部署
-├── data/raw/              每日快照 YYYY-MM-DD.csv.gz 與 _manifest.csv（進 git，見 CLAUDE.md §6.3）
-├── scripts/               Python 前處理與分析
-├── public/data/           產出的 JSON / GeoJSON（前端資料契約，見 CLAUDE.md §4.1）
-└── src/                   Vue 前端
+├── .github/workflows/
+│   ├── daily-snapshot.yml   每日抓取、驗證、封存快照
+│   └── deploy-pages.yml     打包並發布到 GitHub Pages
+├── data/
+│   ├── raw/                 每日快照 YYYY-MM-DD.csv.gz 與 _manifest.csv（進 git，見 CLAUDE.md §6.3）
+│   └── reference/           行政區界原始檔與對照表
+├── scripts/                 Python 前處理與分析（標準函式庫，例外見下）
+│   ├── fetch_snapshot.py    每日抓取；驗證、確定性 gzip、manifest
+│   ├── clean.py             欄位清理，同時是其他腳本的載入函式庫
+│   ├── geocode.py           尋獲地分級（不呼叫 geocoder，見〈尋獲地〉）
+│   ├── build_districts.py   由 shapefile 產生行政區／縣市界（需 pyshp，一次性）
+│   ├── build_stats.py       縣市層級統計
+│   ├── build_shelters.py    收容所與全部動物名冊
+│   ├── build_shelter_points.py  收容所定位（行政區形心）
+│   └── build_distribution.py    在所天數分布：直方圖、KDE、ECDF
+├── public/data/             產出的 JSON / GeoJSON（前端資料契約，見 CLAUDE.md §4.1）
+└── src/                     Vue 前端（views / components / composables）
 ```
+
+### 四個分頁
+
+| 路徑 | 內容 |
+|---|---|
+| `/` | 縣市 choropleth、37 處收容所圖釘、縮放平移，左側面板顯示縣市或單一收容所 |
+| `/animals` | 全部 8,000 餘筆動物，縣市／收容所／類型／品種／在所時間篩選，分頁 20 筆 |
+| `/shelters`、`/shelters/:id` | 收容所列表與單一收容所的動物 |
+| `/analysis` | 在所天數分布：長條圖＋KDE（對數／線性、三段平滑）、犬貓 ECDF、分位數表、各縣市排行 |
 
 ---
 
@@ -64,7 +97,7 @@ stray-atlas/
 | 來源 | [政府資料開放平臺 dataset/85903](https://data.gov.tw/dataset/85903) |
 | 授權 | 政府資料開放授權條款－第 1 版 |
 | 更新頻率 | 每 1 天 |
-| 快照規模 | 8,242 列 × 28 欄（2026-09-01） |
+| 快照規模 | 28 欄，列數逐日變動（2026-09-07 為 8,275 列） |
 
 ### 每日快照機制
 
@@ -83,6 +116,14 @@ python scripts/fetch_snapshot.py --force    # 覆蓋當日已存在的檔案
 
 來源網址若變更，設定 repo variable `SNAPSHOT_URL` 即可覆寫，不需改程式。
 
+每次執行都會在該次 run 的 Summary 寫下筆數、欄位數、位元組、sha256，以及最近幾份快照的並排比較。**這張並排表才是稽核的重點**：這類來源最陰險的故障不是抓不到，而是每天回傳一份格式正確但內容凍結的檔案——run 全綠、檔案照存，只有把連續幾天的筆數與 sha 放在一起看才會發現。
+
+### 部署
+
+`.github/workflows/deploy-pages.yml` 在推上 `main` 時打包並發布到 GitHub Pages。網站由 artifact 提供，不經 `gh-pages` 分支，所以編譯產物完全不進版本歷史。
+
+只動 `data/` 的推送不會觸發部署——那是每天早上機器人的 commit，而 `data/raw/` 是分析腳本的輸入、不是網站資產，重建出來的頁面會一模一樣。網站真正吃的 `public/data/*.json` 不在忽略範圍。
+
 ---
 
 ## 資料限制
@@ -92,7 +133,7 @@ python scripts/fetch_snapshot.py --force    # 覆蓋當日已存在的檔案
 1. **本資料是存量快照，不是歷史紀錄。** `animal_status` 全為 `OPEN`、`animal_closeddate` 全為 `2999-12-31`。已離所的個體不在資料中，因此**沒有認養結果標籤**。
 2. **不可用單一快照討論入所季節性。** `animal_createtime` 的月份分布反映的是 survivorship，不是入所流量。
 3. **不可宣稱「黑狗比較難被認養」。** 只能宣稱「目前仍在所的黑狗待得比較久」——存量快照存在 length-biased sampling。
-4. **`animal_foundplace` 是自由文字，僅 5.1% 含縣市名。** 未經縣市補全就送 geocoder 必然定位錯誤（「西安街」全臺有數十條）。
+4. **`animal_foundplace` 是自由文字，僅 2.4% 含完整縣市名。** 未經縣市補全就送 geocoder 必然定位錯誤（「西安街」全臺有數十條）。更糟的是這 2.4%（201 筆）裡有 167 筆出自南投縣一家收容所——那不是資料的普遍性質，是一間機構的登錄習慣。
 5. **geocode 結果必須分級標註信心水準。** 尋獲地不必然與收容所同縣市（存在跨區送交），補全結果不可當作精確座標呈現。
 6. **`民眾不擬續養`、`所內` 等非地點值必須單獨歸類**，不可硬塞座標。
 
@@ -118,24 +159,47 @@ python scripts/fetch_snapshot.py --force    # 覆蓋當日已存在的檔案
 
 <!-- TODO: 階段 2 完成後補上「黑狗症候群」的收容所內控制方法說明 -->
 
+### 陷阱三：把核密度估計的形狀當成資料的性質
+
+在所天數在對數軸下看起來是雙峰的：一個峰在一年以內，另一個在數年之後。這個形狀有多少來自資料、多少來自頻寬，是必須先回答的問題。
+
+**因此** `/analysis` 提供三段頻寬（Silverman 值的 0.6／1.0／1.7 倍）讓讀者自己推。結果是：狗的雙峰撐得過標準頻寬，但在最寬的設定下併成單峰；貓在最寬的設定下收斂成單峰。**撐不過平滑的結構不當成發現。** 頁面上所有被引用的數字都改讀 ECDF，因為它沒有頻寬也沒有平滑假設。
+
+同一張圖也提醒了尺度的選擇：線性軸下密度是單調遞減的長尾，根本沒有第二個峰。雙峰是「數量級」上的性質，不是「天數」上的性質，所以兩種軸都提供，不挑好看的那個。
+
 ---
 
-## geocode 覆蓋率與信心分級
+## 尋獲地：為什麼沒有熱區圖
 
-`animal_foundplace` 為自由文字欄位，4,671 個唯一值，其中僅 **5.1%** 含縣市名、43.1% 含區／鄉／鎮、70.9% 含路／街／巷／弄／號，另有 12.5% 為空值。
+`animal_foundplace` 為自由文字欄位，4,671 個唯一值。實際可用程度：
 
-處理方式是以收容所所在縣市（可由 `shelter_address` 完整還原 22 縣市）補為前綴後再定位，並依原文資訊量分級：
-
-| 信心 | 判準 |
+| 特徵 | 比例 |
 |---|---|
-| `high` | 原文含縣市＋完整門牌 |
-| `medium` | 原文含區＋路名 |
-| `low` | 僅路名，縣市靠收容所推斷 |
-| `none` | 空值或非地點值（`民眾不擬續養`、`所內` 等） |
+| 空值 | 12.5% |
+| 含完整縣市名（佔全部筆數） | **2.4%** |
+| 通過官方 368 鄉鎮市區清單驗證的區級資訊 | **36.2%** |
+| 含路／街／巷／弄／號 | 70.9% |
 
-<!-- TODO: scripts/geocode.py 執行後補上各級實際比例，並誠實標示無法可靠定位的佔比 -->
+`scripts/geocode.py` **不呼叫任何 geocoder**，只做分級：整值比對非地點值、台／臺折算、以官方清單驗證區名，輸出四級信心。
 
-地圖採雙層設計：底層為鄉鎮區 choropleth（資料可靠），上層才是點位泡泡，且 UI 上會標明覆蓋率與信心分級。
+| 信心 | 判準 | 實際比例 |
+|---|---|---|
+| `high` | 原文自帶縣市＋門牌 | **0.1%**（10 筆） |
+| `medium` | 通過官方清單驗證的區＋路名 | 21.5%（1,773 筆） |
+| `low` | 僅路名或地標，縣市靠收容所推斷 | 64.4%（5,322 筆） |
+| `none` | 空值或非地點值（`所內出生`、`不擬續養`） | 14.0%（1,160 筆） |
+
+縣市來源的分布同樣說明了問題：只有 **197 筆**的縣市讀得自原文，其餘 6,908 筆靠收容所推斷。而那 197 筆裡有 **12 筆與收容它的收容所不同縣市**，甚至有人直接在前面寫「外縣市」——跨區送交是真的存在，所以用收容所縣市回推尋獲地本身就是錯的。
+
+而且 36.2% 的區級覆蓋率在縣市之間差距極大——雲林縣 95.1%、臺北市 1.3%、彰化縣 1.1%。這代表區級 choropleth 畫出來的是**「哪些收容所有填區名」的地圖**，不是流浪動物的分布。
+
+**因此本專案不畫尋獲地熱區圖**，地圖第一層改為縣市 choropleth，以收容所所在縣市為準（100% 覆蓋、零推論），並在頁面上寫明「這是動物現在在哪裡，不是牠在哪裡被撿到」。
+
+### 收容所的位置怎麼來的
+
+37 處收容所的圖釘同樣沒有經過 geocoder。`shelter_address` 一定寫得出鄉鎮市區，而本專案已經有那個行政區的多邊形，所以取**該行政區的形心**作為位置——比門牌粗，但那是資料本身支持的精度，頁面上也明說圖釘標的是行政區而非門牌。新竹市與嘉義市的地址省略「區」，兩筆以明列的對照表人工判定，程式不猜。
+
+---
 
 ---
 
@@ -147,6 +211,10 @@ python scripts/fetch_snapshot.py --force    # 覆蓋當日已存在的檔案
 | 產出格式 | JSON / GeoJSON，而非 PNG | 靜態圖片在 demo 現場無法互動。同樣的前處理成本下，結構化資料可支援縣市篩選、犬貓切換、滯留天數區間篩選 |
 | 開發順序 | 前端先於分析 | 先做前端會迫使我定義「前端要吃什麼格式的 JSON」，這份資料契約會反過來約束清理與分析腳本；反向操作容易產出大量前端用不到的中間產物 |
 | 前端模型推論 | 不採用 ONNX Runtime Web | 以本資料量而言屬過度工程，預先算好結果存 JSON 查表即可 |
+| 收容所定位 | 行政區形心，不呼叫 geocoder | 門牌級座標會讓精度看起來高於來源能支持的程度。行政區形心是資料自己說得出的答案 |
+| KDE 與 ECDF | 在 Python 算好存 JSON | 分析留在腳本裡、瀏覽器只負責畫，與其他頁面同一套分工。高斯 KDE 手寫十五行，不為此引入 scipy |
+| 頻寬選擇 | 公開三段讓讀者切換 | KDE 的形狀有一半是頻寬的主張。用交叉驗證自動選一條反而把選擇藏起來，與這頁想說的事相反 |
+| 地圖繪製 | 內嵌 SVG + d3-geo，自行實作縮放 | 不依賴圖磚服務、不需 API key，demo 現場沒有外部相依可壞。縮放只是一個 transform 加 wheel／pointer 事件，不值得為此引入 d3-zoom |
 
 ---
 
