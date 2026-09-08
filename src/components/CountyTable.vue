@@ -2,10 +2,13 @@
 import type { CountyStats, Metric } from '@/types'
 
 defineProps<{
-  rows: { county: CountyStats; value: number | null }[]
+  rows: { county: CountyStats; value: number | null; sub?: string; alert?: boolean }[]
   metric: Metric
   max: number
   selected: string | null
+  /** Rank numbers. Off on the map page, where the list is a control rather
+   *  than a ranking to be cited. */
+  ranked?: boolean
 }>()
 
 const emit = defineEmits<{ hover: [string | null]; select: [string | null] }>()
@@ -21,12 +24,13 @@ function format(value: number | null, metric: Metric): string {
        number, so nothing depends on distinguishing two shades of orange. -->
   <ol class="ranked" @mouseleave="emit('hover', null)">
     <li
-      v-for="row in rows"
+      v-for="(row, index) in rows"
       :key="row.county.pkid"
       :class="{ row: true, active: selected === row.county.name }"
       @mouseenter="emit('hover', row.county.name)"
       @click="emit('select', selected === row.county.name ? null : row.county.name)"
     >
+      <span v-if="ranked" class="rank">{{ String(index + 1).padStart(2, '0') }}</span>
       <span class="name">
         <span v-if="selected === row.county.name" class="dot" aria-hidden="true" />{{
           row.county.name
@@ -38,7 +42,10 @@ function format(value: number | null, metric: Metric): string {
           :style="{ width: `${row.value === null || max === 0 ? 0 : (row.value / max) * 100}%` }"
         />
       </span>
-      <span class="value">{{ format(row.value, metric) }}</span>
+      <span class="value">
+        {{ format(row.value, metric) }}
+        <span v-if="row.sub" :class="{ sub: true, alert: row.alert }">{{ row.sub }}</span>
+      </span>
     </li>
   </ol>
 </template>
@@ -50,9 +57,32 @@ function format(value: number | null, metric: Metric): string {
   padding: 0;
 }
 
+.ranked:has(.rank) .row {
+  grid-template-columns: 1.6rem 4.5rem 1fr minmax(6.5rem, auto);
+}
+
+.rank {
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.value .sub {
+  color: var(--ink-muted);
+  font-weight: 400;
+}
+
+.value .sub::before {
+  content: ' / ';
+}
+
+.value .sub.alert {
+  color: var(--accent-text);
+}
+
 .row {
   display: grid;
-  grid-template-columns: 4.5rem 1fr 5rem;
+  grid-template-columns: 4.5rem 1fr minmax(5rem, auto);
   align-items: center;
   gap: 0.75rem;
   padding: 0.22rem 0.5rem;

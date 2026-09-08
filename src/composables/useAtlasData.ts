@@ -1,5 +1,12 @@
 import { ref } from 'vue'
-import type { Animal, CountyCollection, CountyPayload, ShelterPayload } from '@/types'
+import type {
+  Animal,
+  CountyCollection,
+  CountyPayload,
+  DistributionPayload,
+  ShelterPayload,
+  ShelterPointPayload,
+} from '@/types'
 
 /** Data lives in public/ and is served from the Pages sub-path.
  *
@@ -71,6 +78,8 @@ export function useAtlasData() {
 
 let sheltersOnce: Promise<ShelterPayload> | null = null
 let animalsOnce: Promise<Animal[]> | null = null
+let distributionOnce: Promise<DistributionPayload> | null = null
+let pointsOnce: Promise<ShelterPointPayload> | null = null
 
 /** Both files are fetched at most once per visit and shared by every view.
  *  animals.json is 272 KB gzipped for all 8,265 records — more than a single
@@ -90,6 +99,28 @@ export function fetchAnimals(): Promise<Animal[]> {
     return response.json() as Promise<Animal[]>
   })
   return animalsOnce
+}
+
+/** The pre-computed duration distribution. Histograms, KDE curves and the
+ *  ECDF are built in Python and read here: the analysis lives in the scripts
+ *  and the browser only draws it, which is the same split every other page
+ *  follows. */
+export function fetchDistribution(): Promise<DistributionPayload> {
+  distributionOnce ??= fetch(dataUrl('stats/distribution.json')).then((response) => {
+    if (!response.ok) throw new Error(`distribution.json ${response.status}`)
+    return response.json() as Promise<DistributionPayload>
+  })
+  return distributionOnce
+}
+
+/** Shelter positions for the map's pin layer. Separate from shelters.json so
+ *  the map does not pull every shelter's full histogram to draw 37 markers. */
+export function fetchShelterPoints(): Promise<ShelterPointPayload> {
+  pointsOnce ??= fetch(dataUrl('shelter-points.json')).then((response) => {
+    if (!response.ok) throw new Error(`shelter-points.json ${response.status}`)
+    return response.json() as Promise<ShelterPointPayload>
+  })
+  return pointsOnce
 }
 
 /** Days in the shelter, measured against the snapshot rather than today. */

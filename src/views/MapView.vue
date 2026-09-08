@@ -1,16 +1,113 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import CountyChoropleth from '@/components/CountyChoropleth.vue'
-import CountyTable from '@/components/CountyTable.vue'
-import { useAtlasData } from '@/composables/useAtlasData'
-import type { CountyStats, KindFilter, Metric } from '@/types'
+import { fetchShelterPoints, useAtlasData } from '@/composables/useAtlasData'
+import type { CountyStats, KindFilter, Metric, ShelterPoint } from '@/types'
 
 const { stats, shapes, loading, error, reload } = useAtlasData()
+const router = useRouter()
+
+const hovered = ref<string | null>(null)
+const selected = ref<string | null>(null)
+
+const points = ref<ShelterPoint[]>([])
+const showPoints = ref(true)
+const manualCount = computed(() => points.value.filter((p) => p.manual).length)
+
+onMounted(async () => {
+  try {
+    points.value = (await fetchShelterPoints()).points
+  } catch {
+    // The choropleth is the page; markers are an overlay. A failed fetch
+    // hides the layer rather than taking the map down with it.
+    points.value = []
+  }
+})
+
+function goToShelterPage(id: string) {
+  void router.push({ name: 'shelter', params: { id } })
+}
+
+/* --------------------------------------------------------------- the rail --
+ * One panel over the map's left edge, in one of four states. A map has one
+ * place for "what am I looking at", and splitting it across a column beside
+ * the map and a panel on top of it would mean two.
+ */
+type RailView = 'closed' | 'list' | 'county' | 'shelter'
+const rail = ref<RailView>('closed')
+const activeShelter = ref<ShelterPoint | null>(null)
+const ascending = ref(false)
+
+const scopedShelters = computed(() => {
+  const scope = selected.value
+    ? points.value.filter((p) => p.county === selected.value)
+    : points.value
+  const sorted = [...scope].sort((a, b) => b.count - a.count)
+  return ascending.value ? sorted.reverse() : sorted
+})
+
+const maxShelterCount = computed(() => Math.max(1, ...scopedShelters.value.map((p) => p.count)))
+
+function openList() {
+  selected.value = null
+  activeShelter.value = null
+  rail.value = rail.value === 'list' ? 'closed' : 'list'
+}
+
+/** A click on the map, resolved against what the panel is showing.
+ *
+ *  Clicking the county whose panel is already open closes it. Clicking any
+ *  other county - including the one a currently open shelter card happens to
+ *  belong to - opens that county. The map cannot make this call itself,
+ *  because it only knows which county is highlighted, not which of the four
+ *  panel states put it there. */
+function onCountyClick(name: string | null) {
+  if (!name || (rail.value === 'county' && selected.value === name)) {
+    closeRail()
+    return
+  }
+  openCounty(name)
+}
+
+function openCounty(name: string | null) {
+  selected.value = name
+  activeShelter.value = null
+  rail.value = name ? 'county' : 'closed'
+}
+
+function openShelterCard(shelter: ShelterPoint) {
+  activeShelter.value = shelter
+  rail.value = 'shelter'
+}
+
+function openShelterById(id: string) {
+  const point = points.value.find((p) => p.id === id)
+  if (!point) return
+  // A pin belongs to a county, so its back arrow should lead there.
+  selected.value = point.county
+  openShelterCard(point)
+}
+
+function railBack() {
+  activeShelter.value = null
+  rail.value = selected.value ? 'county' : 'list'
+}
+
+function closeRail() {
+  selected.value = null
+  activeShelter.value = null
+  rail.value = 'closed'
+}
+
+/** The panel follows the lock, not the cursor: one that opened on hover would
+ *  flicker across the whole map on the way to the county. */
+const locked = computed(
+  () => stats.value?.counties.find((county) => county.name === selected.value) ?? null,
+)
 
 const metric = ref<Metric>('count')
 const kind = ref<KindFilter>('all')
-const hovered = ref<string | null>(null)
-const selected = ref<string | null>(null)
 
 const METRICS: { id: Metric; label: string }[] = [
   { id: 'count', label: '在所數' },
@@ -44,8 +141,6 @@ const values = computed(() => new Map(rows.value.map((row) => [row.county.name, 
 const counts = computed(
   () => new Map((stats.value?.counties ?? []).map((county) => [county.name, county.all.count])),
 )
-const maxValue = computed(() => Math.max(...rows.value.map((row) => row.value ?? 0), 0))
-
 /** Five cut points, six classes, by quantile.
  *  Equal-interval would put eighteen counties in the lightest class, because
  *  新北市 holds a third of every animal in the country. */
@@ -71,12 +166,6 @@ const legendBands = computed(() => {
           : `${cuts[index - 1].toLocaleString('zh-TW')}–${cut.toLocaleString('zh-TW')}${unit}`,
     }))
     .concat([{ step: 6, label: `≥ ${cuts[cuts.length - 1].toLocaleString('zh-TW')}${unit}` }])
-})
-
-const focused = computed<CountyStats | null>(() => {
-  const name = selected.value ?? hovered.value
-  if (!name || !stats.value) return null
-  return stats.value.counties.find((county) => county.name === name) ?? null
 })
 
 function share(part: number, whole: number): string {
@@ -139,6 +228,18 @@ function coverageNote(value: number): string {
             {{ option.label }}
           </button>
         </fieldset>
+
+        <fieldset v-if="points.length">
+          <legend>圖層</legend>
+          <button
+            type="button"
+            :class="{ chip: true, on: showPoints }"
+            :aria-pressed="showPoints"
+            @click="showPoints = !showPoints"
+          >
+            收容所圖釘
+          </button>
+        </fieldset>
       </div>
 
       <div class="kpis">
@@ -181,18 +282,219 @@ function coverageNote(value: number): string {
         <section class="card map-card">
           <div class="card-head">
             <h2><span class="dot" aria-hidden="true" />臺灣縣市分佈地圖</h2>
-            <span class="hint">點選區塊可鎖定</span>
+            <span class="hint">點選縣市或圖釘</span>
           </div>
 
-          <CountyChoropleth
+          <div class="map-shell">
+            <div class="map-frame" :class="{ shifted: rail !== 'closed' }">
+            <CountyChoropleth
             :shapes="shapes"
             :values="values"
             :breaks="breaks"
             :counts="counts"
             :selected="selected"
+            :points="points"
+            :show-points="showPoints && points.length > 0"
             @hover="hovered = $event"
-            @select="selected = $event"
-          />
+            @select="onCountyClick($event)"
+            @open-shelter="openShelterById"
+            />
+            </div>
+
+            <!-- One rail, four states. Google Maps' left panel: what you
+                 clicked opens where you are looking. -->
+            <button
+              v-if="rail === 'closed'"
+              type="button"
+              class="rail-open"
+              @click="openList"
+            >
+              全臺收容所在所數
+            </button>
+
+            <transition name="slide">
+              <aside v-if="rail !== 'closed'" class="rail" aria-live="polite">
+                <div class="rail-head">
+                  <button
+                    v-if="rail === 'shelter'"
+                    type="button"
+                    class="rail-icon"
+                    aria-label="返回"
+                    @click="railBack"
+                  >
+                    ‹
+                  </button>
+                  <div class="rail-title">
+                    <template v-if="rail === 'shelter' && activeShelter">
+                      <h2 class="detail-name">{{ activeShelter.name }}</h2>
+                      <p class="detail-sub">
+                        {{ activeShelter.county }}{{ activeShelter.district }}
+                      </p>
+                    </template>
+                    <template v-else-if="rail === 'county' && locked">
+                      <h2 class="detail-name">{{ locked.name }}</h2>
+                      <p class="detail-sub">{{ locked.shelters }} 間公立收容所</p>
+                    </template>
+                    <template v-else>
+                      <h2 class="detail-name">全臺收容所在所數</h2>
+                      <p class="detail-sub">{{ scopedShelters.length }} 處</p>
+                    </template>
+                  </div>
+                  <button type="button" class="rail-icon" aria-label="關閉" @click="closeRail">
+                    ✕
+                  </button>
+                </div>
+
+                <!-- county summary -->
+                <template v-if="rail === 'county' && locked">
+                  <div class="stats">
+                    <div>
+                      <p class="stat-label">在所總數</p>
+                      <p class="stat-value">
+                        {{ locked.all.count.toLocaleString('zh-TW') }} <span>隻</span>
+                      </p>
+                    </div>
+                    <div>
+                      <p class="stat-label">滯留中位數</p>
+                      <p class="stat-value accent">
+                        {{ locked.all.median_days?.toLocaleString('zh-TW') ?? '—' }} <span>天</span>
+                      </p>
+                      <p class="stat-sub">{{ years(locked.all.median_days) }}</p>
+                    </div>
+                  </div>
+                  <div class="spread">
+                    <div>
+                      <p class="stat-label">平均滯留</p>
+                      <p class="spread-value">
+                        {{ locked.all.mean_days?.toLocaleString('zh-TW') ?? '—' }} 天
+                      </p>
+                    </div>
+                    <div>
+                      <p class="stat-label">最長滯留</p>
+                      <p class="spread-value">
+                        {{ locked.all.max_days?.toLocaleString('zh-TW') ?? '—' }} 天
+                      </p>
+                    </div>
+                  </div>
+                  <p class="species">
+                    狗：{{ locked.狗.count.toLocaleString('zh-TW') }}
+                    <span>{{ share(locked.狗.count, locked.all.count) }}</span>
+                    ・貓：{{ locked.貓.count.toLocaleString('zh-TW') }}
+                    <span>{{ share(locked.貓.count, locked.all.count) }}</span>
+                  </p>
+                  <div class="coverage">
+                    <span>尋獲地行政區級別比例</span>
+                    <span class="coverage-badge">
+                      {{ (locked.district_coverage * 100).toFixed(1) }}%（{{
+                        coverageNote(locked.district_coverage)
+                      }}）
+                    </span>
+                  </div>
+                </template>
+
+                <!-- one shelter -->
+                <template v-else-if="rail === 'shelter' && activeShelter">
+                  <div class="stats">
+                    <div>
+                      <p class="stat-label">在所數</p>
+                      <p class="stat-value">
+                        {{ activeShelter.count.toLocaleString('zh-TW') }} <span>隻</span>
+                      </p>
+                    </div>
+                    <div>
+                      <p class="stat-label">滯留中位數</p>
+                      <p class="stat-value accent">
+                        {{ activeShelter.median_days?.toLocaleString('zh-TW') ?? '—' }}
+                        <span>天</span>
+                      </p>
+                      <p class="stat-sub">{{ years(activeShelter.median_days) }}</p>
+                    </div>
+                  </div>
+                  <div class="spread">
+                    <div>
+                      <p class="stat-label">平均滯留</p>
+                      <p class="spread-value">
+                        {{ activeShelter.mean_days?.toLocaleString('zh-TW') ?? '—' }} 天
+                      </p>
+                    </div>
+                    <div>
+                      <p class="stat-label">最長滯留</p>
+                      <p class="spread-value">
+                        {{ activeShelter.max_days?.toLocaleString('zh-TW') ?? '—' }} 天
+                      </p>
+                    </div>
+                  </div>
+                  <p class="species">
+                    狗：{{ activeShelter.dogs.toLocaleString('zh-TW') }}
+                    <span>{{ share(activeShelter.dogs, activeShelter.count) }}</span>
+                    ・貓：{{ activeShelter.cats.toLocaleString('zh-TW') }}
+                    <span>{{ share(activeShelter.cats, activeShelter.count) }}</span>
+                  </p>
+                  <p v-for="address in activeShelter.addresses" :key="address" class="rail-line">
+                    {{ address }}
+                  </p>
+                  <p v-if="activeShelter.tel" class="rail-line">
+                    <a :href="`tel:${activeShelter.tel}`">{{ activeShelter.tel }}</a>
+                  </p>
+                  <button
+                    type="button"
+                    class="chip on rail-cta"
+                    @click="goToShelterPage(activeShelter.id)"
+                  >
+                    查看這間收容所的動物
+                  </button>
+                </template>
+
+                <!-- the ranked list, national or scoped to the county -->
+                <template v-if="rail !== 'shelter'">
+                  <div class="rail-tools">
+                    <span class="rail-tools-label">
+                      {{ rail === 'county' ? '所內收容所' : '依在所數' }}
+                    </span>
+                    <button
+                      type="button"
+                      class="chip small"
+                      :aria-pressed="ascending"
+                      @click="ascending = !ascending"
+                    >
+                      {{ ascending ? '由少到多 ↑' : '由多到少 ↓' }}
+                    </button>
+                  </div>
+
+                  <ol class="shelters">
+                    <li
+                      v-for="shelter in scopedShelters"
+                      :key="shelter.id"
+                      class="shelter-row"
+                    >
+                      <button
+                        type="button"
+                        class="shelter-hit"
+                        @click="openShelterCard(shelter)"
+                      >
+                        <span class="shelter-name">{{ shelter.name }}</span>
+                        <span class="shelter-count">
+                          {{ shelter.count.toLocaleString('zh-TW') }}
+                        </span>
+                        <span class="shelter-meta">
+                          {{ shelter.county }}{{ shelter.district }}・中位數
+                          {{ shelter.median_days?.toLocaleString('zh-TW') ?? '—' }} 天
+                        </span>
+                        <span
+                          class="shelter-bar"
+                          :style="{ width: `${(shelter.count / maxShelterCount) * 100}%` }"
+                        />
+                      </button>
+                    </li>
+                  </ol>
+                </template>
+              </aside>
+            </transition>
+          </div>
+
+          <p v-if="showPoints && points.length" class="pin-note">
+            圖釘標示 {{ points.length }} 處公立收容所，數字為在所隻數，位置為該所所在<strong>行政區</strong>的形心而非門牌；其中 {{ manualCount }} 處的行政區由地址人工判定。點擊圖釘進入該所的動物列表；滾輪縮放、拖曳平移；點選縣市開啟左側面板，連點兩下才會把鏡頭框過去。
+          </p>
 
           <div class="legend">
             <div class="legend-head">
@@ -215,112 +517,6 @@ function coverageNote(value: number): string {
           </div>
         </section>
 
-        <section class="side">
-          <div class="card detail" :class="{ empty: !focused }">
-            <template v-if="focused">
-              <div class="card-head">
-                <div>
-                  <h2 class="detail-name">{{ focused.name }}</h2>
-                  <p class="detail-sub">{{ focused.shelters }} 間公立收容所</p>
-                </div>
-                <button
-                  type="button"
-                  :class="{ chip: true, small: true, on: selected === focused.name }"
-                  @click="selected = selected === focused.name ? null : focused.name"
-                >
-                  {{ selected === focused.name ? '已鎖定檢視' : '固定鎖定檢視' }}
-                </button>
-              </div>
-
-              <div class="stats">
-                <div>
-                  <p class="stat-label">在所總數</p>
-                  <p class="stat-value">
-                    {{ focused.all.count.toLocaleString('zh-TW') }} <span>隻</span>
-                  </p>
-                </div>
-                <div>
-                  <p class="stat-label">滯留中位數</p>
-                  <p class="stat-value accent">
-                    {{ focused.all.median_days?.toLocaleString('zh-TW') ?? '—' }} <span>天</span>
-                  </p>
-                  <p class="stat-sub">{{ years(focused.all.median_days) }}</p>
-                </div>
-                <div>
-                  <p class="stat-label">物種組成</p>
-                  <p class="species">
-                    狗：{{ focused.狗.count.toLocaleString('zh-TW') }}
-                    <span>{{ share(focused.狗.count, focused.all.count) }}</span>
-                  </p>
-                  <p class="species">
-                    貓：{{ focused.貓.count.toLocaleString('zh-TW') }}
-                    <span>{{ share(focused.貓.count, focused.all.count) }}</span>
-                  </p>
-                </div>
-              </div>
-
-              <div class="spread">
-                <div>
-                  <p class="stat-label">平均滯留</p>
-                  <p class="spread-value">
-                    {{ focused.all.mean_days?.toLocaleString('zh-TW') ?? '—' }} 天
-                  </p>
-                </div>
-                <div>
-                  <p class="stat-label">最長滯留</p>
-                  <p class="spread-value">
-                    {{ focused.all.max_days?.toLocaleString('zh-TW') ?? '—' }} 天
-                    <span v-if="focused.all.max_days" class="spread-sub">
-                      {{ years(focused.all.max_days) }}
-                    </span>
-                  </p>
-                </div>
-              </div>
-
-              <p class="spread-note">
-                平均高於中位數是這份資料的常態——長期滯留者被過度取樣，會把平均拉高。最長滯留是單一個體，不是趨勢。
-              </p>
-
-              <div class="coverage">
-                <span>尋獲地行政區級別比例</span>
-                <span class="coverage-badge">
-                  {{ (focused.district_coverage * 100).toFixed(1) }}%（{{
-                    coverageNote(focused.district_coverage)
-                  }}）
-                </span>
-              </div>
-
-              <p class="detail-note">
-                <span class="mark" aria-hidden="true">ⓘ</span>
-                此欄位反映該縣市收容所填寫尋獲地的習慣，不是動物實際被撿到的位置分布。
-              </p>
-            </template>
-            <p v-else class="hint-empty">
-              將游標移到地圖或下方清單上，看該縣市的細節。點選可鎖定。
-            </p>
-          </div>
-
-          <div class="card">
-            <div class="card-head">
-              <div>
-                <h2 class="panel-title">
-                  各縣市{{ metric === 'count' ? '在所數' : '滯留中位數' }}排行
-                  <span v-if="kind !== 'all'" class="panel-note">· 僅{{ kind }}</span>
-                </h2>
-                <p class="panel-sub">共 {{ rows.length }} 個行政區公立登記資料</p>
-              </div>
-              <span class="hint">全國 {{ stats.total.count.toLocaleString('zh-TW') }} 隻</span>
-            </div>
-            <CountyTable
-              :rows="rows"
-              :metric="metric"
-              :max="maxValue"
-              :selected="selected"
-              @hover="hovered = $event"
-              @select="selected = $event"
-            />
-          </div>
-        </section>
       </div>
 
       <section class="card caveats">
@@ -491,6 +687,13 @@ legend {
   }
 }
 
+.pin-note {
+  margin: 0.7rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.8;
+  color: var(--ink-muted);
+}
+
 .card-head {
   display: flex;
   align-items: flex-start;
@@ -520,24 +723,252 @@ legend {
   white-space: nowrap;
 }
 
+/* One column. Everything the old right-hand column carried now lives in the
+   rail over the map, so the map takes the whole width and the page has one
+   subject rather than two competing for the row. */
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 1.25rem;
-  align-items: start;
+}
+
+.map-shell {
+  position: relative;
+}
+
+/* The map is centred while the rail is closed and steps aside when it opens.
+   Padding on an inner frame, not on the shell: the rail is absolutely
+   positioned against the shell's padding box, so padding there would carry the
+   rail along with the map and defeat the whole point.
+
+   The drawing is letterboxed inside a full-width element, so on a wide screen
+   this eats the dead space and the map does not shrink — it only moves. */
+.map-frame {
+  padding-left: 0;
+  transition: padding-left 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.map-frame.shifted {
+  padding-left: min(21rem, 92%);
+}
+
+/* Full width would make a 560×588 viewBox over 1,200px tall on a desktop. The
+   cap letterboxes it instead. */
+.map-shell :deep(svg.map) {
+  max-height: 74vh;
+}
+
+/* Slides in over the map's left edge. Absolute rather than in the flow, so
+   opening it does not reflow the map underneath and move the county the
+   reader just clicked. */
+.rail {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: min(21rem, 92%);
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 0.9rem 1rem 1.1rem;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 12%);
+  z-index: 2;
+}
+
+.rail-open {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  color: var(--ink-secondary);
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 8%);
+}
+
+.rail-open:hover {
+  border-color: var(--ramp-3);
+  color: var(--ink);
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition:
+    transform 220ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 180ms ease;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-102%);
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-frame {
+    transition: none;
+  }
+
+  .slide-enter-active,
+  .slide-leave-active {
+    transition: opacity 120ms ease;
+  }
+
+  .slide-enter-from,
+  .slide-leave-to {
+    transform: none;
+  }
+}
+
+.rail-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.rail-title {
+  flex: 1;
+  min-width: 0;
+}
+
+.rail-icon {
+  font: inherit;
+  font-size: 0.95rem;
+  line-height: 1;
+  padding: 0.3rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  color: var(--ink-muted);
+  cursor: pointer;
+}
+
+.rail-icon:hover {
+  border-color: var(--ramp-3);
+  color: var(--ink);
+}
+
+/* The shared .stats grid is three columns for the old side card; the rail
+   carries two and would otherwise leave each one a third of a narrow panel. */
+.rail .stats,
+.rail .spread {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.rail .stat-value,
+.rail .spread-value {
+  white-space: nowrap;
+}
+
+.rail .species {
+  margin: 0.7rem 0 0;
+  font-size: 0.82rem;
+  color: var(--ink-secondary);
+}
+
+.rail-line {
+  margin: 0.4rem 0 0;
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+  word-break: break-all;
+}
+
+.rail-cta {
+  margin-top: 0.9rem;
+  width: 100%;
+}
+
+.rail-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin: 1rem 0 0.2rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--hairline);
+}
+
+.rail-tools-label {
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+}
+
+.shelters {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.shelter-row + .shelter-row {
+  border-top: 1px solid var(--hairline);
+}
+
+.shelter-hit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto;
+  gap: 0.1rem 0.6rem;
+  width: 100%;
+  padding: 0.5rem 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+}
+
+.shelter-hit:hover .shelter-name {
+  color: var(--accent-text);
+}
+
+.shelter-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  grid-column: 1;
+}
+
+.shelter-count {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 0.88rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-secondary);
+  white-space: nowrap;
+}
+
+.shelter-meta {
+  grid-column: 1 / -1;
+  font-size: 0.74rem;
+  color: var(--ink-muted);
+}
+
+/* A bar, not a number repeated: the count is already in the right column, and
+   the bar is there to make the shape of the ranking readable at a glance. */
+.shelter-bar {
+  grid-column: 1 / -1;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--ramp-3);
+  margin-top: 0.25rem;
+  min-width: 2px;
+}
+
+.shelter-row.on .shelter-bar {
+  background: var(--ramp-5);
 }
 
 .map-card {
-  /* The ranked list is taller than the map, so the map follows the reader
-     down instead of scrolling away. A scrollbar inside the list card would
-     mean two nested scroll areas on a page that only has one. */
-  position: sticky;
-  top: 1rem;
-}
-
-.side {
-  display: grid;
-  gap: 1.25rem;
+  /* No longer sticky: at full width the map is most of the viewport already,
+     and pinning something that tall just covers whatever is scrolled past. */
+  position: relative;
 }
 
 .detail {
@@ -806,6 +1237,26 @@ legend {
 @media (max-width: 900px) {
   .layout {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Stacked, the rail sits under the map rather than beside it, so there is
+     nothing to step aside from. */
+  .map-frame.shifted {
+    padding-left: 0;
+  }
+
+  /* Over a narrow map the rail would cover the county it describes. */
+  .rail {
+    position: static;
+    width: auto;
+    max-height: none;
+    margin-top: 0.9rem;
+    box-shadow: none;
+  }
+
+  .rail-open {
+    position: static;
+    margin-bottom: 0.7rem;
   }
 
   /* Stacked, a sticky map would cover most of the viewport while the reader

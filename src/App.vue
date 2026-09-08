@@ -44,6 +44,7 @@ const THEMES: { id: ThemeChoice; label: string }[] = [
       <RouterLink to="/">縣市地圖</RouterLink>
       <RouterLink to="/animals">找動物</RouterLink>
       <RouterLink to="/shelters">收容所</RouterLink>
+      <RouterLink to="/analysis">分析</RouterLink>
     </nav>
 
     <RouterView />

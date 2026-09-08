@@ -36,6 +36,14 @@
      with the ramp so it stays readable on the dark surface too. */
   --accent-text: #984e24;
 
+  /* Two categorical slots, used only where 狗 and 貓 are drawn as peers. The
+     ramp above is sequential and cannot tell two series apart; this pair was
+     validated against this surface for the lightness band, the chroma floor,
+     protan/deutan separation (ΔE 16.9) and 3:1 contrast. Never reuse them for
+     magnitude, and never add a third by generating a hue. */
+  --series-a: #d66a27;
+  --series-b: #00799a;
+
   --radius: 12px;
   --radius-sm: 8px;
   --font: system-ui, -apple-system, 'Segoe UI', 'Noto Sans TC', sans-serif;
@@ -62,6 +70,9 @@
     --ramp-6: #f1ab88;
     --no-data: #2b2824;
     --accent-text: #e69062;
+
+  --series-a: #da7338;
+  --series-b: #2b99bf;
   }
 }
 
@@ -85,6 +96,9 @@
   --ramp-6: #f1ab88;
   --no-data: #2b2824;
   --accent-text: #e69062;
+
+  --series-a: #da7338;
+  --series-b: #2b99bf;
 }
 
 * {

@@ -86,3 +86,82 @@ export interface Animal {
    *  is. */
   created: string
 }
+
+export type Scope = 'all' | 'dog' | 'cat'
+export type Scale = 'log' | 'linear'
+export type Smoothing = 'fine' | 'standard' | 'smooth'
+
+export interface KdeCurve {
+  /** Silverman's value times this level's multiplier, in the units of the
+   *  axis it was fitted on — log10(days) for the log scale, days for linear. */
+  bandwidth: number
+  points: [number, number][]
+}
+
+export interface HistogramBin {
+  x0: number
+  x1: number
+  count: number
+  /** count / (n × bin width), so bars and the KDE share one y axis. */
+  density: number
+}
+
+export interface ScaleBlock {
+  bins: HistogramBin[]
+  kde: Record<Smoothing, KdeCurve>
+}
+
+export interface ScopeDistribution {
+  count: number
+  median_days: number
+  mean_days: number
+  p25_days: number
+  p75_days: number
+  p90_days: number
+  max_days: number
+  over_year: number
+  over_4_years: number
+  linear: ScaleBlock
+  log: ScaleBlock
+  /** [days, cumulative share], thinned. No bandwidth, no smoothing — the
+   *  figures quoted in prose are read off this, not off the KDE. */
+  ecdf: [number, number][]
+}
+
+export interface DistributionPayload {
+  generated_at: string
+  snapshot_date: string
+  log_ticks: number[]
+  bandwidth_levels: Smoothing[]
+  scopes: Record<Scope, ScopeDistribution>
+}
+
+export interface ShelterPoint {
+  id: string
+  name: string
+  county: string
+  district: string
+  lon: number
+  lat: number
+  count: number
+  median_days: number | null
+  mean_days: number | null
+  max_days: number | null
+  dogs: number
+  cats: number
+  tel: string
+  /** Every spelling on record: 新北市瑞芳區公立動物之家 is two sites under one
+   *  name, and picking one would hide that. */
+  addresses: string[]
+  /** True where the district came from the stated mapping in
+   *  build_shelter_points.py rather than from the address itself. */
+  manual: boolean
+}
+
+export interface ShelterPointPayload {
+  generated_at: string
+  snapshot_date: string
+  position: 'district_centroid'
+  unplaced: string[]
+  points: ShelterPoint[]
+}
