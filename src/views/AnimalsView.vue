@@ -156,7 +156,11 @@ select {
   border: 1px solid var(--hairline);
   background: var(--surface);
   color: var(--ink);
-  min-width: 16rem;
+  /* The floor is a preference, not a requirement: on a 360px phone a 16rem
+     minimum is wider than the card it sits in and pushes the whole page into
+     a horizontal scroll, so it yields below that. */
+  flex: 1 1 16rem;
+  min-width: 0;
   max-width: 22rem;
 }
 

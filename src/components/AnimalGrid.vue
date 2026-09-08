@@ -24,7 +24,13 @@ const bucket = ref<number | null>(null)
 const sort = ref<Sort>('longest')
 const broken = ref(new Set<string>())
 
-const PER_PAGE = 24
+/** Twenty, and the grid is pinned to 1, 2, 4 or 5 columns to match it: 20 is
+ *  divisible by all four, so the last row of a full page is never short at any
+ *  window width. Three columns is deliberately skipped - it is the one count
+ *  under six that does not divide 20, and a page ending in a row of two reads
+ *  as a loading failure rather than as the end of the page. Twenty-four would
+ *  have forced the same choice one step further out, dropping 5 as well. */
+const PER_PAGE = 20
 
 const BUCKETS: { label: string; min: number; max: number | null }[] = [
   { label: '30 天內', min: 0, max: 30 },
@@ -422,6 +428,13 @@ watch(filtered, (list) => {
   padding: 1.1rem 1.25rem;
 }
 
+/* A grid item's automatic minimum is its min-content width, which for these
+   rows is a legend plus its widest chip - wider than a 320px phone. Releasing
+   it lets the chips wrap instead of pushing the page sideways. */
+.rows > * {
+  min-width: 0;
+}
+
 .row {
   display: flex;
   flex-wrap: wrap;
@@ -450,6 +463,10 @@ legend {
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  /* min-width:0 on both the field and the select: without it the select keeps
+     its 16rem max-width as a floor on a narrow phone and pushes the page into
+     a horizontal scroll. */
+  min-width: 0;
 }
 
 .select-field label {
@@ -465,6 +482,8 @@ select {
   border: 1px solid var(--hairline);
   background: var(--surface);
   color: var(--ink);
+  flex: 1 1 auto;
+  min-width: 0;
   max-width: 16rem;
 }
 
@@ -523,18 +542,47 @@ select:hover {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  min-width: 0;
 }
 
+/* Fixed column counts rather than auto-fill: auto-fill picks whatever fits,
+   which at some widths is three, and three does not divide the twenty cards a
+   page holds. The breakpoints below are the widths at which the next count
+   still leaves a card wide enough to read - the shell is 1180px wide with
+   1.5rem of padding either side, so the usable width is min(100vw, 1180) - 48
+   and a card is that, less a 1rem gap per column boundary, over the count. */
 .grid {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: 1fr;
   gap: 1rem;
   /* Equal-height rows, so a two-line breed name does not make one card taller
      than its neighbours. */
   grid-auto-rows: 1fr;
+}
+
+/* Two columns from 420px: a card is 178px here and grows from there. */
+@media (min-width: 420px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Four from 740px, where a card is 161px - about the narrowest the meta line
+   ("公 · 中型 · 成體 · 黑色") holds without wrapping to a third line. */
+@media (min-width: 740px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Five from 1080px, where a card is 194px; at the 1180px cap it is 214px. */
+@media (min-width: 1080px) {
+  .grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
 }
 
 .animal {
@@ -618,11 +666,18 @@ select:hover {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: 0 0.5rem;
+  /* The subid runs to seventeen characters and does not wrap, so on a
+     four-column card it squeezed the breed name down to one character per
+     line. Wrapping drops the id onto its own line instead, which costs a
+     line only on the cards where the two genuinely do not fit side by
+     side. */
+  flex-wrap: wrap;
 }
 
 .variety {
   font-weight: 600;
+  min-width: 0;
 }
 
 .subid {
@@ -735,6 +790,12 @@ select:hover {
     align-items: flex-start;
     flex-direction: column;
     gap: 0.75rem;
+  }
+
+  /* The column stack sizes its children to their content, which lets the
+     breed select sit at its 16rem cap and run off the side of a phone. */
+  .select-field {
+    width: 100%;
   }
 }
 </style>
