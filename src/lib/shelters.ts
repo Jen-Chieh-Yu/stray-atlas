@@ -3,7 +3,7 @@ import type { Shelter } from '@/types'
 /* Shelter helpers: tidy the address and phone fields the source hands over,
  * and build the Google Maps links for the shelter introduction page.
  *
- *  Used by: ShelterListView.vue and ShelterView.vue.
+ *  Used by: MapView.vue, ShelterListView.vue and ShelterView.vue.
  */
 
 export interface CleanAddress {
@@ -43,7 +43,7 @@ function sameKey(text: string): string {
 }
 
 /** Every distinct address, cleaned, in source order. */
-export function addressesOf(shelter: Shelter): CleanAddress[] {
+export function addressesOf(shelter: Pick<Shelter, 'addresses'>): CleanAddress[] {
   const seen = new Set<string>()
   const out: CleanAddress[] = []
   for (const raw of shelter.addresses) {
@@ -57,7 +57,7 @@ export function addressesOf(shelter: Shelter): CleanAddress[] {
 }
 
 /** How many spellings the source had beyond the distinct places. */
-export function duplicateSpellings(shelter: Shelter): number {
+export function duplicateSpellings(shelter: Pick<Shelter, 'addresses'>): number {
   return shelter.addresses.length - addressesOf(shelter).length
 }
 
@@ -68,7 +68,7 @@ export function hasMachineField(shelter: Shelter): boolean {
 
 /** A number is usable when it has enough digits to dial. Two records carry a
  *  bare area code, "(09)" and "(72)"; those are shown as incomplete. */
-export function phoneOf(shelter: Shelter): { text: string; href: string | null } {
+export function phoneOf(shelter: Pick<Shelter, 'tel'>): { text: string; href: string | null } {
   const digits = shelter.tel.replace(/[^0-9]/g, '')
   return { text: shelter.tel, href: digits.length >= 7 ? `tel:${digits}` : null }
 }

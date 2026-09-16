@@ -45,6 +45,12 @@
   --series-a: #d66a27;
   --series-b: #00799a;
 
+  /* Shelter pins on the county map (chosen 2026-09-16). A cool slate so the
+     pins read as a separate layer from the orange choropleth, and far enough
+     from --series-b that a pin is never taken for "貓". White numerals on it
+     clear 7:1. Used by: CountyChoropleth.vue. */
+  --pin: #3d5a73;
+
   --radius: 12px;
   --radius-sm: 8px;
   /* Text and icons that sit on a --ramp-4 fill (selected chips, primary
@@ -98,7 +104,7 @@ a {
 /* Shared shell pieces. Kept global because every view uses them and scoped
    copies would drift apart. */
 
-/* Bordered panel. Used by: AnalysisView and MapView. */
+/* Bordered panel. Used by: AnalysisView. */
 .card {
   background: var(--surface);
   border: 1px solid var(--hairline);
@@ -107,7 +113,7 @@ a {
 }
 
 /* Pill button; .on marks the selected one, .small is the compact size.
-   Used by: AnimalDialog, AnalysisView and MapView. The redesigned pages
+   Used by: AnimalDialog and AnalysisView. The redesigned pages
    use their own pill styles. */
 .chip {
   font: inherit;

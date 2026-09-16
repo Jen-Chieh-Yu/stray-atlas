@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, ref } from 'vue'
 import { geoMercator, geoPath } from 'd3-geo'
 import type { GeoPermissibleObjects, GeoProjection } from 'd3-geo'
+import LucideIcon from '@/components/LucideIcon.vue'
 import type { CountyCollection, CountyFeature, ShelterPoint } from '@/types'
 
 const props = defineProps<{
@@ -9,12 +10,11 @@ const props = defineProps<{
   values: Map<string, number | null>
   breaks: number[]
   selected: string | null
-  /** Raw counts, used only for the inset labels — an inset a few pixels across
-   *  carries its number as text instead. */
-  counts?: Map<string, number>
   /** Shelter markers. Absent or empty draws the choropleth alone. */
   points?: ShelterPoint[]
   showPoints?: boolean
+  /** The shelter whose card is open; its pin is drawn in the accent. */
+  pickedShelter?: string | null
 }>()
 
 const emit = defineEmits<{
@@ -33,9 +33,9 @@ const HEIGHT = 588  // the height the framed bbox actually needs at this width
  *  convention on every printed map of Taiwan. */
 const INSETS: { counties: string[]; label: string; box: [[number, number], [number, number]] }[] =
   [
-    { counties: ['連江縣'], label: '連江', box: [[10, 10], [104, 104]] },
-    { counties: ['金門縣'], label: '金門', box: [[10, 112], [104, 206]] },
-    { counties: ['澎湖縣'], label: '澎湖', box: [[10, 214], [104, 308]] },
+    { counties: ['連江縣'], label: '連江縣', box: [[10, 10], [104, 104]] },
+    { counties: ['金門縣'], label: '金門縣', box: [[10, 112], [104, 206]] },
+    { counties: ['澎湖縣'], label: '澎湖縣', box: [[10, 214], [104, 308]] },
   ]
 const INSET_COUNTIES = new Set(INSETS.flatMap((inset) => inset.counties))
 
@@ -364,14 +364,12 @@ function pinPath(r: number): string {
   return `M0,0 C${-r * 0.62},${-tail * 0.52} ${-r},${-tail * 0.78} ${-r},${-tail} A${r},${r} 0 1,1 ${r},${-tail} C${r},${-tail * 0.78} ${-(-r) * 0.62},${-tail * 0.52} 0,0 Z`
 }
 
-/* Pins are one ink, not a second sequential ramp.
+/* Pins are one colour (--pin, a cool slate), not a second sequential ramp.
  *
- * Two reasons. The choropleth beneath already spends the ramp on magnitude,
- * and a second scale in the same hue reads as the same scale. And the ramp
- * inverts between themes — light-on-dark — so a pin coloured by count would
- * carry white numerals on a pale fill in dark mode. Ink against surface is
- * legible in both, and the count is already carried by the size and printed
- * inside the pin.
+ * The choropleth beneath already spends the orange ramp on magnitude, and a
+ * second scale in the same hue reads as the same scale. A cool single colour
+ * separates the two layers, and the count is already carried by the size and
+ * printed inside the pin. The open shelter's pin switches to --ramp-4.
  */
 
 const mainPins = computed(() => {
@@ -380,8 +378,12 @@ const mainPins = computed(() => {
     .filter((p) => !INSET_COUNTIES.has(p.county))
     .map((p) => ({ ...p, base: mainProjection.value([p.lon, p.lat]) as [number, number] | null }))
     // Painter's order: southern pins drawn last so an overlap hides the pin
-    // behind rather than a random one.
-    .sort((a, b) => (a.base?.[1] ?? 0) - (b.base?.[1] ?? 0))
+    // behind rather than a random one. The picked pin goes on top of all.
+    .sort(
+      (a, b) =>
+        Number(a.id === props.pickedShelter) - Number(b.id === props.pickedShelter) ||
+        (a.base?.[1] ?? 0) - (b.base?.[1] ?? 0),
+    )
 })
 
 /** Names once the camera is close, and then only for the pins that fit.
@@ -518,6 +520,7 @@ function openShelter(id: string) {
           v-for="pin in mainPins"
           :key="pin.id"
           class="pin"
+          :class="{ picked: pickedShelter === pin.id }"
           :transform="`translate(${at(pin.base).x},${at(pin.base).y})`"
           tabindex="0"
           role="button"
@@ -564,15 +567,6 @@ function openShelter(id: string) {
         <text class="inset-label" :x="inset.box[0][0] + 8" :y="inset.box[1][1] - 8">
           {{ inset.label }}
         </text>
-        <text
-          v-if="counts"
-          class="inset-count"
-          :x="inset.box[1][0] - 8"
-          :y="inset.box[1][1] - 8"
-          text-anchor="end"
-        >
-          {{ (counts.get(inset.counties[0]) ?? 0).toLocaleString('zh-TW') }} 隻
-        </text>
         <path
           v-for="shape in inset.paths"
           :key="shape.county"
@@ -599,6 +593,7 @@ function openShelter(id: string) {
           v-show="showPoints"
           :key="pin.id"
           class="pin small"
+          :class="{ picked: pickedShelter === pin.id }"
           :transform="`translate(${pin.x},${pin.y})`"
           tabindex="0"
           role="button"
@@ -625,7 +620,7 @@ function openShelter(id: string) {
         aria-label="放大"
         @click="zoomBy(1.6)"
       >
-        ＋
+        <LucideIcon name="plus" :size="16" />
       </button>
       <button
         type="button"
@@ -634,7 +629,7 @@ function openShelter(id: string) {
         :disabled="view.k <= 1"
         @click="zoomBy(1 / 1.6)"
       >
-        －
+        <LucideIcon name="minus" :size="16" />
       </button>
     </div>
   </div>
@@ -646,9 +641,13 @@ function openShelter(id: string) {
   position: relative;
 }
 
+/* Capped at 720px tall. The width follows from the viewBox ratio, so the
+   client-to-viewBox arithmetic in toViewBox still holds. */
 .map {
   width: 100%;
+  max-width: calc(720px * 560 / 588);
   height: auto;
+  margin-inline: auto;
   display: block;
   touch-action: none;
 }
@@ -711,20 +710,12 @@ function openShelter(id: string) {
   stroke-width: 1;
 }
 
-.inset-label,
-.inset-count {
-  font-size: 11px;
-}
-
-.inset-label,
-.inset-count {
+/* The county name only. A click opens the panel with the numbers; a count
+   beside a three-character name does not fit a 94-unit plate. */
+.inset-label {
   fill: var(--ink-muted);
   font-size: 12px;
   font-family: var(--font);
-}
-
-.inset-count {
-  font-variant-numeric: tabular-nums;
 }
 
 .pin {
@@ -733,7 +724,7 @@ function openShelter(id: string) {
 }
 
 .pin path {
-  fill: var(--ink);
+  fill: var(--pin);
   stroke: var(--surface);
   stroke-width: 1.5;
 }
@@ -753,6 +744,12 @@ function openShelter(id: string) {
   font-weight: 500;
 }
 
+.pin.picked path {
+  fill: var(--ramp-4);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
 .pin:hover path,
 .pin:focus-visible path {
   stroke: var(--ink);
@@ -761,23 +758,23 @@ function openShelter(id: string) {
 
 .zoom-controls {
   position: absolute;
-  right: 10px;
-  bottom: 10px;
+  right: 4px;
+  bottom: 4px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0.35rem;
 }
 
 .zoom-button {
-  font: inherit;
-  font-size: 0.9rem;
-  line-height: 1;
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--hairline);
   background: var(--surface);
-  color: var(--ink-secondary);
+  color: var(--ink);
   cursor: pointer;
 }
 

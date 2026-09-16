@@ -6,7 +6,7 @@ import type { IconName } from '@/lib/icons'
  *  of meaning (the sex glyph on a card), and it becomes an img with that name.
  *
  *  Used by: App.vue, HomeView.vue, AnimalsView.vue, ShelterListView.vue,
- *  ShelterView.vue and AnimalCard.vue. */
+ *  ShelterView.vue, MapView.vue, AnimalCard.vue and CountyChoropleth.vue. */
 const props = withDefaults(defineProps<{ name: IconName; size?: number; label?: string }>(), {
   size: 18,
   label: undefined,
