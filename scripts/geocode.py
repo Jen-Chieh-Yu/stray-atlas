@@ -33,17 +33,15 @@ import argparse
 import json
 import re
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from clean import load_clean  # noqa: E402
+from common import REFERENCE_DIR, STATS_DIR, log, utc_now, write_json  # noqa: E402
 
-ROOT = Path(__file__).resolve().parents[1]
-REFERENCE_DIR = ROOT / "data" / "reference"
 DISTRICTS_PATH = REFERENCE_DIR / "districts.json"
-OUT_PATH = ROOT / "public" / "data" / "stats" / "foundplace.json"
+OUT_PATH = STATS_DIR / "foundplace.json"
 
 # Values that are not locations. Whole-value matches, deliberately not keyword
 # matching: "自行車道", "彰濱產業園區服務中心" and "鹿角坑生態保護區" are real
@@ -74,10 +72,6 @@ STREET_PATTERN = re.compile(r"[路街巷弄段]")
 HOUSE_NUMBER_PATTERN = re.compile(r"\d+\s*號")
 
 CONFIDENCE_TIERS = ("high", "medium", "low", "none")
-
-
-def log(message: str) -> None:
-    print(message, flush=True)
 
 
 def normalise(text: str) -> str:
@@ -240,7 +234,7 @@ def annotate(snapshot_date: str | None = None) -> tuple[list[dict], dict]:
     total = len(rows)
     report = {
         "snapshot_date": clean_report["snapshot_date"],
-        "generated_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generated_at_utc": utc_now(),
         "rows": total,
         "district_reference": "loaded" if districts else "missing",
         "place_kinds": kinds,
@@ -283,11 +277,7 @@ def main() -> int:
         log("dry run, nothing written")
         return 0
 
-    OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    OUT_PATH.write_text(
-        json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n"
-    )
-    log(f"wrote {OUT_PATH.relative_to(ROOT)}")
+    write_json(OUT_PATH, report, indent=2)
     return 0
 
 

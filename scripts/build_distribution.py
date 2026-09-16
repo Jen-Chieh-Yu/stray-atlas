@@ -34,18 +34,16 @@ Standard library only.
 from __future__ import annotations
 
 import argparse
-import json
 import math
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from clean import load_clean  # noqa: E402
+from common import STATS_DIR, utc_now, write_json  # noqa: E402
 
-ROOT = Path(__file__).resolve().parents[1]
-OUT_PATH = ROOT / "public" / "data" / "stats" / "distribution.json"
+OUT_PATH = STATS_DIR / "distribution.json"
 
 # A stay recorded as 0 days was registered on the snapshot date. It is a real
 # observation, not a missing value, but log10(0) is not, so it is placed at half
@@ -209,7 +207,7 @@ def summarise(days: list[int]) -> dict:
 
 
 def build(snapshot_date: str | None) -> dict:
-    rows, _ = load_clean(snapshot_date)
+    rows, report = load_clean(snapshot_date)
     scopes: dict[str, list[int]] = {"all": [], "dog": [], "cat": []}
     for row in rows:
         days = row["days_in_shelter"]
@@ -221,8 +219,10 @@ def build(snapshot_date: str | None) -> dict:
         elif row["animal_kind"] == "貓":
             scopes["cat"].append(days)
     return {
-        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "snapshot_date": snapshot_date or "",
+        "generated_at": utc_now(),
+        # The snapshot actually read. It used to echo the --date argument, so a
+        # run without one wrote "" and nothing showed which day the page drew.
+        "snapshot_date": report["snapshot_date"],
         "log_ticks": list(LOG_TICKS),
         "bandwidth_levels": [name for name, _ in BANDWIDTH_LEVELS],
         "scopes": {name: summarise(days) for name, days in scopes.items() if days},
@@ -235,12 +235,8 @@ def main() -> int:
     args = parser.parse_args()
 
     payload = build(args.date)
-    OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    OUT_PATH.write_text(
-        json.dumps(payload, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8"
-    )
-    size = OUT_PATH.stat().st_size
-    print(f"wrote {OUT_PATH.relative_to(ROOT)} ({size:,} bytes)")
+    print(f"snapshot {payload['snapshot_date']}")
+    write_json(OUT_PATH, payload)
     for name, scope in payload["scopes"].items():
         print(
             f"  {name:4} n={scope['count']:>5,} median={scope['median_days']:>5,}"

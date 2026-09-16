@@ -25,18 +25,16 @@ Standard library only.
 from __future__ import annotations
 
 import argparse
-import json
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from clean import load_clean  # noqa: E402
+from common import STATS_DIR, utc_now, write_json  # noqa: E402
 from geocode import annotate  # noqa: E402
 
-ROOT = Path(__file__).resolve().parents[1]
-OUT_PATH = ROOT / "public" / "data" / "stats" / "counties.json"
+OUT_PATH = STATS_DIR / "counties.json"
 
 # Cut points in days. Chosen to be readable rather than even: the first three
 # cover the range where most cats leave, the last two the long tail that the
@@ -101,7 +99,9 @@ def build(snapshot_date: str | None) -> dict:
         row["foundplace_district"] = extra["foundplace_district"]
         row["district_verified"] = extra["district_verified"]
 
-    areas = json.loads((ROOT / "public" / "data" / "areas.json").read_text(encoding="utf-8"))
+    # From the clean report rather than public/data/areas.json, so this never
+    # reads an areas file left over from a different snapshot.
+    areas = clean_report["_areas"]
 
     counties = []
     for pkid, area in areas.items():
@@ -124,7 +124,7 @@ def build(snapshot_date: str | None) -> dict:
 
     return {
         "snapshot_date": clean_report["snapshot_date"],
-        "generated_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generated_at_utc": utc_now(),
         "county_source": "shelter",
         "buckets": [
             {"label": label, "min": low, "max": high} for label, low, high in BUCKETS
@@ -156,11 +156,7 @@ def main() -> int:
         print("dry run, nothing written")
         return 0
 
-    OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    OUT_PATH.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n"
-    )
-    print(f"wrote {OUT_PATH.relative_to(ROOT)} ({OUT_PATH.stat().st_size} bytes)")
+    write_json(OUT_PATH, payload, indent=1)
     return 0
 
 

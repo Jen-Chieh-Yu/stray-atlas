@@ -32,16 +32,14 @@ import argparse
 import csv
 import gzip
 import io
-import json
 import re
 import sys
-from datetime import date, datetime, timezone
+from datetime import date
 from pathlib import Path
 
-# CLAUDE.md 2.1: never hard-code the repository root directory name.
-ROOT = Path(__file__).resolve().parents[1]
-RAW_DIR = ROOT / "data" / "raw"
-OUT_DIR = ROOT / "public" / "data"
+from common import PUBLIC_DATA, RAW_DIR, log, snapshot_paths, utc_now, write_json
+
+OUT_DIR = PUBLIC_DATA
 
 EXPECTED_AREA_COUNT = 22
 SENTINEL_DATE = "1900-01-01"
@@ -84,14 +82,6 @@ REQUIRED_COLUMNS = (
     "shelter_name",
     "shelter_address",
 )
-
-
-def log(message: str) -> None:
-    print(message, flush=True)
-
-
-def snapshot_paths() -> list[Path]:
-    return sorted(RAW_DIR.glob("[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].csv.gz"))
 
 
 def resolve_snapshot(snapshot_date: str | None) -> Path:
@@ -376,7 +366,7 @@ def load_clean(snapshot_date: str | None = None) -> tuple[list[dict], dict]:
 
     report = {
         "snapshot_date": snapshot,
-        "generated_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generated_at_utc": utc_now(),
         "source_file": f"data/raw/{path.name}",
         "rows": len(cleaned),
         "columns_in_source": len(columns),
@@ -410,13 +400,6 @@ def load_clean(snapshot_date: str | None = None) -> tuple[list[dict], dict]:
     return cleaned, report
 
 
-def write_json(path: Path, payload: dict) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    text = json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=False)
-    path.write_text(text + "\n", encoding="utf-8", newline="\n")
-    log(f"wrote {path.relative_to(ROOT)}")
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--date", help="Snapshot to clean (YYYY-MM-DD). Default: the newest.")
@@ -444,8 +427,8 @@ def main() -> int:
         log("dry run, nothing written")
         return 0
 
-    write_json(OUT_DIR / "areas.json", areas)
-    write_json(OUT_DIR / "meta.json", report)
+    write_json(OUT_DIR / "areas.json", areas, indent=2)
+    write_json(OUT_DIR / "meta.json", report, indent=2)
     return 0
 
 

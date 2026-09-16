@@ -37,12 +37,22 @@ python scripts/fetch_snapshot.py
 由快照重建前端要吃的 JSON（同樣無外部相依，`build_districts.py` 例外，需要 `pyshp`）：
 
 ```bash
+python scripts/build_all.py                    # 用最新快照依序重建全部 JSON，並檢查日期一致
+python scripts/build_all.py --date 2026-09-03  # 指定快照
+```
+
+`build_all.py` 依下列順序執行，每一步都帶同一個 `--date`；單獨執行某一步時也請帶 `--date`，否則會取當下最新的快照，造成各頁日期不一致：
+
+```bash
 python scripts/clean.py                 # 清理欄位、產生 areas.json / meta.json
+python scripts/geocode.py               # stats/foundplace.json（尋獲地分級）
 python scripts/build_stats.py           # stats/counties.json
 python scripts/build_shelters.py        # shelters.json + animals.json
-python scripts/build_shelter_points.py  # shelter-points.json（地圖圖釘）
+python scripts/build_shelter_points.py  # shelter-points.json（地圖圖釘，讀 shelters.json）
 python scripts/build_distribution.py    # stats/distribution.json（分析頁）
 ```
+
+各腳本共用的路徑、log 與 JSON 寫檔集中在 `scripts/common.py`。
 
 跑前端（Node 22+）：
 

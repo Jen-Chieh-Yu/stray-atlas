@@ -22,15 +22,17 @@ from __future__ import annotations
 
 import json
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-ROOT = Path(__file__).resolve().parents[1]
-SHELTERS = ROOT / "public" / "data" / "shelters.json"
-DISTRICTS = ROOT / "public" / "data" / "districts.geojson"
-OUT_PATH = ROOT / "public" / "data" / "shelter-points.json"
+from common import PUBLIC_DATA, utc_now, write_json  # noqa: E402
+
+# Reads build_shelters.py's output, so it runs after that script and follows
+# whichever snapshot the shelters file was built from.
+SHELTERS = PUBLIC_DATA / "shelters.json"
+DISTRICTS = PUBLIC_DATA / "districts.geojson"
+OUT_PATH = PUBLIC_DATA / "shelter-points.json"
 
 # 新竹市 and 嘉義市 write their addresses without the district. Both were read
 # off the address by hand and are recorded here so the judgement is auditable
@@ -128,7 +130,7 @@ def build() -> dict:
 
     points.sort(key=lambda p: -p["count"])
     return {
-        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generated_at": utc_now(),
         "snapshot_date": payload["snapshot_date"],
         "position": "district_centroid",
         "unplaced": unplaced,
@@ -138,11 +140,7 @@ def build() -> dict:
 
 def main() -> int:
     result = build()
-    OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    OUT_PATH.write_text(
-        json.dumps(result, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8"
-    )
-    print(f"wrote {OUT_PATH.relative_to(ROOT)} ({OUT_PATH.stat().st_size:,} bytes)")
+    write_json(OUT_PATH, result)
     print(f"  placed {len(result['points'])}, unplaced {len(result['unplaced'])}")
     manual = [p["name"] for p in result["points"] if p["manual"]]
     print(f"  by hand: {', '.join(manual) or '—'}")
