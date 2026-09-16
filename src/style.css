@@ -104,17 +104,8 @@ a {
 /* Shared shell pieces. Kept global because every view uses them and scoped
    copies would drift apart. */
 
-/* Bordered panel. Used by: AnalysisView. */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius);
-  padding: 1.25rem;
-}
-
 /* Pill button; .on marks the selected one, .small is the compact size.
-   Used by: AnimalDialog and AnalysisView. The redesigned pages
-   use their own pill styles. */
+   Used by: AnimalDialog. The redesigned pages use their own pill styles. */
 .chip {
   font: inherit;
   font-size: 0.9rem;

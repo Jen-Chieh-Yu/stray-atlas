@@ -4,6 +4,7 @@ import type {
   CountyCollection,
   CountyPayload,
   DistributionPayload,
+  FoundplacePayload,
   ShelterPayload,
   ShelterPointPayload,
 } from '@/types'
@@ -80,6 +81,7 @@ let sheltersOnce: Promise<ShelterPayload> | null = null
 let animalsOnce: Promise<Animal[]> | null = null
 let distributionOnce: Promise<DistributionPayload> | null = null
 let pointsOnce: Promise<ShelterPointPayload> | null = null
+let foundplaceOnce: Promise<FoundplacePayload> | null = null
 
 /** Both files are fetched at most once per visit and shared by every view.
  *  animals.json is 272 KB gzipped for all 8,265 records — more than a single
@@ -121,6 +123,17 @@ export function fetchShelterPoints(): Promise<ShelterPointPayload> {
     return response.json() as Promise<ShelterPointPayload>
   })
   return pointsOnce
+}
+
+/** How much of the found-place column names a county. The analysis page
+ *  quotes these counts, so they follow the snapshot instead of being typed
+ *  into the page. */
+export function fetchFoundplace(): Promise<FoundplacePayload> {
+  foundplaceOnce ??= fetch(dataUrl('stats/foundplace.json')).then((response) => {
+    if (!response.ok) throw new Error(`foundplace.json ${response.status}`)
+    return response.json() as Promise<FoundplacePayload>
+  })
+  return foundplaceOnce
 }
 
 /** Days in the shelter, measured against the snapshot rather than today. */
