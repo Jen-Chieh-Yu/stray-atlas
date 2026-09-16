@@ -11,7 +11,7 @@
  * into the page.
  *
  * Used by: every component, through var(--…). --on-accent is used by the
- * selected .chip below.
+ * selected .chip below and by HomeView.vue's orange bands and filter box.
  */
 :root {
   color-scheme: light;
@@ -85,7 +85,8 @@ a {
 
 /* Page-width column. Only side padding: a padding shorthand here would zero
    the vertical padding of whatever else sits on the same element.
-   Used by: App.vue (top bar, main, footer).
+   Used by: App.vue (top bar, main, footer), and HomeView.vue, whose sections
+   each bring their own column.
    The name is global, so no component may use "wrap" for its own class. */
 .wrap {
   max-width: 1180px;

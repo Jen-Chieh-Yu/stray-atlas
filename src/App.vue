@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
+import LucideIcon from '@/components/LucideIcon.vue'
 
 interface NavItem {
   to: string
@@ -74,7 +75,6 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <!-- Icons: Lucide (ISC License), paths copied unmodified. See THIRD-PARTY-LICENSES. -->
   <header class="topbar">
     <div class="wrap topbar-inner">
       <RouterLink to="/" class="wordmark">StrayAtlas 浪浪地圖</RouterLink>
@@ -100,22 +100,7 @@ onBeforeUnmount(() => {
         :aria-expanded="navOpen"
         @click="setNavOpen(true)"
       >
-        <svg
-          class="lucide lucide-menu"
-          width="22"
-          height="22"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M4 5h16" />
-          <path d="M4 12h16" />
-          <path d="M4 19h16" />
-        </svg>
+        <LucideIcon name="menu" :size="22" />
       </button>
     </div>
 
@@ -129,21 +114,7 @@ onBeforeUnmount(() => {
           aria-label="關閉選單"
           @click="setNavOpen(false)"
         >
-          <svg
-            class="lucide lucide-x"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M18 6 6 18" />
-            <path d="m6 6 12 12" />
-          </svg>
+          <LucideIcon name="x" :size="24" />
         </button>
       </div>
 
@@ -156,26 +127,13 @@ onBeforeUnmount(() => {
           :aria-current="isCurrent(item) ? 'page' : undefined"
         >
           {{ item.label }}
-          <svg
-            class="lucide lucide-chevron-right"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <path d="m9 18 6-6-6-6" />
-          </svg>
+          <LucideIcon name="chevron-right" :size="18" />
         </RouterLink>
       </div>
     </nav>
   </header>
 
-  <main class="wrap main">
+  <main :class="route.meta.fullBleed ? 'bleed' : 'wrap main'">
     <RouterView />
   </main>
 

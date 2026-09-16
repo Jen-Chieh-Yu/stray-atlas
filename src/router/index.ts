@@ -9,10 +9,24 @@ import { createRouter, createWebHistory } from 'vue-router'
  *
  *  Used by: main.ts (app.use). Views reach it through useRoute/useRouter.
  */
+// Read by App.vue: a full-bleed page lays out its own columns.
+declare module 'vue-router' {
+  interface RouteMeta {
+    fullBleed?: boolean
+  }
+}
+
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: '/', name: 'home', component: () => import('@/views/HomeView.vue') },
+    {
+      path: '/',
+      name: 'home',
+      component: () => import('@/views/HomeView.vue'),
+      // The hero and the orange bands run edge to edge, so the page lays out
+      // its own columns instead of sitting inside the shell's .wrap.
+      meta: { fullBleed: true },
+    },
     { path: '/animals', name: 'animals', component: () => import('@/views/AnimalsView.vue') },
     { path: '/shelters', name: 'shelters', component: () => import('@/views/ShelterListView.vue') },
     { path: '/shelters/:id', name: 'shelter', component: () => import('@/views/ShelterView.vue') },

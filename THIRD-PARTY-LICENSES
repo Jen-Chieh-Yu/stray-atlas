@@ -8,7 +8,8 @@ repeated here.
 ------------------------------------------------------------------------
 Lucide icons
 https://lucide.dev  -  https://github.com/lucide-icons/lucide
-Used in: src/App.vue (menu, x, chevron-right). SVG paths copied unmodified.
+Used in: src/lib/icons.ts (rendered by src/components/LucideIcon.vue).
+SVG geometry copied unmodified.
 ------------------------------------------------------------------------
 
 ISC License
