@@ -38,36 +38,6 @@ const {
 
 const longest = computed(() => byLongest.value.slice(0, 10))
 
-function kindDays(kind: Kind): number[] {
-  return animals.value
-    .filter((animal) => animal.kind === kind)
-    .map(daysOf)
-    .filter((value): value is number => value !== null)
-}
-
-const kindMedian = computed(() => ({ dog: median(kindDays('狗')), cat: median(kindDays('貓')) }))
-
-/** The sentence under 等最久的 is built from the data, so it cannot go on
- *  claiming "all dogs" after the ranking changes. */
-const longestNote = computed(() => {
-  const { dog, cat } = kindMedian.value
-  const tail =
-    dog !== null && cat !== null
-      ? `狗的在所中位數是 ${formatCount(dog)} 天，貓是 ${formatCount(cat)} 天。`
-      : ''
-  const allDogs = longest.value.length > 0 && longest.value.every((animal) => animal.kind === '狗')
-  const firstCat = byLongest.value.findIndex((animal) => animal.kind === '貓') + 1
-  if (!allDogs || firstCat === 0) {
-    return { lead: `不分狗貓，全站已在所天數最長的十隻。${tail}`, emphasis: '', rest: '' }
-  }
-  const bound = Math.floor((firstCat - 1) / 100) * 100
-  return {
-    lead: '不分狗貓，全站已在所天數最長的十隻。牠們全部是狗——',
-    emphasis: bound >= 100 ? `排行榜前 ${formatCount(bound)} 名沒有半隻貓` : '',
-    rest: `${bound >= 100 ? '，' : ''}第一隻貓要到第 ${formatCount(firstCat)} 名才出現。${tail}`,
-  }
-})
-
 /** Newest intake first, by 建檔日 — the date the record entered the system. */
 function newest(kind: Kind): Animal[] {
   return animals.value
@@ -303,7 +273,7 @@ const FLOW = [
         <div class="hero-plate">
           <h1>牠們一直都在等待被看見</h1>
           <p class="lede">
-            全臺{{ shelters.length ? ` ${shelters.length} 間` : '' }}公立收容所目前仍開放認養的動物{{ snapshotDate ? `，資料日期 ${snapshotDate}` : '' }}。
+            全臺{{ shelters.length ? ` ${shelters.length} 間` : '' }}公立收容所目前仍開放認養的動物。
           </p>
         </div>
       </div>
@@ -382,10 +352,6 @@ const FLOW = [
           <h2><LucideIcon name="clock" :size="22" /> 等最久的</h2>
           <RouterLink :to="animalsLink({ sort: 'longest' })">依已在所天數排序 →</RouterLink>
         </div>
-        <p class="sec-note">
-          {{ longestNote.lead }}<b v-if="longestNote.emphasis" class="em">{{ longestNote.emphasis }}</b
-          >{{ longestNote.rest }}
-        </p>
 
         <div ref="stripWrap" class="longest-wrap">
           <button
@@ -679,11 +645,6 @@ section {
   margin: 0.35rem 0 0;
   color: var(--ink-secondary);
   font-size: 0.9rem;
-}
-
-.sec-note .em {
-  color: var(--accent-text);
-  font-weight: 500;
 }
 
 /* ── Hero ── */

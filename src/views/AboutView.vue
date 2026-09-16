@@ -33,7 +33,6 @@ const animalCount = computed(() => stats.value?.total.count ?? null)
 const shelterCount = computed(() =>
   stats.value ? stats.value.counties.reduce((sum, county) => sum + county.shelters, 0) : null,
 )
-const snapshotDate = computed(() => stats.value?.snapshot_date ?? '—')
 
 function pct(share: number): string {
   return `${(share * 100).toFixed(1)}%`
@@ -178,10 +177,6 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
       <h2 id="ab-freshness">更新頻率</h2>
       <div class="updatebox">
         <div class="ubox">
-          <b>{{ snapshotDate }}</b>
-          <span>目前畫面呈現的資料快照</span>
-        </div>
-        <div class="ubox">
           <b
             >{{ animalCount !== null ? formatCount(animalCount) : '—' }} 隻 ·
             {{ shelterCount ?? '—' }} 間</b
@@ -194,7 +189,7 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
         </div>
       </div>
       <p>
-        網站上的名單與數字<strong>以上面的快照日期為準</strong>，不會跟著來源自動更新，也不等於收容所現場的即時狀況——名單上的動物可能已經被認養、被原飼主領回或轉出。要看最新名單，請到<a
+        網站上的名單與數字<strong>以頁尾標示的快照日期為準</strong>，不會跟著來源自動更新，也不等於收容所現場的即時狀況——名單上的動物可能已經被認養、被原飼主領回或轉出。要看最新名單，請到<a
           :href="OFFICIAL_URL"
           target="_blank"
           rel="noreferrer"
@@ -353,7 +348,7 @@ section > p.stack {
 /* ── Freshness ── */
 .updatebox {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
   margin-top: 0.5rem;
 }

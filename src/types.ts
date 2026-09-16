@@ -148,6 +148,12 @@ export interface FoundplacePayload {
   county_from_text_differs_from_shelter: number
 }
 
+/** meta.json, the field the site footer reads. The file also records the
+ *  source file, row counts and the columns the cleaner dropped. */
+export interface MetaPayload {
+  snapshot_date: string
+}
+
 export interface ShelterPoint {
   id: string
   name: string

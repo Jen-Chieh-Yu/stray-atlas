@@ -470,7 +470,6 @@ const hint = computed(() => {
       <section class="boundary">
         <div class="boundary-head">
           <span class="kicker">這張圖不能拿來說什麼</span>
-          <span class="pill">資料快照 {{ stats.snapshot_date }}</span>
         </div>
         <ul>
           <li>
@@ -961,15 +960,6 @@ const hint = computed(() => {
   color: var(--ink-muted);
   font-size: 0.72rem;
   letter-spacing: 0.14em;
-}
-
-.pill {
-  padding: 0.12rem 0.75rem;
-  border: 1px solid var(--hairline);
-  border-radius: 999px;
-  background: var(--surface);
-  font-size: 0.84rem;
-  font-variant-numeric: tabular-nums;
 }
 
 .boundary ul {

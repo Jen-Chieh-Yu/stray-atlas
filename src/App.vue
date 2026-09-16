@@ -2,6 +2,7 @@
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 import LucideIcon from '@/components/LucideIcon.vue'
+import { fetchMeta } from '@/composables/useAtlasData'
 
 interface NavItem {
   to: string
@@ -9,6 +10,18 @@ interface NavItem {
   /** Route names that count as this section, so /shelters/:id still marks 收容所. */
   names: string[]
 }
+
+/* The snapshot date, stated once for the whole site. Every page's figures
+ * and lists come from this snapshot. */
+const snapshotDate = ref<string | null>(null)
+fetchMeta()
+  .then((meta) => {
+    snapshotDate.value = meta.snapshot_date
+  })
+  .catch(() => {
+    // Without the date the footer simply leaves the line out.
+    snapshotDate.value = null
+  })
 
 const NAV: NavItem[] = [
   { to: '/animals', label: '找動物', names: ['animals'] },
@@ -139,6 +152,10 @@ onBeforeUnmount(() => {
 
   <footer class="footer">
     <div class="wrap footer-inner">
+      <p v-if="snapshotDate" class="snapshot">
+        資料快照 <b>{{ snapshotDate }}</b>
+        <span>全站的名單與數字都以這一天的資料為準。</span>
+      </p>
       <p>
         資料來源：農業部「動物認領養」開放資料（<a
           href="https://data.gov.tw/dataset/85903"
@@ -345,5 +362,16 @@ onBeforeUnmount(() => {
 
 .footer-inner p {
   margin: 0 0 0.4rem;
+}
+
+.footer-inner .snapshot {
+  margin-bottom: 0.8rem;
+  color: var(--ink-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.snapshot b {
+  margin-right: 0.5rem;
+  color: var(--ink);
 }
 </style>

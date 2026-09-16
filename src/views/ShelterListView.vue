@@ -18,7 +18,7 @@ import type { Shelter } from '@/types'
 const route = useRoute()
 const router = useRouter()
 
-const { shelters, snapshotDate, buckets, loading, error } = useRoster()
+const { shelters, buckets, loading, error } = useRoster()
 
 const labels = computed(() => buckets.value.map((bucket) => bucket.label))
 
@@ -421,7 +421,6 @@ function names(list: Shelter[]): string {
       <section class="boundary">
         <div class="boundary-head">
           <span class="kicker">這一頁不能拿來說什麼</span>
-          <span class="pill">資料快照 {{ snapshotDate }}</span>
         </div>
         <ul>
           <li>
@@ -990,15 +989,6 @@ function names(list: Shelter[]): string {
   color: var(--ink-muted);
   font-size: 0.72rem;
   letter-spacing: 0.14em;
-}
-
-.pill {
-  padding: 0.12rem 0.75rem;
-  border: 1px solid var(--hairline);
-  border-radius: 999px;
-  background: var(--surface);
-  font-size: 0.84rem;
-  font-variant-numeric: tabular-nums;
 }
 
 .boundary ul {

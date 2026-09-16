@@ -1,25 +1,16 @@
 <script setup lang="ts">
-import { useAtlasData } from '@/composables/useAtlasData'
-
-/** Title block shared by every page: h1, one lede paragraph, and the snapshot
- *  stamp at the end of the lede. The stamp used to sit in the site masthead;
- *  it moved here with the draft layout so each page carries its own date.
+/** Title block shared by every page: h1 and one lede paragraph. The snapshot
+ *  date is stated once, in the site footer (App.vue).
  *
  *  Used by: AboutView.vue, AnimalsView.vue, ShelterListView.vue, MapView.vue
- *  and AnalysisView.vue. Each page adopts it as it is rebuilt; the home page
- *  has its own hero instead. */
+ *  and AnalysisView.vue. The home page has its own hero instead. */
 defineProps<{ title: string }>()
-
-const { stats } = useAtlasData()
 </script>
 
 <template>
   <header class="pagehead">
     <h1>{{ title }}</h1>
-    <p>
-      <slot />
-      <span v-if="stats" class="stamp">資料快照 {{ stats.snapshot_date }}</span>
-    </p>
+    <p><slot /></p>
   </header>
 </template>
 
@@ -32,16 +23,5 @@ p {
   margin: 0.6rem 0 0;
   max-width: 44rem;
   color: var(--ink-secondary);
-}
-
-.stamp {
-  display: inline-block;
-  margin-left: 0.5rem;
-  padding: 0.05rem 0.6rem;
-  border-radius: 999px;
-  background: var(--surface-sunk);
-  font-size: 0.8rem;
-  color: var(--ink-muted);
-  font-variant-numeric: tabular-nums;
 }
 </style>

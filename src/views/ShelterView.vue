@@ -107,7 +107,6 @@ function close() {
         <p>
           目前有 {{ formatCount(shelter.all.count) }} 隻動物仍在所，是全臺在所數第 {{ rank }}
           多的公立收容所。出發前請先來電，確認想看的動物還在。
-          <span class="stamp">資料快照 {{ snapshotDate }}</span>
         </p>
       </header>
 
@@ -190,7 +189,7 @@ function close() {
               </div>
             </div>
             <div class="callout">
-              <b>本站不辦理認養。</b>名單以頁首的快照日期為準，上面的動物可能已經被認養；開放時間、預約方式與認養規定，請以收容所現場公告為準。
+              <b>本站不辦理認養。</b>名單以頁尾的快照日期為準，上面的動物可能已經被認養；開放時間、預約方式與認養規定，請以收容所現場公告為準。
             </div>
           </section>
 
@@ -312,7 +311,6 @@ function close() {
       <section class="boundary">
         <div class="boundary-head">
           <span class="kicker">這一頁不能拿來說什麼</span>
-          <span class="pill">資料快照 {{ snapshotDate }}</span>
         </div>
         <ul>
           <li>在所動物多不代表這間收容所做得比較差。收容量、腹地與所轄範圍差距很大，這一頁不做收容所之間的評比。</li>
@@ -361,18 +359,6 @@ function close() {
 .head p {
   margin: 0.6rem 0 0;
   color: var(--ink-secondary);
-}
-
-.stamp {
-  display: inline-block;
-  margin-left: 0.5rem;
-  padding: 0.05rem 0.6rem;
-  border-radius: 999px;
-  background: var(--surface-sunk);
-  color: var(--ink-muted);
-  font-size: 0.8rem;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
 }
 
 /* ── Section heads and rules ── */
@@ -767,15 +753,6 @@ a.sect-link:hover {
   color: var(--ink-muted);
   font-size: 0.72rem;
   letter-spacing: 0.14em;
-}
-
-.pill {
-  padding: 0.12rem 0.75rem;
-  border: 1px solid var(--hairline);
-  border-radius: 999px;
-  background: var(--surface);
-  font-size: 0.84rem;
-  font-variant-numeric: tabular-nums;
 }
 
 .boundary ul {
