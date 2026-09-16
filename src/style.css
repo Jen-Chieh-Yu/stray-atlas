@@ -99,7 +99,7 @@ a {
    copies would drift apart. */
 
 /* Bordered panel. Used by: AnimalGrid, AnalysisView, MapView,
-   ShelterListView and ShelterView, and AnimalsView until its redesign. */
+   ShelterListView and ShelterView. */
 .card {
   background: var(--surface);
   border: 1px solid var(--hairline);

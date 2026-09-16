@@ -5,8 +5,8 @@ import { useAtlasData } from '@/composables/useAtlasData'
  *  stamp at the end of the lede. The stamp used to sit in the site masthead;
  *  it moved here with the draft layout so each page carries its own date.
  *
- *  Used by: AboutView.vue. Each page adopts it as it is rebuilt; the home page
- *  has its own hero instead. */
+ *  Used by: AboutView.vue and AnimalsView.vue. Each page adopts it as it is
+ *  rebuilt; the home page has its own hero instead. */
 defineProps<{ title: string }>()
 
 const { stats } = useAtlasData()

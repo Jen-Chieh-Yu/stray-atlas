@@ -5,7 +5,7 @@ import type { IconName } from '@/lib/icons'
 /** Decorative by default. Pass `label` only where the icon is the sole carrier
  *  of meaning (the sex glyph on a card), and it becomes an img with that name.
  *
- *  Used by: App.vue, HomeView.vue and AnimalCard.vue. */
+ *  Used by: App.vue, HomeView.vue, AnimalsView.vue and AnimalCard.vue. */
 const props = withDefaults(defineProps<{ name: IconName; size?: number; label?: string }>(), {
   size: 18,
   label: undefined,

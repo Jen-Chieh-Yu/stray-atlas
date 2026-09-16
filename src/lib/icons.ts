@@ -11,9 +11,11 @@ export type IconShape = { d: string } | { cx: number; cy: number; r: number }
 export const ICONS = {
   menu: [{ d: 'M4 5h16' }, { d: 'M4 12h16' }, { d: 'M4 19h16' }],
   x: [{ d: 'M18 6 6 18' }, { d: 'm6 6 12 12' }],
+  'chevron-down': [{ d: 'm6 9 6 6 6-6' }],
   'chevron-left': [{ d: 'm15 18-6-6 6-6' }],
   'chevron-right': [{ d: 'm9 18 6-6-6-6' }],
   'arrow-right': [{ d: 'M5 12h14' }, { d: 'm12 5 7 7-7 7' }],
+  'arrow-up-down': [{ d: 'm21 16-4 4-4-4' }, { d: 'M17 20V4' }, { d: 'm3 8 4-4 4 4' }, { d: 'M7 4v16' }],
   plus: [{ d: 'M5 12h14' }, { d: 'M12 5v14' }],
   search: [{ d: 'm21 21-4.34-4.34' }, { cx: 11, cy: 11, r: 8 }],
   clock: [{ cx: 12, cy: 12, r: 10 }, { d: 'M12 6v6l4 2' }],

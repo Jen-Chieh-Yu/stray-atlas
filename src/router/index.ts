@@ -35,5 +35,13 @@ export const router = createRouter({
     { path: '/about', name: 'about', component: () => import('@/views/AboutView.vue') },
     { path: '/:pathMatch(.*)*', redirect: '/' },
   ],
-  scrollBehavior: () => ({ top: 0 }),
+  // Top of the page on a new path only. A query-only change is a filter, a
+  // page of results or an opened dialog, and jumping to the top on those
+  // throws away the place the reader was looking at; the views that want a
+  // scroll (the pager) do it themselves. Back and forward restore as usual.
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) return savedPosition
+    if (to.path === from.path) return false
+    return { top: 0 }
+  },
 })

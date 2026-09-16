@@ -1,9 +1,11 @@
+import type { LocationQuery } from 'vue-router'
 import type { Kind } from '@/types'
 
 /* Animal helpers shared across pages.
  *
- *  Used by: HomeView.vue (labels, day bands, link builder, counting helpers) and
- *  AnimalCard.vue (SEX_LABEL, formatCount).
+ *  Used by: HomeView.vue and AnimalsView.vue (labels, day bands, the /animals
+ *  query contract, counting helpers) and AnimalCard.vue (SEX_LABEL,
+ *  formatCount).
  */
 
 /** Display labels for the coded columns. One copy, shared by every page. */
@@ -30,6 +32,12 @@ export function inBand(days: number | null, min: number, max: number | null): bo
 
 /** URL form of 狗／貓／其他. */
 export const KIND_PARAM: Record<Kind, string> = { 狗: 'dog', 貓: 'cat', 其他: 'other' }
+const KIND_FROM_PARAM: Record<string, Kind> = { dog: '狗', cat: '貓', other: '其他' }
+
+export const SORTS = [
+  { id: 'longest', label: '已在所天數（長到短）' },
+  { id: 'shortest', label: '已在所天數（短到長）' },
+] as const
 
 /** The query contract of /animals. The home page builds links against it now;
  *  the find-animals page reads it when that page is rebuilt. Every key is
@@ -39,13 +47,52 @@ export interface AnimalQuery {
   county?: string
   shelter?: string
   variety?: string
+  sex?: string
   body?: string
   age?: string
   days?: DayBandKey
-  /** Adds to the listed band: every band from this one upward. */
+  /** A lower bound: this band and every band above it. Ignored when `days` is set. */
   daysFrom?: DayBandKey
   q?: string
   sort?: 'longest' | 'shortest'
+}
+
+function single(value: LocationQuery[string]): string | undefined {
+  const first = Array.isArray(value) ? value[0] : value
+  return typeof first === 'string' && first !== '' ? first : undefined
+}
+
+function isBand(value: string | undefined): value is DayBandKey {
+  return DAY_BANDS.some((band) => band.key === value)
+}
+
+/** Read /animals' query string back into filters. Values the page cannot
+ *  use (an unknown kind, a band that no longer exists) are dropped rather
+ *  than guessed at, so a stale link shows more animals, never the wrong ones.
+ *  County, shelter and variety are free text and are checked against the
+ *  data by the page. */
+export function parseAnimalQuery(query: LocationQuery): AnimalQuery {
+  const kindParam = single(query.kind)
+  const sex = single(query.sex)
+  const body = single(query.body)
+  const age = single(query.age)
+  const days = single(query.days)
+  const daysFrom = single(query.daysFrom)
+  const sort = single(query.sort)
+  return {
+    kind: kindParam ? KIND_FROM_PARAM[kindParam] : undefined,
+    county: single(query.county),
+    shelter: single(query.shelter),
+    variety: single(query.variety),
+    sex: sex && sex in SEX_LABEL ? sex : undefined,
+    body: body && body in BODY_LABEL ? body : undefined,
+    age: age && age in AGE_LABEL ? age : undefined,
+    // A band and a lower bound describe the same control; the exact band wins.
+    days: isBand(days) ? days : undefined,
+    daysFrom: !isBand(days) && isBand(daysFrom) ? daysFrom : undefined,
+    q: single(query.q)?.trim() || undefined,
+    sort: sort === 'shortest' ? 'shortest' : undefined,
+  }
 }
 
 export function animalsLink(query: AnimalQuery) {
