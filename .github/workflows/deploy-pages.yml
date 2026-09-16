@@ -58,8 +58,14 @@ jobs:
 
       # npm run build is vue-tsc --build && vite build, so a type error fails
       # the deploy rather than shipping a broken page.
+      # The Maps Embed key ships inside the built page (it is not a secret in
+      # the browser; it is restricted to this site's referrers in Google
+      # Cloud). Keeping it in a repository secret only keeps it out of the git
+      # history. Unset, the shelter page links to Google Maps instead.
       - name: Build
         run: npm run build
+        env:
+          VITE_GOOGLE_MAPS_EMBED_KEY: ${{ secrets.GOOGLE_MAPS_EMBED_KEY }}
 
       - name: Configure Pages
         uses: actions/configure-pages@v6

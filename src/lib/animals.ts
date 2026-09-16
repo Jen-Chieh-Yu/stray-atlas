@@ -4,7 +4,8 @@ import type { Kind } from '@/types'
 /* Animal helpers shared across pages.
  *
  *  Used by: HomeView.vue and AnimalsView.vue (labels, day bands, the /animals
- *  query contract, counting helpers) and AnimalCard.vue (SEX_LABEL,
+ *  query contract, counting helpers), ShelterListView.vue and ShelterView.vue
+ *  (link builder, formatCount, median), and AnimalCard.vue (SEX_LABEL,
  *  formatCount).
  */
 

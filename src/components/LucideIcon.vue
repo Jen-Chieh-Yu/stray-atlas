@@ -5,7 +5,8 @@ import type { IconName } from '@/lib/icons'
 /** Decorative by default. Pass `label` only where the icon is the sole carrier
  *  of meaning (the sex glyph on a card), and it becomes an img with that name.
  *
- *  Used by: App.vue, HomeView.vue, AnimalsView.vue and AnimalCard.vue. */
+ *  Used by: App.vue, HomeView.vue, AnimalsView.vue, ShelterListView.vue,
+ *  ShelterView.vue and AnimalCard.vue. */
 const props = withDefaults(defineProps<{ name: IconName; size?: number; label?: string }>(), {
   size: 18,
   label: undefined,
@@ -29,7 +30,8 @@ const props = withDefaults(defineProps<{ name: IconName; size?: number; label?: 
   >
     <template v-for="(shape, index) in ICONS[props.name]" :key="index">
       <path v-if="'d' in shape" :d="shape.d" />
-      <circle v-else :cx="shape.cx" :cy="shape.cy" :r="shape.r" />
+      <circle v-else-if="'cx' in shape" :cx="shape.cx" :cy="shape.cy" :r="shape.r" />
+      <rect v-else :x="shape.x" :y="shape.y" :width="shape.width" :height="shape.height" :rx="shape.rx" />
     </template>
   </svg>
 </template>

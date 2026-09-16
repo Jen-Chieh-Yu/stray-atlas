@@ -98,8 +98,7 @@ a {
 /* Shared shell pieces. Kept global because every view uses them and scoped
    copies would drift apart. */
 
-/* Bordered panel. Used by: AnimalGrid, AnalysisView, MapView,
-   ShelterListView and ShelterView. */
+/* Bordered panel. Used by: AnalysisView and MapView. */
 .card {
   background: var(--surface);
   border: 1px solid var(--hairline);
@@ -108,8 +107,8 @@ a {
 }
 
 /* Pill button; .on marks the selected one, .small is the compact size.
-   Used by: AnimalDialog, AnimalGrid, AnalysisView, MapView and
-   ShelterListView. The redesigned pages use their own pill styles. */
+   Used by: AnimalDialog, AnalysisView and MapView. The redesigned pages
+   use their own pill styles. */
 .chip {
   font: inherit;
   font-size: 0.9rem;

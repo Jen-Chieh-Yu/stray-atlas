@@ -1,6 +1,6 @@
 import { computed, onMounted, ref } from 'vue'
 import { daysInShelter, fetchAnimals, fetchShelters } from '@/composables/useAtlasData'
-import type { Animal, Shelter } from '@/types'
+import type { Animal, Shelter, ShelterPayload } from '@/types'
 
 /** Every animal and shelter, plus the per-animal numbers the cards show.
  *
@@ -8,12 +8,14 @@ import type { Animal, Shelter } from '@/types'
  *  the same way. The two files are fetched once per visit (useAtlasData
  *  caches the promises), so a second caller costs nothing.
  *
- *  Used by: HomeView.vue and AnimalsView.vue.
+ *  Used by: HomeView.vue, AnimalsView.vue, ShelterListView.vue and
+ *  ShelterView.vue.
  */
 export function useRoster() {
   const animals = ref<Animal[]>([])
   const shelters = ref<Shelter[]>([])
   const snapshotDate = ref('')
+  const buckets = ref<ShelterPayload['buckets']>([])
   const loading = ref(true)
   const error = ref<string | null>(null)
 
@@ -22,6 +24,7 @@ export function useRoster() {
       const [payload, everyAnimal] = await Promise.all([fetchShelters(), fetchAnimals()])
       snapshotDate.value = payload.snapshot_date
       shelters.value = payload.shelters
+      buckets.value = payload.buckets
       animals.value = everyAnimal
     } catch (cause) {
       error.value = cause instanceof Error ? cause.message : String(cause)
@@ -90,6 +93,7 @@ export function useRoster() {
     animals,
     shelters,
     snapshotDate,
+    buckets,
     loading,
     error,
     shelterById,

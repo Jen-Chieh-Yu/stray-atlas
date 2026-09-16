@@ -6,7 +6,10 @@
  *
  *  Used by: LucideIcon.vue (draws the shapes) and AnimalCard.vue (the
  *  IconName type). Add a glyph here before using it anywhere. */
-export type IconShape = { d: string } | { cx: number; cy: number; r: number }
+export type IconShape =
+  | { d: string }
+  | { cx: number; cy: number; r: number }
+  | { x: number; y: number; width: number; height: number; rx: number }
 
 export const ICONS = {
   menu: [{ d: 'M4 5h16' }, { d: 'M4 12h16' }, { d: 'M4 19h16' }],
@@ -16,6 +19,28 @@ export const ICONS = {
   'chevron-right': [{ d: 'm9 18 6-6-6-6' }],
   'arrow-right': [{ d: 'M5 12h14' }, { d: 'm12 5 7 7-7 7' }],
   'arrow-up-down': [{ d: 'm21 16-4 4-4-4' }, { d: 'M17 20V4' }, { d: 'm3 8 4-4 4 4' }, { d: 'M7 4v16' }],
+  'map-pin': [{ d: 'M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0' }, { cx: 12, cy: 10, r: 3 }],
+  phone: [{ d: 'M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384' }],
+  'external-link': [{ d: 'M15 3h6v6' }, { d: 'M10 14 21 3' }, { d: 'M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6' }],
+  hourglass: [
+    { d: 'M5 22h14' },
+    { d: 'M5 2h14' },
+    { d: 'M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22' },
+    { d: 'M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2' },
+  ],
+  'map-pinned': [
+    { d: 'M18 8c0 3.613-3.869 7.429-5.393 8.795a1 1 0 0 1-1.214 0C9.87 15.429 6 11.613 6 8a6 6 0 0 1 12 0' },
+    { cx: 12, cy: 8, r: 2 },
+    { d: 'M8.714 14h-3.71a1 1 0 0 0-.948.683l-2.004 6A1 1 0 0 0 3 22h18a1 1 0 0 0 .948-1.316l-2-6a1 1 0 0 0-.949-.684h-3.712' },
+  ],
+  'chart-column': [{ d: 'M3 3v16a2 2 0 0 0 2 2h16' }, { d: 'M18 17V9' }, { d: 'M13 17V5' }, { d: 'M8 17v-3' }],
+  list: [{ d: 'M3 5h.01' }, { d: 'M3 12h.01' }, { d: 'M3 19h.01' }, { d: 'M8 5h13' }, { d: 'M8 12h13' }, { d: 'M8 19h13' }],
+  'layout-grid': [
+    { x: 3, y: 3, width: 7, height: 7, rx: 1 },
+    { x: 14, y: 3, width: 7, height: 7, rx: 1 },
+    { x: 14, y: 14, width: 7, height: 7, rx: 1 },
+    { x: 3, y: 14, width: 7, height: 7, rx: 1 },
+  ],
   plus: [{ d: 'M5 12h14' }, { d: 'M12 5v14' }],
   search: [{ d: 'm21 21-4.34-4.34' }, { cx: 11, cy: 11, r: 8 }],
   clock: [{ cx: 12, cy: 12, r: 10 }, { d: 'M12 6v6l4 2' }],

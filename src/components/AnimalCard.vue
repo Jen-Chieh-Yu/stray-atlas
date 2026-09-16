@@ -8,7 +8,7 @@ import type { Animal } from '@/types'
 /** The round-photo card from the drafts. The whole card is the click target;
  *  the 查看詳情 button is the keyboard-reachable half of that.
  *
- *  Used by: HomeView.vue and AnimalsView.vue. */
+ *  Used by: HomeView.vue, AnimalsView.vue and ShelterView.vue. */
 const props = defineProps<{
   animal: Animal
   days: number | null

@@ -7,8 +7,7 @@ import type { RouteLocationNormalizedLoaded, Router } from 'vue-router'
  *  entry instead of leaving a duplicate behind for Back to land on twice.
  *  A dialog opened from a shared link has no such entry; replace then.
  *
- *  Used by: HomeView.vue and AnimalsView.vue. AnimalGrid.vue (still on the
- *  shelter page) keeps its own replace-only close until that page is rebuilt. */
+ *  Used by: HomeView.vue, AnimalsView.vue and ShelterView.vue. */
 export function closeAnimalDialog(router: Router, route: RouteLocationNormalizedLoaded) {
   const query = { ...route.query }
   delete query.animal
