@@ -303,7 +303,7 @@ const FLOW = [
         <div class="hero-plate">
           <h1>牠們一直都在等待被看見</h1>
           <p class="lede">
-            全臺{{ shelters.length ? ` ${shelters.length} 間` : '' }}公立收容所目前仍開放認養的動物，每日自動更新。
+            全臺{{ shelters.length ? ` ${shelters.length} 間` : '' }}公立收容所目前仍開放認養的動物{{ snapshotDate ? `，資料日期 ${snapshotDate}` : '' }}。
           </p>
         </div>
       </div>

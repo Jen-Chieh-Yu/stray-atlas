@@ -145,7 +145,8 @@ onBeforeUnmount(() => {
           rel="noreferrer"
           target="_blank"
           >dataset 85903</a
-        >），依政府資料開放授權條款第 1 版使用。行政區界線為內政部「鄉鎮市區界線」（dataset 7441）。動物照片由 pet.gov.tw 提供。
+        >），依政府資料開放授權條款第 1 版使用。行政區界線為內政部「鄉鎮市區界線」（dataset 7441）。動物照片由
+        <a href="https://www.pet.gov.tw/" rel="noreferrer" target="_blank">pet.gov.tw</a> 提供。
       </p>
       <p>
         本專案程式碼目前保留所有權利，尚未選定開放授權條款。介面圖示採用
