@@ -462,7 +462,7 @@ function openShelter(id: string) {
 </script>
 
 <template>
-  <div class="wrap">
+  <div class="frame">
     <svg
       ref="svgElement"
       class="map"
@@ -641,7 +641,8 @@ function openShelter(id: string) {
 </template>
 
 <style scoped>
-.wrap {
+/* Not "wrap": that is the global page column in style.css. */
+.frame {
   position: relative;
 }
 

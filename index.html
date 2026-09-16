@@ -9,19 +9,12 @@
       name="description"
       content="臺灣公立動物收容所開放資料的分析與互動視覺化：各縣市在所動物數與滯留天數。"
     />
-    <script>
-      // Stamp the saved theme before the first paint. Without this the page
-      // renders in the OS scheme and flips once Vue mounts, which is a visible
-      // flash for anyone whose choice differs from their system setting.
-      try {
-        var saved = localStorage.getItem('stray-atlas:theme')
-        if (saved === 'light' || saved === 'dark') {
-          document.documentElement.setAttribute('data-theme', saved)
-        }
-      } catch (e) {
-        /* private window or blocked site data: fall through to the OS setting */
-      }
-    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap"
+    />
   </head>
   <body>
     <div id="app"></div>
