@@ -8,7 +8,7 @@
 
 ## 這個專案在做什麼
 
-農業部「動物認領養」開放資料每日更新，內容是**此刻仍開放認養**的動物名冊。本專案每日自動保存快照、清理欄位、將自由文字的尋獲地補全為可定位的地址，並以互動地圖與分析頁呈現收容所的滯留狀況。
+農業部「動物認領養」開放資料每日更新，內容是**此刻仍開放認養**的動物名冊。本專案每日自動保存快照並重建網站資料：清理欄位、為自由文字的尋獲地分級（刻意不轉成座標，見〈尋獲地〉），並以互動地圖與分析頁呈現收容所的滯留狀況。
 
 這份資料有幾個反直覺的陷阱，處理不當會得到看似漂亮但站不住腳的結論。**如何避開這些陷阱，是本專案想展示的重點**，勝過任何單一結論。詳見〈資料限制〉與〈我踩過的統計陷阱〉。
 
@@ -20,7 +20,7 @@
 |---|---|
 | 前端 | Vue 3 + TypeScript + Vite |
 | 部署 | GitHub Pages（Project site，掛在 `/stray-atlas/` 子路徑） |
-| 資料抓取 | GitHub Actions cron（每日） |
+| 資料抓取與重建 | GitHub Actions cron（每日），有新快照時重建並觸發部署 |
 | 前處理與分析 | Python |
 | 產出格式 | JSON / GeoJSON（不產 PNG，例外見 `CLAUDE.md` §4.2） |
 
@@ -33,6 +33,8 @@
 ```bash
 python scripts/fetch_snapshot.py
 ```
+
+`data/raw/` 由排程負責寫入並推上 `main`。本機抓的快照只供測試，不要 commit，否則會和機器人當天推上的同名檔案衝突。
 
 由快照重建前端要吃的 JSON（同樣無外部相依，`build_districts.py` 例外，需要 `pyshp`）：
 
@@ -54,13 +56,25 @@ python scripts/build_distribution.py    # stats/distribution.json（分析頁）
 
 各腳本共用的路徑、log 與 JSON 寫檔集中在 `scripts/common.py`。
 
+**本機更新到最新資料。** 排程每天會把新快照與重建後的 `public/data/` 推上 `main`，本機只要拉下來：
+
+```bash
+git switch main
+git pull --ff-only
+```
+
+在功能分支上工作時，再把 main 併進來（`git switch <分支>`、`git merge main`）。只有要用非最新的快照、或排程重建失敗時，才需要自己跑 `python scripts/build_all.py`：在分支上 commit `public/data`（訊息 `data: rebuild public/data from the <快照日期> snapshot`，日期看 `build_all.py` 最後一行），再經 PR 併回 `main`（見 `CLAUDE.md` §6.6）。
+
 跑前端（Node 22+）：
 
 ```bash
 npm ci
-npm run dev       # http://localhost:5173/stray-atlas/
-npm run build     # 型別檢查 + 打包，產出 dist/
-npm run preview
+npm run dev         # http://localhost:5173/stray-atlas/
+npm run type-check  # 只做型別檢查（commit 前）
+npm run build       # 型別檢查 + 打包，產出 dist/（推送前）
+npm run preview     # 預覽 dist/
+
+cp .env.example .env.local   # 選用：填入 Google Maps Embed 金鑰，收容所介紹頁才會顯示內嵌地圖
 ```
 
 ---
@@ -70,22 +84,48 @@ npm run preview
 ```
 stray-atlas/
 ├── .github/workflows/
-│   ├── daily-snapshot.yml   每日抓取、驗證、封存快照
+│   ├── daily-snapshot.yml   每日抓取、驗證、封存快照；有新快照時重建網站資料並觸發部署
 │   └── deploy-pages.yml     打包並發布到 GitHub Pages
 ├── data/
 │   ├── raw/                 每日快照 YYYY-MM-DD.csv.gz 與 _manifest.csv（進 git，見 CLAUDE.md §6.3）
-│   └── reference/           行政區界原始檔與對照表
+│   └── reference/
+│       └── districts.json   縣市 → 鄉鎮市區名稱對照（build_districts.py 產出，geocode.py 使用）
 ├── scripts/                 Python 前處理與分析（標準函式庫，例外見下）
+│   ├── common.py            共用：路徑、log、時間戳記、JSON 寫檔、快照清單
 │   ├── fetch_snapshot.py    每日抓取；驗證、確定性 gzip、manifest
+│   ├── build_all.py         固定一份快照，依序跑下列六步並檢查輸出日期一致
 │   ├── clean.py             欄位清理，同時是其他腳本的載入函式庫
 │   ├── geocode.py           尋獲地分級（不呼叫 geocoder，見〈尋獲地〉）
-│   ├── build_districts.py   由 shapefile 產生行政區／縣市界（需 pyshp，一次性）
 │   ├── build_stats.py       縣市層級統計
 │   ├── build_shelters.py    收容所與全部動物名冊
 │   ├── build_shelter_points.py  收容所定位（行政區形心）
-│   └── build_distribution.py    在所天數分布：直方圖、KDE、ECDF
-├── public/data/             產出的 JSON / GeoJSON（前端資料契約，見 CLAUDE.md §4.1）
-└── src/                     Vue 前端（views / components / composables）
+│   ├── build_distribution.py    在所天數分布：直方圖、KDE、ECDF
+│   └── build_districts.py   由內政部鄉鎮市區界 shapefile 產生對照表與界線（需 pyshp，一次性，不在 build_all 內；原始壓縮檔不進 git）
+├── public/
+│   ├── favicon.svg
+│   └── data/                產出的 JSON / GeoJSON（前端資料契約，見 CLAUDE.md §4.1）
+│       ├── meta.json        快照日期與清理摘要（頁尾日期讀這裡）
+│       ├── animals.json     全部動物
+│       ├── shelters.json    收容所與各所統計
+│       ├── shelter-points.json  地圖圖釘
+│       ├── areas.json       縣市代碼對照
+│       ├── counties.geojson、districts.geojson  縣市與鄉鎮市區界（build_districts.py 產出）
+│       └── stats/           counties.json、foundplace.json、distribution.json
+├── src/                     Vue 前端
+│   ├── main.ts、App.vue     進入點與共用外殼（頂欄、導覽、頁尾）
+│   ├── style.css            設計 token 與全域樣式（見 DESIGN.md §3）
+│   ├── types.ts             資料契約的型別
+│   ├── router/              路由與捲動行為
+│   ├── views/               七個頁面（Home、Animals、ShelterList、Shelter、Map、Analysis、About）
+│   ├── components/          動物卡片與詳細資料、縣市地圖、分析圖表、圖示
+│   ├── composables/         資料載入（useAtlasData）與動物名冊（useRoster）
+│   └── lib/                 共用函式：動物、在所天數、收容所地址、詳細資料視窗路由、圖示資料
+├── index.html、vite.config.ts、tsconfig*.json、env.d.ts
+├── .env.example             Google Maps Embed 金鑰範本（複製成 .env.local）
+├── CLAUDE.md                AI 協作工作規則
+├── PROJECT_BRIEF.md         資料剖析結論與已驗證數字
+├── DESIGN.md                介面規格與設計約束
+└── THIRD-PARTY-LICENSES     複製進原始碼的第三方素材授權（Lucide 圖示）
 ```
 
 ### 頁面
@@ -123,6 +163,8 @@ stray-atlas/
 
 `data/raw/_manifest.csv` 逐日記錄 `date,status,rows,bytes,sha256,fetched_at_utc`。當日內容與前一份快照完全相同時不重複存檔，只在 manifest 記一列 `unchanged`；抓取失敗記 `failed`。**因此 `data/raw/` 出現缺日不等於當天沒有資料**，manifest 才是判斷依據——階段 3 以「消失的 `animal_id`」建構離所標籤時必須以它為準，否則會把「來源沒變」誤讀成「全部動物同時離所」。
 
+當天存成新快照時，同一個 workflow 接著以 `scripts/build_all.py --date <當日>` 重建 `public/data/`，與快照一起 commit，再以 `workflow_dispatch` 觸發部署（`GITHUB_TOKEN` 的推送不會觸發其他 workflow，所以必須明確呼叫）。來源與前一天相同（`unchanged`）或抓取失敗時不重建、不部署。重建失敗時快照照樣 commit，`public/data/` 維持前一份，該次 run 標為失敗——存檔永遠優先於網站。
+
 手動補抓：
 
 ```bash
@@ -141,7 +183,7 @@ python scripts/fetch_snapshot.py --force    # 覆蓋當日已存在的檔案
 | 項目 | 每次大小 | 進 git 後的實際增量 | 一年約 |
 |---|---|---|---|
 | 原始快照 `data/raw/YYYY-MM-DD.csv.gz` | 約 0.43 MB（解壓約 2.9 MB，8,300 餘列） | 約 0.43 MB／天——gzip 過的檔案彼此無法做差異壓縮，每天都是完整一份 | 約 160 MB |
-| 重建 `public/data/`（若改為每日） | 目錄共約 4.9 MB，其中 `animals.json` 約 2.7 MB；兩份行政區 GeoJSON 約 2.0 MB 不會變動 | 約 0.06 MB／天（以 09-15 → 09-16 兩次重建實測，打包後的差異壓縮增量） | 約 22 MB |
+| 重建 `public/data/`（有新快照的日子） | 目錄共約 4.9 MB，其中 `animals.json` 約 2.7 MB；兩份行政區 GeoJSON 約 2.0 MB 不會變動 | 約 0.06 MB／天（以 09-15 → 09-16 兩次重建實測，打包後的差異壓縮增量） | 約 22 MB |
 | 部署產物（Pages artifact） | 約 5.2 MB（程式約 0.3 MB＋`public/data`） | 不進 repo | — |
 
 - repo 目前（15 份快照）的 `.git` 物件約 10 MB。GitHub 建議 repo 維持在 1 GB 以下，照上表速度數年內不會碰到；真的變大時再考慮把原始存檔移到 Releases 或獨立的資料 repo，**不刪歷史快照**（階段 3 的離所標籤只能從這裡來）。
@@ -152,7 +194,7 @@ python scripts/fetch_snapshot.py --force    # 覆蓋當日已存在的檔案
 
 `.github/workflows/deploy-pages.yml` 在推上 `main` 時打包並發布到 GitHub Pages。網站由 artifact 提供，不經 `gh-pages` 分支，所以編譯產物完全不進版本歷史。
 
-只動 `data/` 的推送不會觸發部署——那是每天早上機器人的 commit，而 `data/raw/` 是分析腳本的輸入、不是網站資產，重建出來的頁面會一模一樣。網站真正吃的 `public/data/*.json` 不在忽略範圍。
+只動 `data/` 的推送不會觸發部署：`data/raw/` 是分析腳本的輸入、不是網站資產。網站真正吃的 `public/data/*.json` 不在忽略範圍，手動重建後推上 `main` 就會部署。每日排程的重建則由 `daily-snapshot.yml` 以 `workflow_dispatch` 觸發部署（見上）。
 
 ---
 
