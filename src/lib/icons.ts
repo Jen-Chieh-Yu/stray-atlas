@@ -43,6 +43,11 @@ export const ICONS = {
   ],
   plus: [{ d: 'M5 12h14' }, { d: 'M12 5v14' }],
   minus: [{ d: 'M5 12h14' }],
+  pause: [
+    { x: 14, y: 3, width: 5, height: 18, rx: 1 },
+    { x: 5, y: 3, width: 5, height: 18, rx: 1 },
+  ],
+  play: [{ d: 'M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z' }],
   'triangle-alert': [
     { d: 'm21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3' },
     { d: 'M12 9v4' },

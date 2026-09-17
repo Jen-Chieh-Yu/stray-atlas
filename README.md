@@ -77,6 +77,15 @@ npm run preview     # 預覽 dist/
 cp .env.example .env.local   # 選用：填入 Google Maps Embed 金鑰，收容所介紹頁才會顯示內嵌地圖
 ```
 
+**更換首頁照片。** 照片由人工從 Unsplash 下載，先在照片頁確認標示為 Unsplash License（不是付費的 Unsplash+），原檔放進 `assets-src/hero/`，在 `scripts/build_hero.py` 與 `src/lib/heroPhotos.ts`（含攝影師、出處與對焦位置）登記後執行：
+
+```bash
+pip install pillow
+python scripts/build_hero.py   # 產生 src/assets/hero/*.webp
+```
+
+`THIRD-PARTY-LICENSES` 的照片清單要一起更新。
+
 ---
 
 ## 專案結構
@@ -100,6 +109,7 @@ stray-atlas/
 │   ├── build_shelters.py    收容所與全部動物名冊
 │   ├── build_shelter_points.py  收容所定位（行政區形心）
 │   ├── build_distribution.py    在所天數分布：直方圖、KDE、ECDF
+│   ├── build_hero.py        首頁示意照片縮圖成 WebP（需 pillow，一次性，不在 build_all 內）
 │   └── build_districts.py   由內政部鄉鎮市區界 shapefile 產生對照表與界線（需 pyshp，一次性，不在 build_all 內；原始壓縮檔不進 git）
 ├── public/
 │   ├── favicon.svg
@@ -111,21 +121,23 @@ stray-atlas/
 │       ├── areas.json       縣市代碼對照
 │       ├── counties.geojson、districts.geojson  縣市與鄉鎮市區界（build_districts.py 產出）
 │       └── stats/           counties.json、foundplace.json、distribution.json
+├── assets-src/hero/         首頁照片原檔（Unsplash 下載，約 24 MB，不進 git）
 ├── src/                     Vue 前端
 │   ├── main.ts、App.vue     進入點與共用外殼（頂欄、導覽、頁尾）
 │   ├── style.css            設計 token 與全域樣式（見 DESIGN.md §3）
 │   ├── types.ts             資料契約的型別
+│   ├── assets/hero/         首頁示意照片（WebP，1920 與 960 寬各一份）
 │   ├── router/              路由與捲動行為
 │   ├── views/               七個頁面（Home、Animals、ShelterList、Shelter、Map、Analysis、About）
-│   ├── components/          動物卡片與詳細資料、縣市地圖、分析圖表、圖示
+│   ├── components/          動物卡片與詳細資料、首頁照片輪播、縣市地圖、分析圖表、圖示
 │   ├── composables/         資料載入（useAtlasData）與動物名冊（useRoster）
-│   └── lib/                 共用函式：動物、在所天數、收容所地址、詳細資料視窗路由、圖示資料
+│   └── lib/                 共用函式：動物、在所天數、收容所地址、詳細資料視窗路由、圖示資料、首頁照片與出處
 ├── index.html、vite.config.ts、tsconfig*.json、env.d.ts
 ├── .env.example             Google Maps Embed 金鑰範本（複製成 .env.local）
 ├── CLAUDE.md                AI 協作工作規則
 ├── PROJECT_BRIEF.md         資料剖析結論與已驗證數字
 ├── DESIGN.md                介面規格與設計約束
-└── THIRD-PARTY-LICENSES     複製進原始碼的第三方素材授權（Lucide 圖示）
+└── THIRD-PARTY-LICENSES     複製進原始碼的第三方素材授權（Lucide 圖示、Unsplash 照片）
 ```
 
 ### 頁面
@@ -298,3 +310,5 @@ python scripts/fetch_snapshot.py --force    # 覆蓋當日已存在的檔案
 資料源授權與程式碼授權無關，另行標示：
 
 > `data/` 目錄下之資料來源為農業部「動物認領養」開放資料，依政府資料開放授權條款第 1 版使用。
+
+首頁的示意照片來自 Unsplash，依 Unsplash License 使用，攝影師與出處見 `THIRD-PARTY-LICENSES` 與網站的關於本站頁。照片中的動物不在臺灣的收容所。

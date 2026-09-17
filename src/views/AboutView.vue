@@ -9,6 +9,7 @@ import { computed, onMounted, ref } from 'vue'
 import PageHead from '@/components/PageHead.vue'
 import { fetchDistribution, useAtlasData } from '@/composables/useAtlasData'
 import { formatCount } from '@/lib/animals'
+import { HERO_PHOTOS } from '@/lib/heroPhotos'
 import type { DistributionPayload } from '@/types'
 
 const REPO_URL = 'https://github.com/Jen-Chieh-Yu/stray-atlas'
@@ -143,6 +144,18 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
               <td>依來源規定</td>
             </tr>
             <tr>
+              <th scope="row">首頁示意照片</th>
+              <td>
+                <a href="https://unsplash.com" target="_blank" rel="noreferrer">Unsplash</a>，共
+                {{ HERO_PHOTOS.length }} 張，攝影師列於表格下方
+              </td>
+              <td>
+                <a href="https://unsplash.com/license" target="_blank" rel="noreferrer"
+                  >Unsplash License</a
+                >
+              </td>
+            </tr>
+            <tr>
               <th scope="row">認養流程</th>
               <td>
                 參考<a
@@ -171,6 +184,15 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
           </tbody>
         </table>
       </div>
+      <p>
+        首頁輪播的照片僅為示意，照片中的動物不在臺灣的收容所，也不是本站資料裡的動物。攝影與出處：
+      </p>
+      <ul class="photo-credits">
+        <li v-for="photo in HERO_PHOTOS" :key="photo.id">
+          <a :href="photo.url" target="_blank" rel="noreferrer">{{ photo.alt }}</a>
+          <span>Photo by {{ photo.photographer }} / Unsplash</span>
+        </li>
+      </ul>
     </section>
 
     <section aria-labelledby="ab-freshness">
@@ -345,6 +367,28 @@ section > p.stack {
   font-size: 0.86rem;
 }
 
+/* ── Photo credits ── */
+.photo-credits {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem 1.5rem;
+  max-width: 46rem;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.86rem;
+
+  & li {
+    display: flex;
+    flex-direction: column;
+  }
+
+  & span {
+    color: var(--ink-muted);
+    font-size: 0.78rem;
+  }
+}
+
 /* ── Freshness ── */
 .updatebox {
   display: grid;
@@ -398,7 +442,8 @@ section > p.stack {
 }
 
 @media (max-width: 700px) {
-  .updatebox {
+  .updatebox,
+  .photo-credits {
     grid-template-columns: minmax(0, 1fr);
   }
 }

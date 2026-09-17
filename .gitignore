@@ -57,6 +57,13 @@ Thumbs.db
 # data/ can keep the invariant "if it is here, it is committed".
 /tmp/
 
+# assets-src/ holds the original photos the site's images are made from
+# (the home page hero: about 24 MB of Unsplash downloads). The resized
+# WebP files in src/assets/hero/ are committed; the originals can be
+# downloaded again from the pages listed in src/lib/heroPhotos.ts, and
+# scripts/build_hero.py rebuilds the WebP files from them.
+/assets-src/
+
 # ==================================================================
 # Scratch notes and generated previews
 # ==================================================================
