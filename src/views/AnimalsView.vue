@@ -584,15 +584,15 @@ function onSort(event: Event) {
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
-}
 
-.find-row.upper {
-  padding-bottom: 1.1rem;
-  border-bottom: 1px solid var(--hairline);
-}
+  &.upper {
+    padding-bottom: 1.1rem;
+    border-bottom: 1px solid var(--hairline);
+  }
 
-.find-row.lower {
-  padding-top: 1.1rem;
+  &.lower {
+    padding-top: 1.1rem;
+  }
 }
 
 .field {
@@ -600,12 +600,12 @@ function onSort(event: Event) {
   flex-direction: column;
   gap: 0.4rem;
   min-width: 0;
-}
 
-.field > label,
-.field > .label {
-  color: var(--ink-muted);
-  font-size: 0.8rem;
+  & > label,
+  & > .label {
+    color: var(--ink-muted);
+    font-size: 0.8rem;
+  }
 }
 
 /* A native select dressed as the draft's field: the list stays the platform's
@@ -619,36 +619,36 @@ function onSort(event: Event) {
   border-radius: var(--radius-sm);
   background: var(--plane);
   color: var(--ink);
-}
 
-.select:hover {
-  border-color: var(--ramp-3);
-}
+  &:hover {
+    border-color: var(--ramp-3);
+  }
 
-.select:focus-within {
-  outline: 2px solid var(--ramp-4);
-  outline-offset: 1px;
-}
+  &:focus-within {
+    outline: 2px solid var(--ramp-4);
+    outline-offset: 1px;
+  }
 
-.select select {
-  width: 100%;
-  padding: 0.5rem 2.4rem 0.5rem 0.8rem;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  font-size: 0.92rem;
-  font-variant-numeric: tabular-nums;
-  appearance: none;
-  cursor: pointer;
-}
+  & select {
+    width: 100%;
+    padding: 0.5rem 2.4rem 0.5rem 0.8rem;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 0.92rem;
+    font-variant-numeric: tabular-nums;
+    appearance: none;
+    cursor: pointer;
+  }
 
-.select svg {
-  position: absolute;
-  right: 0.8rem;
-  color: var(--ink-muted);
-  pointer-events: none;
+  & svg {
+    position: absolute;
+    right: 0.8rem;
+    color: var(--ink-muted);
+    pointer-events: none;
+  }
 }
 
 .pills {
@@ -671,17 +671,17 @@ function onSort(event: Event) {
     background 160ms ease,
     color 160ms ease,
     border-color 160ms ease;
-}
 
-.pill-btn:hover {
-  border-color: var(--ramp-3);
-  color: var(--ink);
-}
+  &:hover {
+    border-color: var(--ramp-3);
+    color: var(--ink);
+  }
 
-.pill-btn[aria-pressed='true'] {
-  border-color: var(--ramp-4);
-  background: var(--ramp-4);
-  color: var(--on-accent);
+  &[aria-pressed='true'] {
+    border-color: var(--ramp-4);
+    background: var(--ramp-4);
+    color: var(--on-accent);
+  }
 }
 
 /* ── Result bar ── */
@@ -693,16 +693,16 @@ function onSort(event: Event) {
   gap: 1rem;
   margin-top: 1.75rem;
   scroll-margin-top: 80px;
-}
 
-.resultbar .count {
-  color: var(--ink-secondary);
-  font-size: 0.95rem;
-  font-variant-numeric: tabular-nums;
-}
+  & .count {
+    color: var(--ink-secondary);
+    font-size: 0.95rem;
+    font-variant-numeric: tabular-nums;
 
-.resultbar .count b {
-  color: var(--accent-text);
+    & b {
+      color: var(--accent-text);
+    }
+  }
 }
 
 .sortwrap {
@@ -724,42 +724,42 @@ function onSort(event: Event) {
   align-items: center;
   gap: 0.4rem;
   margin-top: 0.9rem;
-}
 
-.applied .tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.22rem 0.5rem 0.22rem 0.75rem;
-  border-radius: 999px;
-  background: var(--surface-sunk);
-  color: var(--ink-secondary);
-  font-size: 0.84rem;
-  font-variant-numeric: tabular-nums;
-}
+  & .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.22rem 0.5rem 0.22rem 0.75rem;
+    border-radius: 999px;
+    background: var(--surface-sunk);
+    color: var(--ink-secondary);
+    font-size: 0.84rem;
+    font-variant-numeric: tabular-nums;
 
-.applied .tag button {
-  display: flex;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--ink-muted);
-  cursor: pointer;
-}
+    & button {
+      display: flex;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--ink-muted);
+      cursor: pointer;
 
-.applied .tag button:hover {
-  color: var(--ink);
-}
+      &:hover {
+        color: var(--ink);
+      }
+    }
+  }
 
-.applied .clear {
-  margin-left: 0.25rem;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--accent-text);
-  font: inherit;
-  font-size: 0.84rem;
-  cursor: pointer;
+  & .clear {
+    margin-left: 0.25rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--accent-text);
+    font: inherit;
+    font-size: 0.84rem;
+    cursor: pointer;
+  }
 }
 
 /* ── Grid and pager ── */
@@ -869,17 +869,17 @@ function onSort(event: Event) {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.5rem;
-}
 
-.boundary-cols h3 {
-  margin-bottom: 0.35rem;
-  font-size: 0.98rem;
-}
+  & h3 {
+    margin-bottom: 0.35rem;
+    font-size: 0.98rem;
+  }
 
-.boundary-cols p {
-  margin: 0;
-  color: var(--ink-secondary);
-  font-size: 0.86rem;
+  & p {
+    margin: 0;
+    color: var(--ink-secondary);
+    font-size: 0.86rem;
+  }
 }
 
 @media (max-width: 1000px) {

@@ -116,19 +116,19 @@ a {
   color: var(--ink-secondary);
   cursor: pointer;
   transition: all 120ms ease;
-}
 
-.chip:hover {
-  border-color: var(--ramp-3);
-}
+  &:hover {
+    border-color: var(--ramp-3);
+  }
 
-.chip.on {
-  background: var(--ramp-4);
-  border-color: var(--ramp-4);
-  color: var(--on-accent);
-}
+  &.on {
+    background: var(--ramp-4);
+    border-color: var(--ramp-4);
+    color: var(--on-accent);
+  }
 
-.chip.small {
-  font-size: 0.82rem;
-  padding: 0.2rem 0.7rem;
+  &.small {
+    font-size: 0.82rem;
+    padding: 0.2rem 0.7rem;
+  }
 }

@@ -97,14 +97,14 @@ const badge = computed(() =>
   border-radius: 999px;
   overflow: hidden;
   background: var(--surface-sunk);
-}
 
-.avatar img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
+  & img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
 }
 
 .acard:hover .avatar img {
@@ -179,14 +179,14 @@ const badge = computed(() =>
   height: 4px;
   border-radius: 999px;
   background: var(--surface-sunk);
-}
 
-.rank-bar span {
-  display: block;
-  height: 100%;
-  min-width: 3px;
-  border-radius: 999px;
-  background: var(--ramp-4);
+  & span {
+    display: block;
+    height: 100%;
+    min-width: 3px;
+    border-radius: 999px;
+    background: var(--ramp-4);
+  }
 }
 
 .rank-txt {
@@ -213,16 +213,16 @@ const badge = computed(() =>
   transition:
     background 160ms ease,
     color 160ms ease;
-}
 
-.detail-btn svg {
-  position: absolute;
-  right: 1.05rem;
-}
+  & svg {
+    position: absolute;
+    right: 1.05rem;
+  }
 
-.detail-btn:hover {
-  background: var(--ink);
-  color: var(--plane);
+  &:hover {
+    background: var(--ink);
+    color: var(--plane);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

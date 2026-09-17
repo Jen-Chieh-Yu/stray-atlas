@@ -441,10 +441,10 @@ const shelterRange = computed(() => {
   border-radius: 999px;
   background: var(--surface);
   font-size: 0.84rem;
-}
 
-.pill svg {
-  color: var(--accent-text);
+  & svg {
+    color: var(--accent-text);
+  }
 }
 
 .kicker {
@@ -463,46 +463,46 @@ const shelterRange = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-}
 
-.warn-col .no {
-  color: var(--accent-text);
-  font-size: 0.78rem;
-  letter-spacing: 0.12em;
-  font-variant-numeric: tabular-nums;
-}
+  & .no {
+    color: var(--accent-text);
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    font-variant-numeric: tabular-nums;
+  }
 
-.warn-col h2 {
-  font-size: 0.98rem;
-}
+  & h2 {
+    font-size: 0.98rem;
 
-.warn-col h2 em {
-  display: block;
-  color: var(--ink-muted);
-  font-size: 0.76rem;
-  font-style: normal;
-  font-weight: 400;
-  letter-spacing: 0.02em;
-}
+    & em {
+      display: block;
+      color: var(--ink-muted);
+      font-size: 0.76rem;
+      font-style: normal;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
+  }
 
-.warn-col p {
-  margin: 0;
-  color: var(--ink-secondary);
-  font-size: 0.86rem;
-  line-height: 1.65;
-}
+  & p {
+    margin: 0;
+    color: var(--ink-secondary);
+    font-size: 0.86rem;
+    line-height: 1.65;
+  }
 
-.warn-col strong {
-  color: var(--ink);
-}
+  & strong {
+    color: var(--ink);
+  }
 
-/* The three texts differ in length; margin-top: auto lines the footers up. */
-.warn-col .status {
-  margin-top: auto;
-  padding-top: 0.8rem;
-  border-top: 1px solid var(--hairline);
-  color: var(--ink-muted);
-  font-size: 0.78rem;
+  /* The three texts differ in length; margin-top: auto lines the footers up. */
+  & .status {
+    margin-top: auto;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--hairline);
+    color: var(--ink-muted);
+    font-size: 0.78rem;
+  }
 }
 
 /* ── Cards ── */
@@ -520,16 +520,16 @@ const shelterRange = computed(() => {
   justify-content: space-between;
   gap: 0.4rem 1rem;
   margin-bottom: 0.9rem;
-}
 
-.an-head h2 {
-  font-size: 1.15rem;
-}
+  & h2 {
+    font-size: 1.15rem;
+  }
 
-.an-head .sub {
-  color: var(--ink-muted);
-  font-size: 0.84rem;
-  font-variant-numeric: tabular-nums;
+  & .sub {
+    color: var(--ink-muted);
+    font-size: 0.84rem;
+    font-variant-numeric: tabular-nums;
+  }
 }
 
 /* ── Controls ── */
@@ -545,11 +545,11 @@ const shelterRange = computed(() => {
   flex-direction: column;
   gap: 0.4rem;
   min-width: 0;
-}
 
-.field > .label {
-  color: var(--ink-muted);
-  font-size: 0.8rem;
+  & > .label {
+    color: var(--ink-muted);
+    font-size: 0.8rem;
+  }
 }
 
 .pills {
@@ -571,17 +571,17 @@ const shelterRange = computed(() => {
     background 160ms ease,
     color 160ms ease,
     border-color 160ms ease;
-}
 
-.pill-btn:hover {
-  border-color: var(--ramp-3);
-  color: var(--ink);
-}
+  &:hover {
+    border-color: var(--ramp-3);
+    color: var(--ink);
+  }
 
-.pill-btn[aria-pressed='true'] {
-  border-color: var(--ramp-4);
-  background: var(--ramp-4);
-  color: var(--on-accent);
+  &[aria-pressed='true'] {
+    border-color: var(--ramp-4);
+    background: var(--ramp-4);
+    color: var(--on-accent);
+  }
 }
 
 .applied {
@@ -591,11 +591,11 @@ const shelterRange = computed(() => {
   line-height: 1.6;
   text-align: right;
   font-variant-numeric: tabular-nums;
-}
 
-.applied b {
-  color: var(--accent-text);
-  font-weight: 500;
+  & b {
+    color: var(--accent-text);
+    font-weight: 500;
+  }
 }
 
 /* ── Chart legends and notes ── */
@@ -606,43 +606,43 @@ const shelterRange = computed(() => {
   margin-top: 0.4rem;
   color: var(--ink-secondary);
   font-size: 0.84rem;
-}
 
-.chart-legend .k {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-}
+  & .k {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
 
-.chart-legend .k::before {
-  content: '';
-  width: 14px;
-  height: 3px;
-  border-radius: 2px;
-}
+    &::before {
+      content: '';
+      width: 14px;
+      height: 3px;
+      border-radius: 2px;
+    }
+  }
 
-.chart-legend .bar::before {
-  width: 12px;
-  height: 10px;
-  background: var(--ramp-2);
-}
+  & .bar::before {
+    width: 12px;
+    height: 10px;
+    background: var(--ramp-2);
+  }
 
-.chart-legend .kde::before {
-  background: var(--ramp-5);
-}
+  & .kde::before {
+    background: var(--ramp-5);
+  }
 
-.chart-legend .median::before {
-  height: 0;
-  border-top: 1.5px dashed var(--ink);
-  border-radius: 0;
-}
+  & .median::before {
+    height: 0;
+    border-top: 1.5px dashed var(--ink);
+    border-radius: 0;
+  }
 
-.chart-legend .dog::before {
-  background: var(--series-a);
-}
+  & .dog::before {
+    background: var(--series-a);
+  }
 
-.chart-legend .cat::before {
-  background: var(--series-b);
+  & .cat::before {
+    background: var(--series-b);
+  }
 }
 
 /* A caption with its own heading and a sunk ground, not grey small print. */
@@ -651,28 +651,28 @@ const shelterRange = computed(() => {
   padding: 1rem 1.1rem;
   border-radius: var(--radius-sm);
   background: var(--surface-sunk);
-}
 
-.note h3 {
-  margin-bottom: 0.4rem;
-  font-size: 0.88rem;
-}
+  & h3 {
+    margin-bottom: 0.4rem;
+    font-size: 0.88rem;
+  }
 
-.note p {
-  max-width: 52rem;
-  margin: 0;
-  color: var(--ink-secondary);
-  font-size: 0.85rem;
-  line-height: 1.7;
-  font-variant-numeric: tabular-nums;
-}
+  & p {
+    max-width: 52rem;
+    margin: 0;
+    color: var(--ink-secondary);
+    font-size: 0.85rem;
+    line-height: 1.7;
+    font-variant-numeric: tabular-nums;
 
-.note p + p {
-  margin-top: 0.5rem;
-}
+    & + p {
+      margin-top: 0.5rem;
+    }
+  }
 
-.note strong {
-  color: var(--ink);
+  & strong {
+    color: var(--ink);
+  }
 }
 
 /* ── Quantile table ── */
@@ -685,33 +685,33 @@ const shelterRange = computed(() => {
   min-width: 620px;
   border-collapse: collapse;
   font-variant-numeric: tabular-nums;
-}
 
-.qtable th,
-.qtable td {
-  padding: 0.6rem 0.5rem;
-  font-size: 0.88rem;
-  text-align: right;
-}
+  & th,
+  & td {
+    padding: 0.6rem 0.5rem;
+    font-size: 0.88rem;
+    text-align: right;
+  }
 
-.qtable thead th {
-  border-bottom: 1px solid var(--hairline);
-  color: var(--ink-muted);
-  font-size: 0.78rem;
-  font-weight: 400;
-}
+  & thead th {
+    border-bottom: 1px solid var(--hairline);
+    color: var(--ink-muted);
+    font-size: 0.78rem;
+    font-weight: 400;
+  }
 
-.qtable thead th:first-child,
-.qtable tbody th {
-  text-align: left;
-}
+  & thead th:first-child,
+  & tbody th {
+    text-align: left;
+  }
 
-.qtable tbody th {
-  font-weight: 700;
-}
+  & tbody th {
+    font-weight: 700;
+  }
 
-.qtable tbody tr + tr > * {
-  border-top: 1px solid var(--hairline);
+  & tbody tr + tr > * {
+    border-top: 1px solid var(--hairline);
+  }
 }
 
 /* ── County list ── */
@@ -729,31 +729,31 @@ const shelterRange = computed(() => {
   padding: 0.55rem 0.5rem;
   border-bottom: 1px solid var(--hairline);
   font-variant-numeric: tabular-nums;
-}
 
-.rank-row:last-child {
-  border-bottom: 0;
-}
+  &:last-child {
+    border-bottom: 0;
+  }
 
-.rank-row .rk,
-.rank-row .sh {
-  color: var(--ink-muted);
-  font-size: 0.78rem;
-}
+  & .rk,
+  & .sh {
+    color: var(--ink-muted);
+    font-size: 0.78rem;
+  }
 
-.rank-row .v1,
-.rank-row .v2 {
-  font-size: 0.9rem;
-  text-align: right;
-}
+  & .v1,
+  & .v2 {
+    font-size: 0.9rem;
+    text-align: right;
+  }
 
-.rank-row .v2 {
-  color: var(--ink-secondary);
-}
+  & .v2 {
+    color: var(--ink-secondary);
+  }
 
-.rank-row.hot .v2 {
-  color: var(--accent-text);
-  font-weight: 700;
+  &.hot .v2 {
+    color: var(--accent-text);
+    font-weight: 700;
+  }
 }
 
 @media (max-width: 900px) {
@@ -774,10 +774,10 @@ const shelterRange = computed(() => {
 
   .rank-row {
     grid-template-columns: 2rem minmax(0, 1fr) 4.6rem 4.6rem;
-  }
 
-  .rank-row .sh {
-    display: none;
+    & .sh {
+      display: none;
+    }
   }
 }
 

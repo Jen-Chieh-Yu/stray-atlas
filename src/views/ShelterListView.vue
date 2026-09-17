@@ -472,19 +472,19 @@ function names(list: Shelter[]): string {
   border-radius: var(--radius);
   background: var(--surface);
   text-align: center;
-}
 
-.stat b {
-  display: block;
-  color: var(--accent-text);
-  font-size: 1.85rem;
-  line-height: 1.2;
-  font-variant-numeric: tabular-nums;
-}
+  & b {
+    display: block;
+    color: var(--accent-text);
+    font-size: 1.85rem;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+  }
 
-.stat span {
-  color: var(--ink-secondary);
-  font-size: 0.86rem;
+  & span {
+    color: var(--ink-secondary);
+    font-size: 0.86rem;
+  }
 }
 
 /* ── Filter panel (same shape as the animals page) ── */
@@ -500,15 +500,15 @@ function names(list: Shelter[]): string {
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
-}
 
-.find-row.upper {
-  padding-bottom: 1.1rem;
-  border-bottom: 1px solid var(--hairline);
-}
+  &.upper {
+    padding-bottom: 1.1rem;
+    border-bottom: 1px solid var(--hairline);
+  }
 
-.find-row.lower {
-  padding-top: 1.1rem;
+  &.lower {
+    padding-top: 1.1rem;
+  }
 }
 
 .field {
@@ -516,12 +516,12 @@ function names(list: Shelter[]): string {
   flex-direction: column;
   gap: 0.4rem;
   min-width: 0;
-}
 
-.field > label,
-.field > .label {
-  color: var(--ink-muted);
-  font-size: 0.8rem;
+  & > label,
+  & > .label {
+    color: var(--ink-muted);
+    font-size: 0.8rem;
+  }
 }
 
 .select {
@@ -533,10 +533,10 @@ function names(list: Shelter[]): string {
   border-radius: var(--radius-sm);
   background: var(--plane);
   color: var(--ink);
-}
 
-.select:hover {
-  border-color: var(--ramp-3);
+  &:hover {
+    border-color: var(--ramp-3);
+  }
 }
 
 .select:focus-within,
@@ -577,21 +577,21 @@ function names(list: Shelter[]): string {
   border-radius: var(--radius-sm);
   background: var(--plane);
   color: var(--ink-muted);
-}
 
-.find-search input {
-  flex: 1;
-  min-width: 0;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  color: var(--ink);
-  font: inherit;
-  font-size: 0.92rem;
-}
+  & input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.92rem;
 
-.find-search input::placeholder {
-  color: var(--ink-muted);
+    &::placeholder {
+      color: var(--ink-muted);
+    }
+  }
 }
 
 .pills {
@@ -614,17 +614,17 @@ function names(list: Shelter[]): string {
     background 160ms ease,
     color 160ms ease,
     border-color 160ms ease;
-}
 
-.pill-btn:hover {
-  border-color: var(--ramp-3);
-  color: var(--ink);
-}
+  &:hover {
+    border-color: var(--ramp-3);
+    color: var(--ink);
+  }
 
-.pill-btn[aria-pressed='true'] {
-  border-color: var(--ramp-4);
-  background: var(--ramp-4);
-  color: var(--on-accent);
+  &[aria-pressed='true'] {
+    border-color: var(--ramp-4);
+    background: var(--ramp-4);
+    color: var(--on-accent);
+  }
 }
 
 /* ── Result bar ── */
@@ -635,16 +635,16 @@ function names(list: Shelter[]): string {
   justify-content: space-between;
   gap: 1rem;
   margin-top: 1.75rem;
-}
 
-.resultbar .count {
-  color: var(--ink-secondary);
-  font-size: 0.95rem;
-  font-variant-numeric: tabular-nums;
-}
+  & .count {
+    color: var(--ink-secondary);
+    font-size: 0.95rem;
+    font-variant-numeric: tabular-nums;
 
-.resultbar .count b {
-  color: var(--accent-text);
+    & b {
+      color: var(--accent-text);
+    }
+  }
 }
 
 .sortwrap {
@@ -674,30 +674,30 @@ function names(list: Shelter[]): string {
   border: 1px solid var(--hairline);
   border-radius: 999px;
   background: var(--surface);
-}
 
-.viewtoggle button {
-  display: inline-grid;
-  place-items: center;
-  width: 2.25rem;
-  height: 2rem;
-  padding: 0;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--ink-secondary);
-  font: inherit;
-  font-size: 0.85rem;
-  cursor: pointer;
-}
+  & button {
+    display: inline-grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2rem;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink-secondary);
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
 
-.viewtoggle button:hover {
-  color: var(--ink);
-}
+    &:hover {
+      color: var(--ink);
+    }
 
-.viewtoggle button[aria-pressed='true'] {
-  background: var(--ramp-4);
-  color: var(--on-accent);
+    &[aria-pressed='true'] {
+      background: var(--ramp-4);
+      color: var(--on-accent);
+    }
+  }
 }
 
 /* ── Shelter rows ── */
@@ -720,10 +720,10 @@ function names(list: Shelter[]): string {
   border-radius: var(--radius);
   background: var(--surface);
   transition: border-color 160ms ease;
-}
 
-.srow:hover {
-  border-color: var(--ramp-3);
+  &:hover {
+    border-color: var(--ramp-3);
+  }
 }
 
 .r-main {
@@ -731,19 +731,19 @@ function names(list: Shelter[]): string {
   flex-direction: column;
   gap: 0.35rem;
   min-width: 0;
-}
 
-.r-main h2 {
-  font-size: 1.05rem;
-}
+  & h2 {
+    font-size: 1.05rem;
 
-.r-main h2 a {
-  color: inherit;
-  text-decoration: none;
-}
+    & a {
+      color: inherit;
+      text-decoration: none;
 
-.r-main h2 a:hover {
-  color: var(--accent-text);
+      &:hover {
+        color: var(--accent-text);
+      }
+    }
+  }
 }
 
 .r-counts {
@@ -792,10 +792,10 @@ function names(list: Shelter[]): string {
   border-radius: var(--radius);
   background: var(--surface);
   transition: border-color 160ms ease;
-}
 
-.scard:hover {
-  border-color: var(--ramp-3);
+  &:hover {
+    border-color: var(--ramp-3);
+  }
 }
 
 .scard-top {
@@ -844,29 +844,29 @@ function names(list: Shelter[]): string {
   gap: 0.3rem;
   color: var(--ink-muted);
   font-size: 0.83rem;
-}
 
-.smeta > span {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.45rem;
-}
+  & > span {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.45rem;
+  }
 
-.smeta svg {
-  flex-shrink: 0;
-  margin-top: 0.3rem;
-}
+  & svg {
+    flex-shrink: 0;
+    margin-top: 0.3rem;
+  }
 
-/* One line each: source addresses vary wildly in length. Hover shows it all. */
-.smeta .line {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+  /* One line each: source addresses vary wildly in length. Hover shows it all. */
+  & .line {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-.smeta .missing {
-  opacity: 0.75;
+  & .missing {
+    opacity: 0.75;
+  }
 }
 
 .scounts {
@@ -880,18 +880,18 @@ function names(list: Shelter[]): string {
 
 .scount {
   text-align: center;
-}
 
-.scount b {
-  display: block;
-  font-size: 1.15rem;
-  line-height: 1.3;
-  font-variant-numeric: tabular-nums;
-}
+  & b {
+    display: block;
+    font-size: 1.15rem;
+    line-height: 1.3;
+    font-variant-numeric: tabular-nums;
+  }
 
-.scount span {
-  color: var(--ink-muted);
-  font-size: 0.78rem;
+  & span {
+    color: var(--ink-muted);
+    font-size: 0.78rem;
+  }
 }
 
 .spark-block {
@@ -936,16 +936,16 @@ function names(list: Shelter[]): string {
   transition:
     background 160ms ease,
     color 160ms ease;
-}
 
-.detail-btn svg {
-  position: absolute;
-  right: 1.05rem;
-}
+  & svg {
+    position: absolute;
+    right: 1.05rem;
+  }
 
-.detail-btn:hover {
-  background: var(--ink);
-  color: var(--plane);
+  &:hover {
+    background: var(--ink);
+    color: var(--plane);
+  }
 }
 
 .animals-link {
@@ -954,10 +954,10 @@ function names(list: Shelter[]): string {
   text-align: center;
   text-decoration: none;
   font-variant-numeric: tabular-nums;
-}
 
-.animals-link:hover {
-  text-decoration: underline;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .empty-state {

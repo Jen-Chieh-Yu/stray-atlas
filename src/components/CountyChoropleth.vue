@@ -650,14 +650,14 @@ function openShelter(id: string) {
   margin-inline: auto;
   display: block;
   touch-action: none;
-}
 
-.map.pannable {
-  cursor: grab;
-}
+  &.pannable {
+    cursor: grab;
+  }
 
-.map.dragging {
-  cursor: grabbing;
+  &.dragging {
+    cursor: grabbing;
+  }
 }
 
 .county {
@@ -671,32 +671,32 @@ function openShelter(id: string) {
     opacity 120ms ease,
     stroke 120ms ease;
   outline: none;
-}
 
-/* With pins on, the choropleth is context rather than the subject: at full
+  /* With pins on, the choropleth is context rather than the subject: at full
    strength the two sequential scales compete and neither reads. */
-.county.muted {
-  opacity: 0.45;
-}
+  &.muted {
+    opacity: 0.45;
+  }
 
-.county.dimmed {
-  opacity: 0.3;
-}
+  &.dimmed {
+    opacity: 0.3;
+  }
 
-.county.muted.dimmed {
-  opacity: 0.18;
-}
+  &.muted.dimmed {
+    opacity: 0.18;
+  }
 
-.county.active,
-.county:focus-visible {
-  stroke: var(--ink);
-  stroke-width: 2;
-}
+  &.active,
+  &:focus-visible {
+    stroke: var(--ink);
+    stroke-width: 2;
+  }
 
-.county.inset {
-  /* The Matsu and Kinmen islands are a few pixels across; the full-width
+  &.inset {
+    /* The Matsu and Kinmen islands are a few pixels across; the full-width
      surface stroke would erase them. */
-  stroke-width: 0.5;
+    stroke-width: 0.5;
+  }
 }
 
 .gutter-edge {
@@ -721,39 +721,39 @@ function openShelter(id: string) {
 .pin {
   cursor: pointer;
   outline: none;
-}
 
-.pin path {
-  fill: var(--pin);
-  stroke: var(--surface);
-  stroke-width: 1.5;
-}
+  & path {
+    fill: var(--pin);
+    stroke: var(--surface);
+    stroke-width: 1.5;
+  }
 
-.pin text {
-  fill: var(--surface);
-  text-anchor: middle;
-  font-family: var(--font);
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  pointer-events: none;
-}
+  & text {
+    fill: var(--surface);
+    text-anchor: middle;
+    font-family: var(--font);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+  }
 
-.pin .pin-name {
-  fill: var(--ink-secondary);
-  font-size: 9px;
-  font-weight: 500;
-}
+  & .pin-name {
+    fill: var(--ink-secondary);
+    font-size: 9px;
+    font-weight: 500;
+  }
 
-.pin.picked path {
-  fill: var(--ramp-4);
-  stroke: var(--ink);
-  stroke-width: 2;
-}
+  &.picked path {
+    fill: var(--ramp-4);
+    stroke: var(--ink);
+    stroke-width: 2;
+  }
 
-.pin:hover path,
-.pin:focus-visible path {
-  stroke: var(--ink);
-  stroke-width: 2;
+  &:hover path,
+  &:focus-visible path {
+    stroke: var(--ink);
+    stroke-width: 2;
+  }
 }
 
 .zoom-controls {
@@ -776,14 +776,14 @@ function openShelter(id: string) {
   background: var(--surface);
   color: var(--ink);
   cursor: pointer;
-}
 
-.zoom-button:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
 
-.zoom-button:hover:not(:disabled) {
-  border-color: var(--ramp-3);
+  &:hover:not(:disabled) {
+    border-color: var(--ramp-3);
+  }
 }
 </style>

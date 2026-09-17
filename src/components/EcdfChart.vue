@@ -231,9 +231,9 @@ svg {
   color: var(--ink-secondary);
   font-size: 0.8rem;
   font-variant-numeric: tabular-nums;
-}
 
-.readout.muted {
-  color: var(--ink-muted);
+  &.muted {
+    color: var(--ink-muted);
+  }
 }
 </style>

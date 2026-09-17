@@ -50,19 +50,19 @@ const summary = computed(() =>
   align-items: flex-end;
   gap: 3px;
   height: 46px;
-}
 
-.bars i {
-  display: block;
-  flex: 1 1 0;
-  min-width: 0;
-  border-radius: 2px 2px 0 0;
-  background: var(--ramp-4);
-}
+  & i {
+    display: block;
+    flex: 1 1 0;
+    min-width: 0;
+    border-radius: 2px 2px 0 0;
+    background: var(--ramp-4);
 
-.bars i.zero {
-  height: 3px;
-  background: var(--no-data);
+    &.zero {
+      height: 3px;
+      background: var(--no-data);
+    }
+  }
 }
 
 .axis {

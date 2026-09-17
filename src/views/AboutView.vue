@@ -300,31 +300,31 @@ a {
   width: 100%;
   min-width: 36rem;
   border-collapse: collapse;
-}
 
-.grid-table th,
-.grid-table td {
-  padding: 0.75rem 0.6rem;
-  border-bottom: 1px solid var(--hairline);
-  font-size: 0.88rem;
-  line-height: 1.7;
-  text-align: left;
-  vertical-align: top;
-}
+  & th,
+  & td {
+    padding: 0.75rem 0.6rem;
+    border-bottom: 1px solid var(--hairline);
+    font-size: 0.88rem;
+    line-height: 1.7;
+    text-align: left;
+    vertical-align: top;
+  }
 
-.grid-table thead th {
-  color: var(--ink-muted);
-  font-size: 0.78rem;
-  font-weight: 400;
-}
+  & thead th {
+    color: var(--ink-muted);
+    font-size: 0.78rem;
+    font-weight: 400;
+  }
 
-.grid-table tbody th {
-  font-weight: 700;
-  white-space: nowrap;
-}
+  & tbody th {
+    font-weight: 700;
+    white-space: nowrap;
+  }
 
-.grid-table td {
-  color: var(--ink-secondary);
+  & td {
+    color: var(--ink-secondary);
+  }
 }
 
 .sources thead th:first-child,
@@ -358,19 +358,19 @@ section > p.stack {
   border: 1px solid var(--hairline);
   border-radius: var(--radius);
   background: var(--surface);
-}
 
-.ubox b {
-  display: block;
-  color: var(--accent-text);
-  font-size: 1.15rem;
-  line-height: 1.35;
-  font-variant-numeric: tabular-nums;
-}
+  & b {
+    display: block;
+    color: var(--accent-text);
+    font-size: 1.15rem;
+    line-height: 1.35;
+    font-variant-numeric: tabular-nums;
+  }
 
-.ubox span {
-  color: var(--ink-muted);
-  font-size: 0.82rem;
+  & span {
+    color: var(--ink-muted);
+    font-size: 0.82rem;
+  }
 }
 
 /* ── Disclaimer ── */
@@ -379,22 +379,22 @@ section > p.stack {
   padding: 1.6rem;
   border-radius: var(--radius);
   background: var(--surface-sunk);
-}
 
-.disclaimer ul {
-  margin: 0;
-  padding-left: 1.15rem;
-}
+  & ul {
+    margin: 0;
+    padding-left: 1.15rem;
+  }
 
-.disclaimer li {
-  margin-bottom: 0.55rem;
-  color: var(--ink-secondary);
-  font-size: 0.88rem;
-  line-height: 1.8;
-}
+  & li {
+    margin-bottom: 0.55rem;
+    color: var(--ink-secondary);
+    font-size: 0.88rem;
+    line-height: 1.8;
 
-.disclaimer li:last-child {
-  margin-bottom: 0;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 
 @media (max-width: 700px) {

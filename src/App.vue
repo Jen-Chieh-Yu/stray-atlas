@@ -197,31 +197,31 @@ onBeforeUnmount(() => {
   white-space: nowrap;
   color: inherit;
   text-decoration: none;
-}
 
-.wordmark:hover {
-  color: var(--accent-text);
+  &:hover {
+    color: var(--accent-text);
+  }
 }
 
 .mainnav {
   display: flex;
   align-items: center;
   gap: 1.4rem;
-}
 
-.mainnav a {
-  color: var(--ink-secondary);
-  text-decoration: none;
-  font-size: 0.92rem;
-}
+  & a {
+    color: var(--ink-secondary);
+    text-decoration: none;
+    font-size: 0.92rem;
 
-.mainnav a:hover {
-  color: var(--ink);
-}
+    &:hover {
+      color: var(--ink);
+    }
 
-.mainnav a.current {
-  color: var(--ink);
-  font-weight: 700;
+    &.current {
+      color: var(--ink);
+      font-weight: 700;
+    }
+  }
 }
 
 /* ── Menu button and full-screen panel (≤ 820px) ── */
@@ -267,19 +267,19 @@ onBeforeUnmount(() => {
   transition:
     transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
     visibility 0s linear 300ms;
-}
 
-.navpanel.open {
-  transform: translateX(0);
-  visibility: visible;
-  transition:
-    transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
-    visibility 0s;
-}
+  &.open {
+    transform: translateX(0);
+    visibility: visible;
+    transition:
+      transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+      visibility 0s;
+  }
 
-/* In a column flex container, .wrap's auto margins stop the child stretching. */
-.navpanel > .wrap {
-  width: 100%;
+  /* In a column flex container, .wrap's auto margins stop the child stretching. */
+  & > .wrap {
+    width: 100%;
+  }
 }
 
 .navpanel-head {
@@ -297,30 +297,30 @@ onBeforeUnmount(() => {
   flex: 1;
   overflow-y: auto;
   padding-top: 0.5rem;
-}
 
-.navpanel-links a {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.05rem 0;
-  font-size: 1.1rem;
-  color: var(--ink);
-  text-decoration: none;
-  border-bottom: 1px solid var(--hairline);
-}
+  & a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.05rem 0;
+    font-size: 1.1rem;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--hairline);
 
-.navpanel-links a:last-child {
-  border-bottom: 0;
-}
+    &:last-child {
+      border-bottom: 0;
+    }
 
-.navpanel-links a svg {
-  color: var(--ink-muted);
-}
+    & svg {
+      color: var(--ink-muted);
+    }
 
-.navpanel-links a.current {
-  color: var(--accent-text);
-  font-weight: 700;
+    &.current {
+      color: var(--accent-text);
+      font-weight: 700;
+    }
+  }
 }
 
 @media (max-width: 820px) {
@@ -358,16 +358,16 @@ onBeforeUnmount(() => {
   padding-bottom: 3rem;
   color: var(--ink-muted);
   font-size: 0.85rem;
-}
 
-.footer-inner p {
-  margin: 0 0 0.4rem;
-}
+  & p {
+    margin: 0 0 0.4rem;
+  }
 
-.footer-inner .snapshot {
-  margin-bottom: 0.8rem;
-  color: var(--ink-secondary);
-  font-variant-numeric: tabular-nums;
+  & .snapshot {
+    margin-bottom: 0.8rem;
+    color: var(--ink-secondary);
+    font-variant-numeric: tabular-nums;
+  }
 }
 
 .snapshot b {

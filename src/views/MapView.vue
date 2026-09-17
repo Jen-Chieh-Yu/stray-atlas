@@ -534,11 +534,11 @@ const hint = computed(() => {
   flex-direction: column;
   gap: 0.4rem;
   min-width: 0;
-}
 
-.field > .label {
-  color: var(--ink-muted);
-  font-size: 0.8rem;
+  & > .label {
+    color: var(--ink-muted);
+    font-size: 0.8rem;
+  }
 }
 
 .pills {
@@ -561,17 +561,17 @@ const hint = computed(() => {
     background 160ms ease,
     color 160ms ease,
     border-color 160ms ease;
-}
 
-.pill-btn:hover {
-  border-color: var(--ramp-3);
-  color: var(--ink);
-}
+  &:hover {
+    border-color: var(--ramp-3);
+    color: var(--ink);
+  }
 
-.pill-btn[aria-pressed='true'] {
-  border-color: var(--ramp-4);
-  background: var(--ramp-4);
-  color: var(--on-accent);
+  &[aria-pressed='true'] {
+    border-color: var(--ramp-4);
+    background: var(--ramp-4);
+    color: var(--on-accent);
+  }
 }
 
 /* ── Map card: panel | map, legend band below ── */
@@ -630,10 +630,10 @@ const hint = computed(() => {
   background: transparent;
   color: var(--ink-muted);
   cursor: pointer;
-}
 
-.rail-close:hover {
-  color: var(--ink);
+  &:hover {
+    color: var(--ink);
+  }
 }
 
 .rail-nums {
@@ -647,19 +647,19 @@ const hint = computed(() => {
   border: 1px solid var(--hairline);
   border-radius: var(--radius-sm);
   background: var(--surface);
-}
 
-.rnum b {
-  display: block;
-  color: var(--accent-text);
-  font-size: 1.15rem;
-  line-height: 1.3;
-  font-variant-numeric: tabular-nums;
-}
+  & b {
+    display: block;
+    color: var(--accent-text);
+    font-size: 1.15rem;
+    line-height: 1.3;
+    font-variant-numeric: tabular-nums;
+  }
 
-.rnum span {
-  color: var(--ink-muted);
-  font-size: 0.76rem;
+  & span {
+    color: var(--ink-muted);
+    font-size: 0.76rem;
+  }
 }
 
 .rail-split {
@@ -668,11 +668,11 @@ const hint = computed(() => {
   height: 8px;
   border-radius: 999px;
   background: var(--no-data);
-}
 
-.rail-split i {
-  display: block;
-  height: 100%;
+  & i {
+    display: block;
+    height: 100%;
+  }
 }
 
 .rail-split .dog,
@@ -691,24 +691,24 @@ const hint = computed(() => {
   margin-top: 0.3rem;
   color: var(--ink-secondary);
   font-size: 0.78rem;
-}
 
-.rail-splitlab em {
-  font-style: normal;
-  font-variant-numeric: tabular-nums;
-}
+  & em {
+    font-style: normal;
+    font-variant-numeric: tabular-nums;
+  }
 
-.rail-splitlab .k {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-}
+  & .k {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
 
-.rail-splitlab .k::before {
-  content: '';
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
+    &::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+    }
+  }
 }
 
 .rail-meta {
@@ -717,27 +717,27 @@ const hint = computed(() => {
   gap: 0.5rem;
   color: var(--ink-secondary);
   font-size: 0.84rem;
-}
 
-.rail-meta .lbl,
-.rail-meta .line {
-  display: block;
-}
+  & .lbl,
+  & .line {
+    display: block;
+  }
 
-.rail-meta .lbl {
-  color: var(--ink-muted);
-  font-size: 0.74rem;
-}
+  & .lbl {
+    color: var(--ink-muted);
+    font-size: 0.74rem;
+  }
 
-.rail-meta a.line {
-  color: var(--ink);
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  text-decoration: none;
-}
+  & a.line {
+    color: var(--ink);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+  }
 
-.rail-meta a.line:hover {
-  color: var(--accent-text);
+  & a.line:hover {
+    color: var(--accent-text);
+  }
 }
 
 .rail-actions {
@@ -761,16 +761,16 @@ const hint = computed(() => {
   transition:
     background 160ms ease,
     color 160ms ease;
-}
 
-.detail-btn svg {
-  position: absolute;
-  right: 1.05rem;
-}
+  & svg {
+    position: absolute;
+    right: 1.05rem;
+  }
 
-.detail-btn:hover {
-  background: var(--ink);
-  color: var(--plane);
+  &:hover {
+    background: var(--ink);
+    color: var(--plane);
+  }
 }
 
 .animals-link {
@@ -779,22 +779,22 @@ const hint = computed(() => {
   text-align: center;
   text-decoration: none;
   font-variant-numeric: tabular-nums;
-}
 
-.animals-link:hover {
-  text-decoration: underline;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .rail-list {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-}
 
-.rail-list .cap {
-  color: var(--ink-muted);
-  font-size: 0.76rem;
-  letter-spacing: 0.08em;
+  & .cap {
+    color: var(--ink-muted);
+    font-size: 0.76rem;
+    letter-spacing: 0.08em;
+  }
 }
 
 .rail-item {
@@ -811,23 +811,23 @@ const hint = computed(() => {
   line-height: 1.45;
   text-align: left;
   cursor: pointer;
-}
 
-.rail-item:hover {
-  border-color: var(--hairline);
-  background: var(--surface);
-}
+  &:hover {
+    border-color: var(--hairline);
+    background: var(--surface);
+  }
 
-.rail-item .nm {
-  flex: 1;
-  min-width: 0;
-}
+  & .nm {
+    flex: 1;
+    min-width: 0;
+  }
 
-.rail-item .n {
-  color: var(--ink-muted);
-  font-size: 0.82rem;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
+  & .n {
+    color: var(--ink-muted);
+    font-size: 0.82rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
 }
 
 .rail-hint {
@@ -892,29 +892,29 @@ const hint = computed(() => {
   align-items: center;
   gap: 0.25rem;
   min-width: 0;
-}
 
-.lg-step i {
-  display: block;
-  width: 100%;
-  height: 10px;
-}
+  & i {
+    display: block;
+    width: 100%;
+    height: 10px;
+  }
 
-.lg-step:first-child i {
-  border-radius: 3px 0 0 3px;
-}
+  &:first-child i {
+    border-radius: 3px 0 0 3px;
+  }
 
-.lg-step:last-child i {
-  border-radius: 0 3px 3px 0;
-}
+  &:last-child i {
+    border-radius: 0 3px 3px 0;
+  }
 
-.lg-step em {
-  color: var(--ink-muted);
-  font-size: 0.68rem;
-  font-style: normal;
-  line-height: 1.3;
-  text-align: center;
-  font-variant-numeric: tabular-nums;
+  & em {
+    color: var(--ink-muted);
+    font-size: 0.68rem;
+    font-style: normal;
+    line-height: 1.3;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
 }
 
 .lg-nd {
@@ -923,13 +923,13 @@ const hint = computed(() => {
   gap: 0.4rem;
   color: var(--ink-muted);
   font-size: 0.72rem;
-}
 
-.lg-nd i {
-  width: 14px;
-  height: 10px;
-  border-radius: 2px;
-  background: var(--no-data);
+  & i {
+    width: 14px;
+    height: 10px;
+    border-radius: 2px;
+    background: var(--no-data);
+  }
 }
 
 .lg-note {
