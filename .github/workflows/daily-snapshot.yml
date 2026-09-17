@@ -1,8 +1,13 @@
-# Daily archive of the source stock snapshot. See CLAUDE.md section 3, stage 0.
+# Daily archive of the source stock snapshot, and the site data rebuilt from
+# it. See CLAUDE.md section 3, stage 0, and section 4.1.
 #
 # This workflow is the project's only source of time-series data: the feed drops
 # animals once they leave the shelter, so a day not archived is a day that can
 # never be recovered. It is therefore scheduled before anything else is built.
+#
+# When the day's snapshot is new, the same run rebuilds public/data/ from it and
+# asks the Pages workflow to deploy. The archive always comes first: a broken
+# rebuild never costs the day's snapshot.
 name: Daily snapshot
 
 on:
@@ -22,9 +27,12 @@ on:
         type: boolean
         default: false
 
-# Required so GITHUB_TOKEN can push the archived snapshot back to the branch.
+# contents: write so GITHUB_TOKEN can push the snapshot back to the branch.
+# actions: write to start the Pages workflow: a push made with GITHUB_TOKEN does
+# not trigger other workflows, but an explicit workflow_dispatch does.
 permissions:
   contents: write
+  actions: write
 
 # Never let a manual run collide with the scheduled one: both push to the same
 # branch. Queue instead of cancelling, so a run in progress still archives.
@@ -62,13 +70,40 @@ jobs:
             python scripts/fetch_snapshot.py
           fi
 
+      # Only a newly stored snapshot is worth rebuilding. "unchanged" means the
+      # source repeated yesterday's file, so the site data would differ only in
+      # its timestamps; "failed" has nothing to build from. Standard library
+      # only, like the fetch: build_all.py skips build_districts.py, the one
+      # script that needs pyshp.
+      #
+      # continue-on-error so the snapshot is still committed when the rebuild
+      # breaks; the last step turns that into a failed run.
+      - name: Rebuild site data
+        id: rebuild
+        if: steps.fetch.outputs.status == 'stored'
+        continue-on-error: true
+        env:
+          SNAPSHOT_DATE: ${{ steps.fetch.outputs.date }}
+        run: python scripts/build_all.py --date "${SNAPSHOT_DATE}"
+
+      # A rebuild that stopped halfway leaves some pages on the new date and
+      # some on the old one. Put public/data/ back so only the archive is
+      # committed.
+      - name: Discard a partial rebuild
+        if: steps.rebuild.outcome == 'failure'
+        run: |
+          git restore --worktree -- public/data
+          git clean -fdq -- public/data
+
       # always(): a failed fetch still writes a manifest row, and that row is
       # what distinguishes "source was unchanged" from "the fetch broke" when
       # stage 3 reconstructs labels from the snapshot series.
       - name: Commit and push
+        id: push
         if: always() && steps.fetch.outputs.status != 'skipped'
         env:
           COMMIT_MESSAGE: ${{ steps.fetch.outputs.commit_message }}
+          REBUILT: ${{ steps.rebuild.outcome == 'success' }}
         run: |
           set -euo pipefail
           if [ -z "${COMMIT_MESSAGE}" ]; then
@@ -78,6 +113,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/raw
+          if [ "${REBUILT}" = "true" ]; then
+            git add public/data
+            COMMIT_MESSAGE="${COMMIT_MESSAGE}, rebuild public/data"
+          fi
           if git diff --cached --quiet; then
             echo "working tree clean, nothing to commit"
             exit 0
@@ -86,6 +125,7 @@ jobs:
           for attempt in 1 2 3; do
             if git pull --rebase --autostash origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}"; then
               echo "pushed on attempt ${attempt}"
+              echo "pushed=true" >> "${GITHUB_OUTPUT}"
               exit 0
             fi
             echo "push attempt ${attempt} failed, retrying"
@@ -94,12 +134,36 @@ jobs:
           echo "::error::could not push the snapshot after 3 attempts"
           exit 1
 
+      # Deploy only from main, and only when new site data was pushed. The
+      # Pages workflow checks out the branch head, which now includes the push.
+      - name: Deploy the rebuilt site
+        if: >-
+          steps.rebuild.outcome == 'success'
+          && steps.push.outputs.pushed == 'true'
+          && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy-pages.yml --repo "${GITHUB_REPOSITORY}" --ref main
+
+      - name: Fail on a broken rebuild
+        if: steps.rebuild.outcome == 'failure'
+        run: |
+          {
+            echo "### Site data"
+            echo ""
+            echo "The snapshot was archived, but build_all.py failed, so"
+            echo "public/data/ was left at the previous snapshot and the site"
+            echo "was not redeployed. See the Rebuild site data step log."
+          } >> "${GITHUB_STEP_SUMMARY}"
+          echo "::error::build_all.py failed; the snapshot was archived without a rebuild"
+          exit 1
+
       # The fetch step writes the run summary itself: it is what holds the row
       # count, the digest and the manifest, and a workflow step could only echo
       # back whatever was passed through GITHUB_OUTPUT. This catches the one
       # path that leaves no summary behind, an unexpected crash.
       - name: Note an unrecorded failure
-        if: failure()
+        if: failure() && steps.rebuild.outcome != 'failure'
         run: |
           echo "### Snapshot" >> "${GITHUB_STEP_SUMMARY}"
           echo "" >> "${GITHUB_STEP_SUMMARY}"

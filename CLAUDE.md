@@ -170,7 +170,7 @@ public/data/
 - 部署與資料管線解耦 —— 前端改版不必重跑 Python；管線壞掉（geocoder API 掛掉、套件衝突、來源改格式）時網站仍以前一份資料正常部署，只是資料舊一點，不會整站掛掉
 - diff 雜訊已由 `.gitattributes` 的 `linguist-generated=true` 處理，GitHub 上預設摺疊且不計入語言統計
 
-**配套：不要每天重算重 commit。** 快照（`data/raw/`）每日抓取，但 `public/data/` 以每週排程或手動觸發重算即可。存量結構逐日變化極小，每日 commit 只會製造雜訊。
+**配套：來源有變才重算。** 快照（`data/raw/`）每日抓取；當天存成新快照（manifest `stored`）時，同一個 workflow 以 `scripts/build_all.py` 重建 `public/data/`、一起 commit，再觸發部署。來源未變（`unchanged`）或抓取失敗時不重建，避免只有時間戳記不同的 commit。重建失敗時仍 commit 快照、`public/data/` 維持前一份，該次 run 標為失敗。每日重建在 git 裡的增量約 0.06 MB，見 README〈儲存成本（觀察用）〉。（2026-09-17 改；原規定為每週或手動重算）
 
 判斷分界：`data/raw/` **不可重現**（漏抓即永久遺失），`public/data/` **可由 `data/raw/` 完整重建**。兩者都進 git，但理由不同——前者是地基，後者是為了部署可靠性。
 

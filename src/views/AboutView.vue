@@ -43,8 +43,8 @@ const overFourYears = computed(() => distribution.value?.scopes.all.over_4_years
 const TECH: { topic: string; choice: string; reason: string }[] = [
   {
     topic: '來源快照',
-    choice: 'GitHub Actions 排程存檔',
-    reason: '來源不保留歷史，沒存下的那一天補不回來；人工執行遲早會斷。',
+    choice: 'GitHub Actions 每日排程',
+    reason: '來源不保留歷史，沒存下的那一天補不回來；人工執行遲早會斷。存完快照接著重建網站資料並部署。',
   },
   {
     topic: '原始檔存檔',
@@ -184,12 +184,12 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
           <span>這份快照的動物與收容所數</span>
         </div>
         <div class="ubox">
-          <b>不定期</b>
-          <span>重新整理統計後才會換成新的快照</span>
+          <b>每日</b>
+          <span>每天早上排程更新；來源沒有變動時沿用前一份</span>
         </div>
       </div>
       <p>
-        網站上的名單與數字<strong>以頁尾標示的快照日期為準</strong>，不會跟著來源自動更新，也不等於收容所現場的即時狀況——名單上的動物可能已經被認養、被原飼主領回或轉出。要看最新名單，請到<a
+        網站上的名單與數字<strong>以頁尾標示的快照日期為準</strong>，一天更新一次，不等於收容所現場的即時狀況——名單上的動物可能已經被認養、被原飼主領回或轉出。要看最新名單，請到<a
           :href="OFFICIAL_URL"
           target="_blank"
           rel="noreferrer"
@@ -197,7 +197,7 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
         >，或直接致電收容所。
       </p>
       <p>
-        另外，本站以排程保存來源的原始快照：來源只提供「此刻」的名冊，沒存下的那一天永遠補不回來。這些存檔是留給日後分析離所事件用的，不會直接反映在畫面上。
+        每天的原始快照也會另外存檔：來源只提供「此刻」的名冊，沒存下的那一天永遠補不回來。這些存檔留給日後分析離所事件用。
       </p>
     </section>
 

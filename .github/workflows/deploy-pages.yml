@@ -10,12 +10,13 @@ name: Deploy Pages
 on:
   push:
     branches: [main]
-    # The daily snapshot bot commits to main every morning and touches nothing
-    # under data/ that the site serves: the raw archive is an input to the
-    # build scripts, not an asset. Rebuilding on it would redeploy a
-    # byte-identical site 365 times a year. The generated site data lives in
-    # public/data/, which is not ignored here, so a rebuild of the JSON does
-    # deploy.
+    # The raw archive under data/ is an input to the build scripts, not an
+    # asset, so a push that only touches it does not deploy. A push that
+    # rebuilds public/data/ by hand does.
+    #
+    # The daily snapshot bot pushes with GITHUB_TOKEN, and such a push starts
+    # no workflow at all. When it rebuilds public/data/ it starts this one
+    # through workflow_dispatch instead (see daily-snapshot.yml).
     paths-ignore:
       - "data/**"
       - ".github/workflows/daily-snapshot.yml"

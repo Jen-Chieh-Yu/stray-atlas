@@ -54,6 +54,15 @@ python scripts/build_distribution.py    # stats/distribution.json（分析頁）
 
 各腳本共用的路徑、log 與 JSON 寫檔集中在 `scripts/common.py`。
 
+**本機更新到最新資料。** 排程每天會把新快照與重建後的 `public/data/` 推上 `main`，本機只要拉下來：
+
+```bash
+git switch main
+git pull --ff-only
+```
+
+在功能分支上工作時，再把 main 併進來（`git switch <分支>`、`git merge main`）。只有要用非最新的快照、或排程重建失敗時，才需要自己跑 `python scripts/build_all.py`，並把 `public/data` 一起 commit（訊息 `data: rebuild public/data from the <快照日期> snapshot`，日期看 `build_all.py` 最後一行）。
+
 跑前端（Node 22+）：
 
 ```bash
@@ -70,7 +79,7 @@ npm run preview
 ```
 stray-atlas/
 ├── .github/workflows/
-│   ├── daily-snapshot.yml   每日抓取、驗證、封存快照
+│   ├── daily-snapshot.yml   每日抓取、驗證、封存快照；有新快照時重建網站資料並觸發部署
 │   └── deploy-pages.yml     打包並發布到 GitHub Pages
 ├── data/
 │   ├── raw/                 每日快照 YYYY-MM-DD.csv.gz 與 _manifest.csv（進 git，見 CLAUDE.md §6.3）
@@ -123,6 +132,8 @@ stray-atlas/
 
 `data/raw/_manifest.csv` 逐日記錄 `date,status,rows,bytes,sha256,fetched_at_utc`。當日內容與前一份快照完全相同時不重複存檔，只在 manifest 記一列 `unchanged`；抓取失敗記 `failed`。**因此 `data/raw/` 出現缺日不等於當天沒有資料**，manifest 才是判斷依據——階段 3 以「消失的 `animal_id`」建構離所標籤時必須以它為準，否則會把「來源沒變」誤讀成「全部動物同時離所」。
 
+當天存成新快照時，同一個 workflow 接著以 `scripts/build_all.py --date <當日>` 重建 `public/data/`，與快照一起 commit，再以 `workflow_dispatch` 觸發部署（`GITHUB_TOKEN` 的推送不會觸發其他 workflow，所以必須明確呼叫）。來源與前一天相同（`unchanged`）或抓取失敗時不重建、不部署。重建失敗時快照照樣 commit，`public/data/` 維持前一份，該次 run 標為失敗——存檔永遠優先於網站。
+
 手動補抓：
 
 ```bash
@@ -141,7 +152,7 @@ python scripts/fetch_snapshot.py --force    # 覆蓋當日已存在的檔案
 | 項目 | 每次大小 | 進 git 後的實際增量 | 一年約 |
 |---|---|---|---|
 | 原始快照 `data/raw/YYYY-MM-DD.csv.gz` | 約 0.43 MB（解壓約 2.9 MB，8,300 餘列） | 約 0.43 MB／天——gzip 過的檔案彼此無法做差異壓縮，每天都是完整一份 | 約 160 MB |
-| 重建 `public/data/`（若改為每日） | 目錄共約 4.9 MB，其中 `animals.json` 約 2.7 MB；兩份行政區 GeoJSON 約 2.0 MB 不會變動 | 約 0.06 MB／天（以 09-15 → 09-16 兩次重建實測，打包後的差異壓縮增量） | 約 22 MB |
+| 重建 `public/data/`（有新快照的日子） | 目錄共約 4.9 MB，其中 `animals.json` 約 2.7 MB；兩份行政區 GeoJSON 約 2.0 MB 不會變動 | 約 0.06 MB／天（以 09-15 → 09-16 兩次重建實測，打包後的差異壓縮增量） | 約 22 MB |
 | 部署產物（Pages artifact） | 約 5.2 MB（程式約 0.3 MB＋`public/data`） | 不進 repo | — |
 
 - repo 目前（15 份快照）的 `.git` 物件約 10 MB。GitHub 建議 repo 維持在 1 GB 以下，照上表速度數年內不會碰到；真的變大時再考慮把原始存檔移到 Releases 或獨立的資料 repo，**不刪歷史快照**（階段 3 的離所標籤只能從這裡來）。
@@ -152,7 +163,7 @@ python scripts/fetch_snapshot.py --force    # 覆蓋當日已存在的檔案
 
 `.github/workflows/deploy-pages.yml` 在推上 `main` 時打包並發布到 GitHub Pages。網站由 artifact 提供，不經 `gh-pages` 分支，所以編譯產物完全不進版本歷史。
 
-只動 `data/` 的推送不會觸發部署——那是每天早上機器人的 commit，而 `data/raw/` 是分析腳本的輸入、不是網站資產，重建出來的頁面會一模一樣。網站真正吃的 `public/data/*.json` 不在忽略範圍。
+只動 `data/` 的推送不會觸發部署：`data/raw/` 是分析腳本的輸入、不是網站資產。網站真正吃的 `public/data/*.json` 不在忽略範圍，手動重建後推上 `main` 就會部署。每日排程的重建則由 `daily-snapshot.yml` 以 `workflow_dispatch` 觸發部署（見上）。
 
 ---
 
