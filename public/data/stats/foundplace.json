@@ -1,12 +1,12 @@
 {
-  "snapshot_date": "2026-09-16",
-  "generated_at_utc": "2026-09-17T00:52:34Z",
-  "rows": 8336,
+  "snapshot_date": "2026-09-17",
+  "generated_at_utc": "2026-09-17T03:09:57Z",
+  "rows": 8354,
   "district_reference": "loaded",
   "place_kinds": {
-    "district": 1208,
-    "address": 5090,
-    "blank": 1011,
+    "address": 5108,
+    "blank": 1015,
+    "district": 1204,
     "landmark": 911,
     "non_place": 116
   },
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1820,
-      "share": 0.2183
+      "rows": 1822,
+      "share": 0.2181
     },
     "low": {
-      "rows": 5382,
-      "share": 0.6456
+      "rows": 5394,
+      "share": 0.6457
     },
     "none": {
-      "rows": 1127,
-      "share": 0.1352
+      "rows": 1131,
+      "share": 0.1354
     }
   },
   "county_source": {
     "text": 192,
-    "shelter": 7017,
-    "none": 1127
+    "shelter": 7031,
+    "none": 1131
   },
   "county_from_text_differs_from_shelter": 11,
   "district": {
-    "extracted": 3031,
-    "verified_against_reference": 3028,
+    "extracted": 3029,
+    "verified_against_reference": 3026,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
+      "樹林區東華街1號4樓之2",
+      "麥寮鄉仁德路",
+      "二崙鄉中山路一段",
       "鶯歌區二甲路219號",
-      "板橋區文化路",
-      "板橋區板城路465-1號",
-      "新莊區天祥街",
-      "三重區五華街"
+      "板橋區文化路"
     ],
     "low": [
-      "竹南鎮營盤里",
-      "文華路2段1246巷",
-      "城西街三段510巷 附近漁塭",
-      "行大一街799號",
-      "中正路2段187巷6弄14號"
+      "仁德街",
+      "銅鑼鄉樟樹村",
+      "省府路",
+      "中山路",
+      "福北路477巷5弄附近"
     ],
     "none": [
       "民眾不擬續養",
