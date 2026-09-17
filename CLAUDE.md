@@ -27,7 +27,7 @@
 1. **本資料是存量快照，不是歷史紀錄。** `animal_status` 全為 `OPEN`、`animal_closeddate` 全為 `2999-12-31`。已離所個體不在資料中，因此沒有認養結果標籤。
 2. **不可用單一快照討論入所季節性。** `animal_createtime` 的月份分布反映的是 survivorship，不是流量。
 3. **不可宣稱「黑狗比較難被認養」。** 只能宣稱「目前仍在所的黑狗待得比較久」。存量快照存在 length-biased sampling。
-4. **`animal_foundplace` 是自由文字，僅 5.1% 含縣市名。** 未經縣市補全就送 geocoder 一律視為錯誤實作。
+4. **`animal_foundplace` 是自由文字，僅 2.4% 含完整縣市名**（以全部筆數為分母；5.1% 是非空值中含「縣」「市」字元的比例，口徑見 `PROJECT_BRIEF.md` §4.3）。未經縣市補全就送 geocoder 一律視為錯誤實作。
 5. **geocode 結果必須分級標註信心水準。** 尋獲地不必然與收容所同縣市。不可將補全結果當作精確座標呈現。
 6. **`民眾不擬續養`、`所內` 等非地點值必須單獨歸類**，不可硬塞座標。
 
@@ -93,7 +93,7 @@ Project site 掛在 `/stray-atlas/` 子路徑下。以下三處只要漏一個�
   - 非地點值分類（建立關鍵詞黑名單）
   - 縣市補全（以收容所縣市為前綴）
   - 信心分級：`high`（原文含縣市＋完整門牌）/ `medium`（含區＋路名）/ `low`（僅路名，靠收容所推斷）/ `none`
-  - geocode 結果快取到本機，**不可每次重跑都打外部 API**
+  - geocode 結果快取到本機，**不可每次重跑都打外部 API**（現行 `geocode.py` 只分級、不呼叫 geocoder，見 README〈尋獲地：為什麼沒有熱區圖〉）
 
 ### 階段 1（主力）
 
@@ -114,7 +114,7 @@ Project site 掛在 `/stray-atlas/` 子路徑下。以下三處只要漏一個�
 
 > **2026-09-03 修正。** 原訂「先做鄉鎮區 choropleth（資料可靠）」，前提不成立。
 > 經 `scripts/geocode.py` 以官方 368 鄉鎮市區清單驗證，全國僅 **36.2%** 的資料
-> 有可信的區級資訊，且各縣市從 1.1% 到 95.1% 不等（見 `PROJECT_BRIEF.md` §4.3）。
+> 有可信的區級資訊，且各縣市從 1.1% 到 95.1% 不等（見 `PROJECT_BRIEF.md` §4.4）。
 > 逕行繪製會得到一張「哪些收容所有填區名」的地圖：臺北市 978 隻只有 13 隻有區級
 > 資料，圖上會是一片空白，而原因是登錄實務不是現實。縣市層級以收容所縣市為準，
 > 不需任何推論，且 `PROJECT_BRIEF.md` §5.5 的縣市滯留差異本身就有 16 倍的強訊號。
@@ -146,7 +146,7 @@ Project site 掛在 `/stray-atlas/` 子路徑下。以下三處只要漏一個�
 
 所有分析產出一律輸出結構化資料到 `public/data/`：
 
-實際產出（2026-09-08）：
+實際產出（2026-09-17 確認；各檔由 `scripts/build_all.py` 依序產生，兩份 GeoJSON 與 `data/reference/districts.json` 由一次性的 `build_districts.py` 產生）：
 
 ```
 public/data/
@@ -226,13 +226,26 @@ Assisted-by: Claude <noreply@anthropic.com>
 | `docs` | 文件 |
 | `chore` | 建置、設定、依賴更新 |
 | `refactor` | 重構，行為不變 |
-| `data` | 每日快照自動 commit |
+| `ci` | GitHub Actions workflow |
+| `data` | 資料 commit：每日排程、手動重建 `public/data/` |
 
-每日快照的 message 固定為 `data: snapshot YYYY-MM-DD`，方便日後以 `git log --grep="^data:"` 與開發 commit 分離。
+需要標出範圍時可加括號，例如 `refactor(style):`、`docs(readme):`。
+
+`data` commit 的 message 固定如下，方便日後以 `git log --grep="^data:"` 與開發 commit 分離：
+
+| 情況 | message |
+|---|---|
+| 排程存成新快照並重建成功 | `data: snapshot YYYY-MM-DD, rebuild public/data` |
+| 排程存成新快照、重建失敗 | `data: snapshot YYYY-MM-DD` |
+| 來源未變 | `data: manifest YYYY-MM-DD (source unchanged since YYYY-MM-DD)` |
+| 抓取失敗 | `data: manifest YYYY-MM-DD (fetch failed)` |
+| 手動重建 | `data: rebuild public/data from the YYYY-MM-DD snapshot` |
+
+`data/raw/` 只由排程寫入。本機測試 `fetch_snapshot.py` 產生的快照不要 commit，否則會與機器人當天推上 `main` 的同名檔案衝突。
 
 ### 6.3 `.gitignore`
 
-排除 `node_modules/`、`dist/`、`.venv/`、`__pycache__/`、`*.pyc`、`.env`。
+排除 `node_modules/`、`dist/`、`.venv/`、`__pycache__/`、`*.pyc`、`.env` 與 `.env.*`（`.env.example` 例外，要進版控）、`*.local`（含 `.env.local`）、`/tmp/`。
 
 **絕對不可排除 `data/`。** 每日快照 workflow 需要 commit 資料檔進 repo；若被 gitignore 擋掉，workflow 會安靜地什麼都沒存，且要數日後才會發現。
 
@@ -270,23 +283,35 @@ Assisted-by: Claude <noreply@anthropic.com>
 
 AI 協作者**不得執行**任何改動 repo 狀態的 git 指令，包含但不限於 `git add`、`git commit`、`git push`、`git reset`、`git rebase`、`git checkout`。唯讀指令（`git status`、`git log`、`git diff`）不在此限。
 
-完成一段工作後，只輸出兩樣東西，由人類自行執行：
+完成一段工作後，只輸出以下幾樣東西，由人類自行執行：
 
 1. 依 §6.4 格式寫好的 commit message
 2. 對應的 git 指令
+3. 要開 PR 時，PR 標題與內文（見 §6.6）
 
 開發機為 Windows／PowerShell，**不支援 heredoc**（`<< 'EOF'`）。因此 AI 應將 message 寫入 `.git/` 底下的暫存檔——該目錄不受 git 追蹤，不會污染 `git status`——指令一律改用 `-F`：
 
 ```powershell
 git add scripts/ .github/
 git commit -F .git/msg.txt
-git push origin main
+git push -u origin feature/YYYYMMDD-topic
 ```
 
 理由：
 
 - 提交者對進入 history 的內容負全責。§6.1 的 `Assisted-by` 僅標示 AI 參與，不轉移責任，因此最後一道確認必須由人類執行
 - Cowork device shell 沒有 git 身分設定，commit 會失敗並留下 `.git/index.lock`，卡住後續所有 git 操作
+
+### 6.6 分支與 PR（2026-09-17 起）
+
+- 程式、文件、workflow 的改動一律在分支上做，命名 `feature/YYYYMMDD-topic`，從最新的 `main` 開出
+- 分支**一律經 PR 併回 `main`**，合併方式用 Create a merge commit；不在本機 merge 後直接推 `main`
+- 例外：每日排程機器人直接 commit 到 `main`（快照與重建後的 `public/data/`）
+- 機器人每天推 `main`，所以開分支前先 `git switch main`、`git pull --ff-only`；PR 合併後本機再 pull 一次
+- AI 協作者交付 commit message 時，一併提供 PR 標題（沿用 commit 標題）與繁體中文 PR 內文，寫入 `.git/prNN.md`；內文含「變更」與「合併後驗證」清單
+- `schedule` 只在預設分支觸發，且本專案的 workflow 會推 `main` 或部署網站，PR 階段無法實測；驗證項目寫進 PR 內文，合併後逐項確認
+
+理由：PR 頁面留下變更總覽與驗證紀錄，面試官可直接從 GitHub 看到開發流程；分支在本機 merge 後直推，事後無法補開 PR。
 
 ---
 
