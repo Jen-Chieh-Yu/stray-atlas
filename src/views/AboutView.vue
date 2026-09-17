@@ -10,6 +10,7 @@ import PageHead from '@/components/PageHead.vue'
 import { fetchDistribution, useAtlasData } from '@/composables/useAtlasData'
 import { formatCount } from '@/lib/animals'
 import { HERO_PHOTOS } from '@/lib/heroPhotos'
+import { vReveal } from '@/lib/reveal'
 import type { DistributionPayload } from '@/types'
 
 const REPO_URL = 'https://github.com/Jen-Chieh-Yu/stray-atlas'
@@ -88,7 +89,7 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
       }}公立收容所目前仍開放認養的動物，做成可以查詢與比較的畫面。
     </PageHead>
 
-    <section aria-labelledby="ab-purpose">
+    <section v-reveal aria-labelledby="ab-purpose">
       <h2 id="ab-purpose">服務目的</h2>
       <p>
         農業部的寵物登記管理網站（<a :href="PET_SITE_URL" target="_blank" rel="noreferrer">pet.gov.tw</a>）上，已經有<a :href="OFFICIAL_URL" target="_blank" rel="noreferrer">動物認領養公告頁</a>提供全國收容動物的查詢，本站用的是同一份開放資料，差別在於讀法：<strong>找動物</strong>用地區、種類、性別、體型與已在所時間收斂清單；<strong>收容所</strong>看每一間現在收了多少、狗貓各佔多少；<strong>縣市地圖</strong>看全臺的分布；<strong>資料分析</strong>看在所天數的整體樣貌。
@@ -104,7 +105,7 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
       </p>
     </section>
 
-    <section aria-labelledby="ab-sources">
+    <section v-reveal aria-labelledby="ab-sources">
       <h2 id="ab-sources">資料來源</h2>
       <p>本站不修改來源內容，只做格式整理與統計。</p>
       <div class="table-scroll">
@@ -195,7 +196,7 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
       </ul>
     </section>
 
-    <section aria-labelledby="ab-freshness">
+    <section v-reveal aria-labelledby="ab-freshness">
       <h2 id="ab-freshness">更新頻率</h2>
       <div class="updatebox">
         <div class="ubox">
@@ -223,7 +224,7 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
       </p>
     </section>
 
-    <section aria-labelledby="ab-tech">
+    <section v-reveal aria-labelledby="ab-tech">
       <h2 id="ab-tech">技術選擇</h2>
       <p>每一列寫的是為什麼這樣選，不是版本號。</p>
       <div class="table-scroll">
@@ -249,7 +250,7 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
       </p>
     </section>
 
-    <section aria-labelledby="ab-disclaimer">
+    <section v-reveal aria-labelledby="ab-disclaimer">
       <h2 id="ab-disclaimer">免責聲明</h2>
       <div class="disclaimer">
         <ul>

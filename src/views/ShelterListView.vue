@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import LucideIcon from '@/components/LucideIcon.vue'
 import PageHead from '@/components/PageHead.vue'
 import ShelterSpark from '@/components/ShelterSpark.vue'
 import { useRoster } from '@/composables/useRoster'
 import { animalsLink, formatCount } from '@/lib/animals'
+import { vReveal } from '@/lib/reveal'
 import {
   addressesOf,
   duplicateSpellings,
   hasMachineField,
   northToSouth,
   phoneOf,
+  shelterListView as view,
 } from '@/lib/shelters'
 import type { Shelter } from '@/types'
 
@@ -44,6 +46,10 @@ const SORTS: { id: Sort; label: string }[] = [
   { id: 'north', label: '縣市（由北到南）' },
 ]
 
+/** Cards shown before 查看更多, and how many each press adds: four rows of
+ *  the three-column grid. */
+const PAGE_SIZE = 12
+
 function one(value: unknown): string | undefined {
   const first = Array.isArray(value) ? value[0] : value
   return typeof first === 'string' && first !== '' ? first : undefined
@@ -54,14 +60,15 @@ const filters = computed(() => {
   const size = one(route.query.size)
   const sort = one(route.query.sort)
   return {
-    // Card grid or full-width rows. Kept in the URL so the choice survives
-    // a trip to a shelter page and back.
-    view: one(route.query.view) === 'list' ? ('list' as const) : ('grid' as const),
     county: one(route.query.county),
     q: one(route.query.q)?.trim() || undefined,
     has: has === 'dog' || has === 'cat' ? (has as Has) : undefined,
     size: SIZES.some((item) => item.id === size) ? (size as Size) : undefined,
     sort: SORTS.some((item) => item.id === sort) ? (sort as Sort) : ('all-desc' as Sort),
+    // How many are shown. In the URL so Back from a shelter page returns to
+    // the same expanded list; a filter or sort change starts from PAGE_SIZE
+    // again.
+    shown: Math.max(PAGE_SIZE, Math.floor(Number(one(route.query.shown)) || 0)),
   }
 })
 
@@ -75,7 +82,7 @@ function update(patch: Partial<Filters>) {
   if (next.has) query.has = next.has
   if (next.size) query.size = next.size
   if (next.sort !== 'all-desc') query.sort = next.sort
-  if (next.view === 'list') query.view = 'list'
+  if ('shown' in patch && next.shown > PAGE_SIZE) query.shown = String(next.shown)
   void router.replace({ query })
 }
 
@@ -117,6 +124,30 @@ function by(sort: Sort) {
 const results = computed(() =>
   shelters.value.filter((shelter) => matches(shelter, null)).sort(by(filters.value.sort)),
 )
+
+const visible = computed(() => results.value.slice(0, filters.value.shown))
+const remaining = computed(() => results.value.length - visible.value.length)
+
+/** Index of the first card added by the last 查看更多. Those cards fade in
+ *  even though they appear on screen, a few milliseconds apart. */
+const addedFrom = ref(Number.POSITIVE_INFINITY)
+
+function revealOf(index: number) {
+  if (index < addedFrom.value) return undefined
+  return { appear: true, delay: Math.min(index - addedFrom.value, 11) * 40 }
+}
+
+function setView(next: 'grid' | 'list') {
+  if (view.value === next) return
+  // The swap fades the whole list; the added-cards stagger is not replayed.
+  addedFrom.value = Number.POSITIVE_INFINITY
+  view.value = next
+}
+
+function showMore() {
+  addedFrom.value = visible.value.length
+  update({ shown: filters.value.shown + PAGE_SIZE })
+}
 
 const resultAnimals = computed(() =>
   results.value.reduce((total, shelter) => total + shelter.all.count, 0),
@@ -195,7 +226,7 @@ function names(list: Shelter[]): string {
         </div>
       </div>
 
-      <div class="findbox">
+      <div v-reveal class="findbox">
         <div class="find-row upper">
           <div class="field">
             <label for="s-county">縣市</label>
@@ -289,19 +320,19 @@ function names(list: Shelter[]): string {
           <span class="viewtoggle" role="group" aria-label="顯示方式">
             <button
               type="button"
-              :aria-pressed="filters.view === 'grid'"
+              :aria-pressed="view === 'grid'"
               aria-label="以卡片顯示"
               title="以卡片顯示"
-              @click="update({ view: 'grid' })"
+              @click="setView('grid')"
             >
               <LucideIcon name="layout-grid" :size="18" />
             </button>
             <button
               type="button"
-              :aria-pressed="filters.view === 'list'"
+              :aria-pressed="view === 'list'"
               aria-label="以條列顯示"
               title="以條列顯示"
-              @click="update({ view: 'list' })"
+              @click="setView('list')"
             >
               <LucideIcon name="list" :size="18" />
             </button>
@@ -325,14 +356,71 @@ function names(list: Shelter[]): string {
         </span>
       </div>
 
-      <!-- Thirty-seven fit on one page; no pager. -->
+      <!-- Twelve at a time; 查看更多 adds twelve more. -->
       <!-- Rows: the same facts as a card, laid out left to right so a long
            list can be scanned and compared column by column. -->
-      <ul v-if="results.length && filters.view === 'list'" class="rows">
-        <li v-for="shelter in results" :key="shelter.id" class="srow">
-          <div class="r-main">
+      <!-- Two templates, swapped with a fade: out, then in. -->
+      <Transition name="swap" mode="out-in">
+        <ul v-if="results.length && view === 'list'" key="list" class="rows">
+          <li
+            v-for="(shelter, index) in visible"
+            :key="shelter.id"
+            v-reveal="revealOf(index)"
+            class="srow"
+          >
+            <div class="r-main">
+              <div class="scard-top">
+                <span class="county">{{ shelter.county }}</span>
+              </div>
+              <h2>
+                <RouterLink :to="{ name: 'shelter', params: { id: shelter.id } }">{{ shelter.name }}</RouterLink>
+              </h2>
+              <div class="smeta">
+                <span v-for="address in addressesOf(shelter)" :key="address.text">
+                  <LucideIcon name="map-pin" :size="14" />
+                  <span class="line" :title="`原始資料：${address.raw}`">{{ address.text }}</span>
+                </span>
+                <span>
+                  <LucideIcon name="phone" :size="14" />
+                  <span v-if="phoneOf(shelter).href" class="line">{{ shelter.tel }}</span>
+                  <span v-else class="line missing">電話欄位不完整（原始資料：{{ shelter.tel }}）</span>
+                </span>
+              </div>
+            </div>
+            <div class="r-counts">
+              <div class="scount total"><b>{{ formatCount(shelter.all.count) }}</b><span>在所</span></div>
+              <div class="scount"><b>{{ formatCount(shelter.狗.count) }}</b><span>狗</span></div>
+              <div class="scount"><b>{{ formatCount(shelter.貓.count) }}</b><span>貓</span></div>
+              <div class="scount"><b>{{ formatCount(shelter.其他.count) }}</b><span>其他</span></div>
+            </div>
+            <div class="r-spark">
+              <ShelterSpark :histogram="shelter.all.histogram" :labels="labels" />
+              <div class="spark-foot">
+                中位數 {{ shelter.all.median_days === null ? '—' : formatCount(shelter.all.median_days) }} 天 ·
+                最久 {{ shelter.all.max_days === null ? '—' : formatCount(shelter.all.max_days) }} 天
+              </div>
+            </div>
+            <div class="r-actions">
+              <RouterLink :to="{ name: 'shelter', params: { id: shelter.id } }" class="detail-btn">
+                收容所介紹 <LucideIcon name="arrow-right" :size="16" />
+              </RouterLink>
+              <RouterLink :to="animalsLink({ shelter: shelter.id })" class="animals-link">
+                看這裡的 {{ formatCount(shelter.all.count) }} 隻動物 →
+              </RouterLink>
+            </div>
+          </li>
+        </ul>
+
+        <div v-else-if="results.length" key="grid" class="shelters">
+          <article
+            v-for="(shelter, index) in visible"
+            :key="shelter.id"
+            v-reveal="revealOf(index)"
+            class="scard"
+          >
             <div class="scard-top">
               <span class="county">{{ shelter.county }}</span>
+              <span class="scard-n">在所 {{ formatCount(shelter.all.count) }} 隻</span>
             </div>
             <h2>
               <RouterLink :to="{ name: 'shelter', params: { id: shelter.id } }">{{ shelter.name }}</RouterLink>
@@ -348,77 +436,40 @@ function names(list: Shelter[]): string {
                 <span v-else class="line missing">電話欄位不完整（原始資料：{{ shelter.tel }}）</span>
               </span>
             </div>
-          </div>
-          <div class="r-counts">
-            <div class="scount total"><b>{{ formatCount(shelter.all.count) }}</b><span>在所</span></div>
-            <div class="scount"><b>{{ formatCount(shelter.狗.count) }}</b><span>狗</span></div>
-            <div class="scount"><b>{{ formatCount(shelter.貓.count) }}</b><span>貓</span></div>
-            <div class="scount"><b>{{ formatCount(shelter.其他.count) }}</b><span>其他</span></div>
-          </div>
-          <div class="r-spark">
-            <ShelterSpark :histogram="shelter.all.histogram" :labels="labels" />
-            <div class="spark-foot">
-              中位數 {{ shelter.all.median_days === null ? '—' : formatCount(shelter.all.median_days) }} 天 ·
-              最久 {{ shelter.all.max_days === null ? '—' : formatCount(shelter.all.max_days) }} 天
+            <div class="scounts">
+              <div class="scount"><b>{{ formatCount(shelter.狗.count) }}</b><span>狗</span></div>
+              <div class="scount"><b>{{ formatCount(shelter.貓.count) }}</b><span>貓</span></div>
+              <div class="scount"><b>{{ formatCount(shelter.其他.count) }}</b><span>其他</span></div>
             </div>
-          </div>
-          <div class="r-actions">
-            <RouterLink :to="{ name: 'shelter', params: { id: shelter.id } }" class="detail-btn">
-              收容所介紹 <LucideIcon name="arrow-right" :size="16" />
-            </RouterLink>
-            <RouterLink :to="animalsLink({ shelter: shelter.id })" class="animals-link">
-              看這裡的 {{ formatCount(shelter.all.count) }} 隻動物 →
-            </RouterLink>
-          </div>
-        </li>
-      </ul>
+            <div class="spark-block">
+              <div class="spark-cap">在所時間分布</div>
+              <ShelterSpark :histogram="shelter.all.histogram" :labels="labels" />
+              <div class="spark-foot">
+                中位數 {{ shelter.all.median_days === null ? '—' : formatCount(shelter.all.median_days) }} 天 ·
+                最久 {{ shelter.all.max_days === null ? '—' : formatCount(shelter.all.max_days) }} 天
+              </div>
+            </div>
+            <div class="actions">
+              <RouterLink :to="{ name: 'shelter', params: { id: shelter.id } }" class="detail-btn">
+                收容所介紹 <LucideIcon name="arrow-right" :size="16" />
+              </RouterLink>
+              <RouterLink :to="animalsLink({ shelter: shelter.id })" class="animals-link">
+                看這裡的 {{ formatCount(shelter.all.count) }} 隻動物 →
+              </RouterLink>
+            </div>
+          </article>
+        </div>
+        <p v-else key="empty" class="empty-state">沒有符合條件的收容所，試著放寬條件。</p>
+      </Transition>
 
-      <div v-else-if="results.length" class="shelters">
-        <article v-for="shelter in results" :key="shelter.id" class="scard">
-          <div class="scard-top">
-            <span class="county">{{ shelter.county }}</span>
-            <span class="scard-n">在所 {{ formatCount(shelter.all.count) }} 隻</span>
-          </div>
-          <h2>
-            <RouterLink :to="{ name: 'shelter', params: { id: shelter.id } }">{{ shelter.name }}</RouterLink>
-          </h2>
-          <div class="smeta">
-            <span v-for="address in addressesOf(shelter)" :key="address.text">
-              <LucideIcon name="map-pin" :size="14" />
-              <span class="line" :title="`原始資料：${address.raw}`">{{ address.text }}</span>
-            </span>
-            <span>
-              <LucideIcon name="phone" :size="14" />
-              <span v-if="phoneOf(shelter).href" class="line">{{ shelter.tel }}</span>
-              <span v-else class="line missing">電話欄位不完整（原始資料：{{ shelter.tel }}）</span>
-            </span>
-          </div>
-          <div class="scounts">
-            <div class="scount"><b>{{ formatCount(shelter.狗.count) }}</b><span>狗</span></div>
-            <div class="scount"><b>{{ formatCount(shelter.貓.count) }}</b><span>貓</span></div>
-            <div class="scount"><b>{{ formatCount(shelter.其他.count) }}</b><span>其他</span></div>
-          </div>
-          <div class="spark-block">
-            <div class="spark-cap">在所時間分布</div>
-            <ShelterSpark :histogram="shelter.all.histogram" :labels="labels" />
-            <div class="spark-foot">
-              中位數 {{ shelter.all.median_days === null ? '—' : formatCount(shelter.all.median_days) }} 天 ·
-              最久 {{ shelter.all.max_days === null ? '—' : formatCount(shelter.all.max_days) }} 天
-            </div>
-          </div>
-          <div class="actions">
-            <RouterLink :to="{ name: 'shelter', params: { id: shelter.id } }" class="detail-btn">
-              收容所介紹 <LucideIcon name="arrow-right" :size="16" />
-            </RouterLink>
-            <RouterLink :to="animalsLink({ shelter: shelter.id })" class="animals-link">
-              看這裡的 {{ formatCount(shelter.all.count) }} 隻動物 →
-            </RouterLink>
-          </div>
-        </article>
+      <div v-if="remaining > 0" class="more-row">
+        <button type="button" class="more-btn" @click="showMore">
+          查看更多（還有 {{ remaining }} 間）
+          <LucideIcon name="chevron-down" :size="18" />
+        </button>
       </div>
-      <p v-else class="empty-state">沒有符合條件的收容所，試著放寬條件。</p>
 
-      <section class="boundary">
+      <section v-reveal class="boundary">
         <div class="boundary-head">
           <span class="kicker">這一頁不能拿來說什麼</span>
         </div>
@@ -484,6 +535,47 @@ function names(list: Shelter[]): string {
   & span {
     color: var(--ink-secondary);
     font-size: 0.86rem;
+  }
+}
+
+/* ── Grid / rows swap ── */
+.swap-enter-active,
+.swap-leave-active {
+  transition: opacity 180ms ease;
+}
+
+.swap-enter-from,
+.swap-leave-to {
+  opacity: 0;
+}
+
+/* ── 查看更多 ── */
+.more-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 2rem;
+  border: 1px solid var(--ramp-4);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ramp-4);
+  font: inherit;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    color 160ms ease;
+
+  &:hover {
+    background: var(--ramp-4);
+    color: var(--on-accent);
   }
 }
 
@@ -1090,6 +1182,12 @@ function names(list: Shelter[]): string {
   .select.sort {
     flex: 1;
     min-width: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .swap-enter-active,
+  .swap-leave-active {
+    transition: none;
   }
 }
 </style>

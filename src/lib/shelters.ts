@@ -1,10 +1,18 @@
+import { ref } from 'vue'
 import type { Shelter } from '@/types'
 
 /* Shelter helpers: tidy the address and phone fields the source hands over,
- * and build the Google Maps links for the shelter introduction page.
+ * build the Google Maps links for the shelter introduction page, and hold
+ * the shelter list's view choice.
  *
  *  Used by: MapView.vue, ShelterListView.vue and ShelterView.vue.
  */
+
+/** The shelter list's layout: card grid or full-width rows. It lives here,
+ *  at module scope, rather than in the page, so the choice survives a trip
+ *  to a shelter page and back within the visit without going into the URL;
+ *  a reload starts from the grid again. */
+export const shelterListView = ref<'grid' | 'list'>('grid')
 
 export interface CleanAddress {
   /** What the page shows. */

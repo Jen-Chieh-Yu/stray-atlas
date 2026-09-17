@@ -15,6 +15,7 @@ import LucideIcon from '@/components/LucideIcon.vue'
 import PageHead from '@/components/PageHead.vue'
 import { fetchDistribution, fetchFoundplace, useAtlasData } from '@/composables/useAtlasData'
 import { formatCount } from '@/lib/animals'
+import { vReveal } from '@/lib/reveal'
 import type {
   DistributionPayload,
   FoundplacePayload,
@@ -160,7 +161,7 @@ const shelterRange = computed(() => {
     <!-- Not a footnote. Each column names its statistical term in English as
          well: a reader who knows the term can stop at the heading, and one who
          does not gets the words they would need to look it up. -->
-    <section class="warncard" aria-labelledby="warn-title">
+    <section v-reveal class="warncard" aria-labelledby="warn-title">
       <div class="warn-top">
         <span id="warn-title" class="pill">
           <LucideIcon name="triangle-alert" :size="15" />方法學指引與資料邊界
@@ -199,7 +200,7 @@ const shelterRange = computed(() => {
     <p v-else-if="!data || !current || !block" class="state">載入中…</p>
 
     <template v-else>
-      <section class="acard controls" aria-label="圖表設定">
+      <section v-reveal class="acard controls" aria-label="圖表設定">
         <div class="field">
           <span id="a-scope" class="label">對象</span>
           <div class="pills" role="group" aria-labelledby="a-scope">
@@ -253,7 +254,7 @@ const shelterRange = computed(() => {
         </p>
       </section>
 
-      <section class="acard" aria-labelledby="a-hist">
+      <section v-reveal class="acard" aria-labelledby="a-hist">
         <div class="an-head">
           <h2 id="a-hist">在所天數的分布</h2>
           <span class="sub">
@@ -284,7 +285,7 @@ const shelterRange = computed(() => {
         </div>
       </section>
 
-      <section class="acard" aria-labelledby="a-ecdf">
+      <section v-reveal class="acard" aria-labelledby="a-ecdf">
         <div class="an-head">
           <h2 id="a-ecdf">累積分布（ECDF）</h2>
           <span class="sub">狗與貓兩條，橫軸跟著上面的設定走</span>
@@ -312,7 +313,7 @@ const shelterRange = computed(() => {
         </div>
       </section>
 
-      <section class="acard" aria-labelledby="a-quant">
+      <section v-reveal class="acard" aria-labelledby="a-quant">
         <div class="an-head">
           <h2 id="a-quant">分位數</h2>
           <span class="sub">單位：天</span>
@@ -363,7 +364,7 @@ const shelterRange = computed(() => {
         </div>
       </section>
 
-      <section v-if="countyRows.length" class="acard" aria-labelledby="a-county">
+      <section v-if="countyRows.length" v-reveal class="acard" aria-labelledby="a-county">
         <div class="an-head">
           <h2 id="a-county">各縣市</h2>
           <span class="sub">依在所數排序 · 右側同時顯示在所數與中位數</span>
