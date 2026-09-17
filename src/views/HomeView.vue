@@ -3,6 +3,7 @@ import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import AnimalCard from '@/components/AnimalCard.vue'
 import AnimalDialog from '@/components/AnimalDialog.vue'
+import HeroCarousel from '@/components/HeroCarousel.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
 import { useRoster } from '@/composables/useRoster'
 import { closeAnimalDialog } from '@/lib/dialogRoute'
@@ -267,9 +268,11 @@ const FLOW = [
 
 <template>
   <div class="home">
-    <!-- Hero: plain ground and title plate. No photos (decided 2026-09-15). -->
+    <!-- Hero: illustrative photo carousel with the title plate overlapping its
+         lower edge (2026-09-17; replaces the plain ground of 2026-09-15). -->
     <div class="hero">
       <div class="herobanner">
+        <HeroCarousel />
         <div class="hero-plate">
           <h1>牠們一直都在等待被看見</h1>
           <p class="lede">
@@ -556,44 +559,6 @@ const FLOW = [
           </div>
         </div>
       </div>
-
-      <!-- Data boundary -->
-      <section class="wrap">
-        <div class="sec-head">
-          <h2>關於這份資料</h2>
-          <RouterLink to="/analysis">完整方法學說明在資料分析頁 →</RouterLink>
-        </div>
-        <div class="boundary">
-          <div class="boundary-head">
-            <span class="pill">資料邊界與偏誤</span>
-            <span class="kicker">DATA BOUNDARY &amp; BIAS</span>
-          </div>
-          <div class="boundary-cols">
-            <div>
-              <span class="kicker">01 · RIGHT-CENSORING</span>
-              <h3>這是存量，不是歷史</h3>
-              <p>
-                只有此刻仍在所的動物在資料裡。已被認養、已離所的動物不在其中，因此本站無法計算認養率，也沒有認養結果可以呈現。
-              </p>
-              <span class="tag">影響：所有天數都只是下限</span>
-            </div>
-            <div>
-              <span class="kicker">02 · LENGTH-BIASED SAMPLING</span>
-              <h3>留下來的偏向待得久的</h3>
-              <p>單一快照裡建檔月份的分布是存活偏誤的結果，不能拿來談入所的季節性。</p>
-              <span class="tag">影響：右偏是結構性的</span>
-            </div>
-            <div>
-              <span class="kicker">03 · COVERAGE</span>
-              <h3>名字與描述大多從缺</h3>
-              <p>
-                原始資料沒有名字欄位，備註欄多半空白或是行政註記。尋獲地欄位僅約 5% 含縣市名，因此本站不做尋獲地熱區圖。
-              </p>
-              <span class="tag">影響：卡片標題常態性只有品種</span>
-            </div>
-          </div>
-        </div>
-      </section>
     </template>
 
     <AnimalDialog
@@ -654,18 +619,21 @@ section {
 
 .herobanner {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: clamp(340px, 46vh, 500px);
-  padding: 0 1.5rem;
-  background: var(--surface-sunk);
 }
 
+/* The plate overlaps the photo's lower edge, where the ground usually is,
+   so it never covers an animal's face. */
 .hero-plate {
+  position: relative;
+  z-index: 1;
   max-width: 660px;
+  margin: -3.25rem 1.5rem 0;
   padding: 1.75rem 2.25rem;
   border-radius: var(--radius);
   background: var(--surface);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--ink) 12%, transparent);
   text-align: center;
 }
 
@@ -681,6 +649,7 @@ section {
   margin: 0.85rem auto 0;
   color: var(--ink-secondary);
   font-size: 0.98rem;
+  text-wrap: pretty;
 }
 
 /* ── Filter box ── */
@@ -1207,66 +1176,6 @@ section {
   }
 }
 
-/* ── Data boundary ── */
-.boundary {
-  margin-top: 1.25rem;
-  padding: 1.6rem;
-  border-radius: var(--radius);
-  background: var(--surface-sunk);
-}
-
-.boundary-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.1rem;
-}
-
-.pill {
-  padding: 0.12rem 0.75rem;
-  border: 1px solid var(--hairline);
-  border-radius: 999px;
-  background: var(--surface);
-  font-size: 0.84rem;
-}
-
-.kicker {
-  color: var(--ink-muted);
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
-}
-
-.boundary-cols {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.5rem;
-
-  & > div {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-  }
-
-  & h3 {
-    font-size: 0.98rem;
-  }
-
-  & p {
-    margin: 0;
-    color: var(--ink-secondary);
-    font-size: 0.86rem;
-  }
-
-  & .tag {
-    margin-top: auto;
-    padding-top: 0.7rem;
-    color: var(--ink-muted);
-    font-size: 0.76rem;
-  }
-}
-
 /* ── Responsive ── */
 @media (max-width: 1080px) {
   .chart {
@@ -1288,15 +1197,6 @@ section {
   .browse {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
-  .boundary-cols {
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
-
-    & .tag {
-      margin-top: 0;
-    }
-  }
 }
 
 @media (max-width: 820px) {
@@ -1315,6 +1215,15 @@ section {
 
   .hero-plate {
     padding: 1.25rem;
+  }
+}
+
+/* Phones: the carousel is squarer and its credit sits at the bottom, so the
+   plate moves below the photo instead of overlapping it. */
+@media (max-width: 700px) {
+  .hero-plate {
+    margin-top: 1rem;
+    box-shadow: none;
   }
 }
 

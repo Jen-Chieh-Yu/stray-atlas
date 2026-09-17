@@ -6,6 +6,32 @@ through npm carry their own license files under node_modules/ and are not
 repeated here.
 
 ------------------------------------------------------------------------
+Home page hero photos (Unsplash)
+https://unsplash.com  -  license: https://unsplash.com/license
+Used in: src/assets/hero/ (resized to WebP by scripts/build_hero.py;
+credited on the home and about pages from src/lib/heroPhotos.ts).
+Illustrative only: the animals shown are not in any Taiwanese shelter.
+License checked on each photo page on 2026-09-17.
+------------------------------------------------------------------------
+
+From the Unsplash License: "Unsplash grants you an irrevocable,
+nonexclusive, worldwide copyright license to download, copy, modify,
+distribute, perform, and use images from Unsplash for free, including
+for commercial purposes, without permission from or attributing the
+photographer or Unsplash." It does not cover compiling images to
+replicate a similar or competing service. The full terms are at the URL
+above. Credit is given below although the license does not require it.
+
+cat-dog-grass     Andrew S            https://unsplash.com/photos/a-dog-and-a-cat-laying-in-the-grass-ouo1hbizWwo
+dog-wall          Catarina Carvalho   https://unsplash.com/photos/short-coat-brown-and-white-dog-sitting-near-gray-concrete-wall-during-daytime-1K7Qf8OBXjU
+cat-pavement      Akira               https://unsplash.com/photos/orange-tabby-cat-sitting-on-gray-concrete-floor-ajs8oiV3CfM
+cat-dog-sidewalk  nygi                https://unsplash.com/photos/a-cat-and-a-dog-sitting-on-the-sidewalk-88B-uqWmk4A
+dogs-dirt-road    Alvan Nee           https://unsplash.com/photos/two-brown-and-white-dogs-running-dirt-road-during-daytime-T-0EW-SEbsE
+cat-tabby         Ricardo IV Tamayo   https://unsplash.com/photos/gray-tabby-cat-on-gray-surface-dwS880MZe3k
+cat-dog-doorway   Glomad Marketing    https://unsplash.com/photos/gray-cat-sitting-on-lying-brown-dog-6VQlKJp2vpo
+cat-dogs-snow     Daniel Tuttle       https://unsplash.com/photos/brown-cat-beside-dog-during-daytime-khAuelKVnRg
+
+------------------------------------------------------------------------
 Lucide icons
 https://lucide.dev  -  https://github.com/lucide-icons/lucide
 Used in: src/lib/icons.ts (rendered by src/components/LucideIcon.vue).

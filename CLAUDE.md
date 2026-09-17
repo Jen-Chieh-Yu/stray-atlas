@@ -245,7 +245,7 @@ Assisted-by: Claude <noreply@anthropic.com>
 
 ### 6.3 `.gitignore`
 
-排除 `node_modules/`、`dist/`、`.venv/`、`__pycache__/`、`*.pyc`、`.env` 與 `.env.*`（`.env.example` 例外，要進版控）、`*.local`（含 `.env.local`）、`/tmp/`。
+排除 `node_modules/`、`dist/`、`.venv/`、`__pycache__/`、`*.pyc`、`.env` 與 `.env.*`（`.env.example` 例外，要進版控）、`*.local`（含 `.env.local`）、`/tmp/`、`/assets-src/`（首頁照片原檔，可重新下載）。
 
 **絕對不可排除 `data/`。** 每日快照 workflow 需要 commit 資料檔進 repo；若被 gitignore 擋掉，workflow 會安靜地什麼都沒存，且要數日後才會發現。
 
@@ -364,6 +364,8 @@ git push -u origin feature/YYYYMMDD-topic
 官方亦提供 JSON；是否改為介接 JSON 尚未決定，改動前先問。若切換，`clean.py`
 必須能同時讀取既有的 CSV 快照與新格式，`data/raw/` 已存的快照不可改寫。
 評估時以 README〈儲存成本（觀察用）〉的實測數字為比較基準。
+
+**首頁示意照片**（2026-09-17 起）：Unsplash，依 Unsplash License 使用，由人類手動下載（雲端環境無法連線 Unsplash 圖片網址）。新增或更換前先確認照片頁標示 Unsplash License 而非 Unsplash+；照片只能用在首頁 Hero 並標示為示意，出處同步更新 `src/lib/heroPhotos.ts`、`THIRD-PARTY-LICENSES`。
 
 **爬蟲禮儀**：若執行影像模組，下載 `album_file` 圖片時必須限速並建立本機快取，不可重複打政府網站。同時確認圖片授權範圍。
 
