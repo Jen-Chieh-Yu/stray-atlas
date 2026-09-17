@@ -34,21 +34,19 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import json
 import shutil
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from build_stats import BUCKETS, KINDS, summarise  # noqa: E402
 from clean import load_clean  # noqa: E402
+from common import PUBLIC_DATA, relative, utc_now, write_json  # noqa: E402
 
-ROOT = Path(__file__).resolve().parents[1]
-SHELTERS_PATH = ROOT / "public" / "data" / "shelters.json"
-ANIMALS_PATH = ROOT / "public" / "data" / "animals.json"
-LEGACY_ANIMALS_DIR = ROOT / "public" / "data" / "animals"
+SHELTERS_PATH = PUBLIC_DATA / "shelters.json"
+ANIMALS_PATH = PUBLIC_DATA / "animals.json"
+LEGACY_ANIMALS_DIR = PUBLIC_DATA / "animals"
 
 # Fields the pages actually render. Everything else stays out of a file that is
 # downloaded by every visitor who opens an animal list.
@@ -115,7 +113,7 @@ def build(snapshot_date: str | None) -> tuple[dict, list[dict]]:
 
     payload = {
         "snapshot_date": report["snapshot_date"],
-        "generated_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generated_at_utc": utc_now(),
         "buckets": [{"label": label, "min": low, "max": high} for label, low, high in BUCKETS],
         "kinds": list(KINDS),
         "shelters": shelters,
@@ -142,18 +140,8 @@ def main() -> int:
         print("dry run, nothing written")
         return 0
 
-    SHELTERS_PATH.parent.mkdir(parents=True, exist_ok=True)
-    SHELTERS_PATH.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n"
-    )
-    print(f"wrote {SHELTERS_PATH.relative_to(ROOT)} ({SHELTERS_PATH.stat().st_size} bytes)")
-
-    ANIMALS_PATH.write_text(
-        json.dumps(animals, ensure_ascii=False, separators=(",", ":")) + "\n",
-        encoding="utf-8",
-        newline="\n",
-    )
-    print(f"wrote {ANIMALS_PATH.relative_to(ROOT)} ({ANIMALS_PATH.stat().st_size} bytes)")
+    write_json(SHELTERS_PATH, payload, indent=1)
+    write_json(ANIMALS_PATH, animals)
 
     # The per-shelter directory this script used to produce would otherwise sit
     # in public/ forever, shipped to every visitor as dead weight. Tidying it is
@@ -161,9 +149,9 @@ def main() -> int:
     if LEGACY_ANIMALS_DIR.exists():
         try:
             shutil.rmtree(LEGACY_ANIMALS_DIR)
-            print(f"removed the superseded {LEGACY_ANIMALS_DIR.relative_to(ROOT)}/")
+            print(f"removed the superseded {relative(LEGACY_ANIMALS_DIR)}/")
         except OSError as error:
-            print(f"::warning::could not remove {LEGACY_ANIMALS_DIR.relative_to(ROOT)}/: {error}")
+            print(f"::warning::could not remove {relative(LEGACY_ANIMALS_DIR)}/: {error}")
     return 0
 
 

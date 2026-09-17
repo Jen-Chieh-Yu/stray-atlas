@@ -34,18 +34,15 @@ import zipfile
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-ROOT = Path(__file__).resolve().parents[1]
-DISTRICTS_PATH = ROOT / "data" / "reference" / "districts.json"
-GEOJSON_PATH = ROOT / "public" / "data" / "districts.geojson"
-COUNTIES_PATH = ROOT / "public" / "data" / "counties.geojson"
+from common import PUBLIC_DATA, REFERENCE_DIR, log, relative
+
+DISTRICTS_PATH = REFERENCE_DIR / "districts.json"
+GEOJSON_PATH = PUBLIC_DATA / "districts.geojson"
+COUNTIES_PATH = PUBLIC_DATA / "counties.geojson"
 
 EXPECTED_COUNTIES = 22
 EXPECTED_DISTRICTS = 368
 COORDINATE_PRECISION = 5  # ~1 m, well past what a choropleth can show
-
-
-def log(message: str) -> None:
-    print(message, flush=True)
 
 
 def simplify(points: list[tuple[float, float]], tolerance: float) -> list[tuple[float, float]]:
@@ -295,11 +292,11 @@ def build(source: Path, tolerance: float, write: bool) -> None:
             encoding="utf-8",
             newline="\n",
         )
-        log(f"wrote {DISTRICTS_PATH.relative_to(ROOT)}")
+        log(f"wrote {relative(DISTRICTS_PATH)}")
 
         GEOJSON_PATH.parent.mkdir(parents=True, exist_ok=True)
         GEOJSON_PATH.write_text(payload + "\n", encoding="utf-8", newline="\n")
-        log(f"wrote {GEOJSON_PATH.relative_to(ROOT)}")
+        log(f"wrote {relative(GEOJSON_PATH)}")
 
         by_county: dict = {}
         for record, shape in zip(records, shapes):
@@ -321,7 +318,7 @@ def build(source: Path, tolerance: float, write: bool) -> None:
             separators=(",", ":"),
         )
         COUNTIES_PATH.write_text(county_payload + "\n", encoding="utf-8", newline="\n")
-        log(f"wrote {COUNTIES_PATH.relative_to(ROOT)} ({len(county_payload) / 1024:.0f} KB)")
+        log(f"wrote {relative(COUNTIES_PATH)} ({len(county_payload) / 1024:.0f} KB)")
 
 
 def main() -> int:

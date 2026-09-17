@@ -37,12 +37,22 @@ python scripts/fetch_snapshot.py
 由快照重建前端要吃的 JSON（同樣無外部相依，`build_districts.py` 例外，需要 `pyshp`）：
 
 ```bash
+python scripts/build_all.py                    # 用最新快照依序重建全部 JSON，並檢查日期一致
+python scripts/build_all.py --date 2026-09-03  # 指定快照
+```
+
+`build_all.py` 依下列順序執行，每一步都帶同一個 `--date`；單獨執行某一步時也請帶 `--date`，否則會取當下最新的快照，造成各頁日期不一致：
+
+```bash
 python scripts/clean.py                 # 清理欄位、產生 areas.json / meta.json
+python scripts/geocode.py               # stats/foundplace.json（尋獲地分級）
 python scripts/build_stats.py           # stats/counties.json
 python scripts/build_shelters.py        # shelters.json + animals.json
-python scripts/build_shelter_points.py  # shelter-points.json（地圖圖釘）
+python scripts/build_shelter_points.py  # shelter-points.json（地圖圖釘，讀 shelters.json）
 python scripts/build_distribution.py    # stats/distribution.json（分析頁）
 ```
+
+各腳本共用的路徑、log 與 JSON 寫檔集中在 `scripts/common.py`。
 
 跑前端（Node 22+）：
 
@@ -78,14 +88,19 @@ stray-atlas/
 └── src/                     Vue 前端（views / components / composables）
 ```
 
-### 四個分頁
+### 頁面
 
 | 路徑 | 內容 |
 |---|---|
-| `/` | 縣市 choropleth、37 處收容所圖釘、縮放平移，左側面板顯示縣市或單一收容所 |
-| `/animals` | 全部 8,000 餘筆動物，縣市／收容所／類型／品種／在所時間篩選，分頁 20 筆 |
-| `/shelters`、`/shelters/:id` | 收容所列表與單一收容所的動物 |
+| `/` | 首頁：全站數字、已在所最久的動物、各頁入口與這份資料的邊界 |
+| `/animals` | 全部 8,000 餘筆動物，縣市／收容所／類型／品種／在所時間篩選，每頁 16 筆 |
+| `/shelters` | 收容所列表：縣市篩選、七種排序、卡片／條列切換 |
+| `/shelters/:id` | 收容所介紹：基本資料與地圖、收容動物現況與在所時間分布、該所動物 |
+| `/map` | 縣市 choropleth（固定門檻分級）、37 處收容所圖釘、縮放平移，左側面板顯示全國、縣市或單一收容所 |
 | `/analysis` | 在所天數分布：長條圖＋KDE（對數／線性、三段平滑）、犬貓 ECDF、分位數表、各縣市排行 |
+| `/about` | 關於本站：資料來源、處理方式與限制、相關官方網站 |
+
+頁面上的資料日期只在頁尾顯示一處，讀自 `public/data/meta.json`。
 
 ---
 
@@ -95,6 +110,7 @@ stray-atlas/
 |---|---|
 | 名稱 | 動物認領養（農業部） |
 | 來源 | [政府資料開放平臺 dataset/85903](https://data.gov.tw/dataset/85903) |
+| 介接網址 | `https://data.moa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL`（`fetch_snapshot.py` 加上 `&FOTT=CSV&IsTransData=1` 取 CSV） |
 | 授權 | 政府資料開放授權條款－第 1 版 |
 | 更新頻率 | 每 1 天 |
 | 快照規模 | 28 欄，列數逐日變動（2026-09-07 為 8,275 列） |
@@ -117,6 +133,20 @@ python scripts/fetch_snapshot.py --force    # 覆蓋當日已存在的檔案
 來源網址若變更，設定 repo variable `SNAPSHOT_URL` 即可覆寫，不需改程式。
 
 每次執行都會在該次 run 的 Summary 寫下筆數、欄位數、位元組、sha256，以及最近幾份快照的並排比較。**這張並排表才是稽核的重點**：這類來源最陰險的故障不是抓不到，而是每天回傳一份格式正確但內容凍結的檔案——run 全綠、檔案照存，只有把連續幾天的筆數與 sha 放在一起看才會發現。
+
+### 儲存成本（觀察用）
+
+每日執行會讓 repo 持續變大，以下數字供日後觀察，也作為評估是否改接官方 JSON API 的基準。2026-09-17 實測：
+
+| 項目 | 每次大小 | 進 git 後的實際增量 | 一年約 |
+|---|---|---|---|
+| 原始快照 `data/raw/YYYY-MM-DD.csv.gz` | 約 0.43 MB（解壓約 2.9 MB，8,300 餘列） | 約 0.43 MB／天——gzip 過的檔案彼此無法做差異壓縮，每天都是完整一份 | 約 160 MB |
+| 重建 `public/data/`（若改為每日） | 目錄共約 4.9 MB，其中 `animals.json` 約 2.7 MB；兩份行政區 GeoJSON 約 2.0 MB 不會變動 | 約 0.06 MB／天（以 09-15 → 09-16 兩次重建實測，打包後的差異壓縮增量） | 約 22 MB |
+| 部署產物（Pages artifact） | 約 5.2 MB（程式約 0.3 MB＋`public/data`） | 不進 repo | — |
+
+- repo 目前（15 份快照）的 `.git` 物件約 10 MB。GitHub 建議 repo 維持在 1 GB 以下，照上表速度數年內不會碰到；真的變大時再考慮把原始存檔移到 Releases 或獨立的資料 repo，**不刪歷史快照**（階段 3 的離所標籤只能從這裡來）。
+- 成本的大頭是原始快照，不是網站資料。改接 JSON API 時要比較的是：JSON 回應的大小與壓縮率、能否與既有 CSV 快照接續（`clean.py` 須兩種都能讀），以及欄位是否一致。
+- 重新量測：`data/raw/_manifest.csv` 的 `bytes` 欄是來源 CSV 未壓縮的位元組數；壓縮檔大小看 `data/raw/` 目錄；repo 物件大小用 `git count-objects -vH`。
 
 ### 部署
 
@@ -215,6 +245,7 @@ python scripts/fetch_snapshot.py --force    # 覆蓋當日已存在的檔案
 | KDE 與 ECDF | 在 Python 算好存 JSON | 分析留在腳本裡、瀏覽器只負責畫，與其他頁面同一套分工。高斯 KDE 手寫十五行，不為此引入 scipy |
 | 頻寬選擇 | 公開三段讓讀者切換 | KDE 的形狀有一半是頻寬的主張。用交叉驗證自動選一條反而把選擇藏起來，與這頁想說的事相反 |
 | 地圖繪製 | 內嵌 SVG + d3-geo，自行實作縮放 | 不依賴圖磚服務、不需 API key，demo 現場沒有外部相依可壞。縮放只是一個 transform 加 wheel／pointer 事件，不值得為此引入 d3-zoom |
+| 收容所介紹頁地圖 | Google Maps Embed，金鑰缺席時退回外部連結 | 單一地址的街道圖是讀者要的東西，自己畫不划算。金鑰由建置環境注入（本機 `.env.local` 的 `VITE_GOOGLE_MAPS_EMBED_KEY`、CI 的 secret `GOOGLE_MAPS_EMBED_KEY`），必須限制 HTTP referrer；沒有金鑰時頁面仍可用，不影響主地圖 |
 
 ---
 

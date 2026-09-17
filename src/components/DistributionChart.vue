@@ -5,8 +5,11 @@
  *  count / (n × bin width), the curve integrates to 1 over the same axis. A
  *  count axis would put them on different scales and the overlay would be a
  *  decoration rather than a comparison.
+ *
+ *  Used by: AnalysisView.vue.
  */
 import { computed, ref } from 'vue'
+import { axisTicks, labelDays } from '@/lib/days'
 import type { ScaleBlock, Scale, Smoothing } from '@/types'
 
 const props = defineProps<{
@@ -14,16 +17,15 @@ const props = defineProps<{
   scale: Scale
   smoothing: Smoothing
   logTicks: number[]
-  maxDays: number
   median: number
-  colour: string
 }>()
 
-const W = 720
-const H = 300
-const PAD = { top: 16, right: 16, bottom: 34, left: 46 }
+const W = 900
+const H = 360
+const PAD = { top: 18, right: 18, bottom: 38, left: 56 }
 const plotW = W - PAD.left - PAD.right
 const plotH = H - PAD.top - PAD.bottom
+const bottom = PAD.top + plotH
 
 const curve = computed(() => props.block.kde[props.smoothing])
 
@@ -39,7 +41,7 @@ const domain = computed<[number, number]>(() => {
 const yMax = computed(() => {
   const bars = Math.max(...props.block.bins.map((b) => b.density))
   const line = Math.max(...curve.value.points.map((p) => p[1]))
-  return Math.max(bars, line) * 1.08
+  return Math.max(bars, line) * 1.1
 })
 
 function x(value: number): number {
@@ -48,72 +50,65 @@ function x(value: number): number {
 }
 
 function y(value: number): number {
-  return PAD.top + plotH - (value / yMax.value) * plotH
-}
-
-/** Axis position for a value in days, whichever scale is showing. */
-function xDays(days: number): number {
-  return x(props.scale === 'log' ? Math.log10(Math.max(days, 0.5)) : days)
+  return bottom - (value / yMax.value) * plotH
 }
 
 const ticks = computed(() => {
-  if (props.scale === 'log') {
-    return props.logTicks
-      .filter((d) => d <= props.maxDays)
-      .map((d) => ({ at: xDays(d), label: labelDays(d) }))
-  }
-  const step = props.maxDays > 3000 ? 1000 : 500
-  const out = []
-  for (let d = 0; d <= props.maxDays; d += step) out.push({ at: xDays(d), label: `${d}` })
-  return out
+  const [lo, hi] = domain.value
+  return axisTicks(props.scale, props.logTicks)
+    .map((tick) => ({
+      label: tick.label,
+      value: props.scale === 'log' ? Math.log10(tick.days) : tick.days,
+    }))
+    .filter((tick) => tick.value >= lo && tick.value <= hi)
+    .map((tick) => ({ at: x(tick.value), label: tick.label }))
 })
 
-function labelDays(days: number): string {
-  if (days < 30) return `${days} 天`
-  if (days < 365) return `${Math.round(days / 30)} 個月`
-  return `${+(days / 365).toFixed(days >= 730 ? 0 : 1)} 年`
-}
+const gridShares = [0.25, 0.5, 0.75, 1]
 
-const barPath = computed(() =>
-  props.block.bins
-    .map((b) => {
-      const x0 = x(b.x0)
-      const x1 = x(b.x1)
-      // 2px of surface between fills, per the mark spec; skip it if the bin is
-      // narrower than the gap would be.
-      const inset = x1 - x0 > 4 ? 1 : 0
-      return `M${(x0 + inset).toFixed(2)},${y(0).toFixed(2)} L${(x0 + inset).toFixed(2)},${y(b.density).toFixed(2)} L${(x1 - inset).toFixed(2)},${y(b.density).toFixed(2)} L${(x1 - inset).toFixed(2)},${y(0).toFixed(2)} Z`
-    })
-    .join(' '),
+const bars = computed(() =>
+  props.block.bins.map((bin) => {
+    const left = x(bin.x0)
+    return {
+      x: left,
+      y: y(bin.density),
+      // 1 unit of surface between bars.
+      width: Math.max(x(bin.x1) - left - 1, 1),
+      height: Math.max(bottom - y(bin.density), 0),
+    }
+  }),
 )
 
 const linePath = computed(() =>
   curve.value.points
-    .map((p, i) => `${i ? 'L' : 'M'}${x(p[0]).toFixed(2)},${y(p[1]).toFixed(2)}`)
+    .map((p, i) => `${i ? 'L' : 'M'}${x(p[0]).toFixed(1)},${y(p[1]).toFixed(1)}`)
     .join(' '),
 )
 
-const hover = ref<{ i: number; cx: number } | null>(null)
+const medianX = computed(() =>
+  x(props.scale === 'log' ? Math.log10(Math.max(props.median, 0.5)) : props.median),
+)
+/** Near the right edge the label flips to the left of its line. */
+const medianAnchor = computed(() => (medianX.value > W - 150 ? 'end' : 'start'))
+
+const hover = ref<number | null>(null)
 
 function onMove(event: MouseEvent) {
-  const target = event.currentTarget as SVGSVGElement
-  const rect = target.getBoundingClientRect()
+  const rect = (event.currentTarget as SVGSVGElement).getBoundingClientRect()
   const px = ((event.clientX - rect.left) / rect.width) * W
   let best = 0
   let bestDistance = Infinity
-  props.block.bins.forEach((b, i) => {
-    const centre = x((b.x0 + b.x1) / 2)
-    const distance = Math.abs(centre - px)
+  props.block.bins.forEach((bin, i) => {
+    const distance = Math.abs(x((bin.x0 + bin.x1) / 2) - px)
     if (distance < bestDistance) {
       bestDistance = distance
       best = i
     }
   })
-  const bin = props.block.bins[best]
-  hover.value = { i: best, cx: x((bin.x0 + bin.x1) / 2) }
+  hover.value = best
 }
 
-const hovered = computed(() => (hover.value ? props.block.bins[hover.value.i] : null))
+const hovered = computed(() => (hover.value === null ? null : props.block.bins[hover.value]))
 
 function binRange(x0: number, x1: number): string {
   const toDays = (v: number) => (props.scale === 'log' ? Math.pow(10, v) : v)
@@ -123,79 +118,62 @@ function binRange(x0: number, x1: number): string {
 
 <template>
   <figure class="chart">
-    <svg
-      :viewBox="`0 0 ${W} ${H}`"
-      role="img"
-      :aria-label="`在所天數分佈，${scale === 'log' ? '對數' : '線性'}橫軸`"
-      @mousemove="onMove"
-      @mouseleave="hover = null"
-    >
-      <g class="grid">
-        <line
-          v-for="t in ticks"
-          :key="`g${t.at}`"
-          :x1="t.at"
-          :x2="t.at"
-          :y1="PAD.top"
-          :y2="PAD.top + plotH"
-        />
-      </g>
-
-      <path class="bars" :d="barPath" />
-      <path class="kde" :d="linePath" :style="{ stroke: colour }" />
-
-      <line
-        class="median"
-        :x1="xDays(median)"
-        :x2="xDays(median)"
-        :y1="PAD.top"
-        :y2="PAD.top + plotH"
-      />
-      <text class="median-label" :x="xDays(median) + 5" :y="PAD.top + 11">
-        中位數 {{ median.toLocaleString('zh-TW') }} 天
-      </text>
-
-      <line
-        class="axis"
-        :x1="PAD.left"
-        :x2="PAD.left + plotW"
-        :y1="PAD.top + plotH"
-        :y2="PAD.top + plotH"
-      />
-      <text
-        v-for="t in ticks"
-        :key="`t${t.at}`"
-        class="tick"
-        :x="t.at"
-        :y="PAD.top + plotH + 16"
-        text-anchor="middle"
+    <div class="frame">
+      <svg
+        :viewBox="`0 0 ${W} ${H}`"
+        role="img"
+        :aria-label="`在所天數分布，${scale === 'log' ? '對數' : '線性'}橫軸，中位數 ${median} 天`"
+        @mousemove="onMove"
+        @mouseleave="hover = null"
       >
-        {{ t.label }}
-      </text>
-      <text class="axis-title" :x="PAD.left" :y="H - 4">已在所天數</text>
-      <text class="axis-title" :x="PAD.left" :y="PAD.top - 4">機率密度</text>
-
-      <template v-if="hover && hovered">
         <line
-          class="cursor"
-          :x1="hover.cx"
-          :x2="hover.cx"
-          :y1="PAD.top"
-          :y2="PAD.top + plotH"
+          v-for="share in gridShares"
+          :key="`g${share}`"
+          class="gridline"
+          :x1="PAD.left"
+          :x2="W - PAD.right"
+          :y1="y(yMax * share)"
+          :y2="y(yMax * share)"
         />
-        <circle :cx="hover.cx" :cy="y(hovered.density)" r="4.5" :style="{ fill: colour }" />
-      </template>
-    </svg>
+
+        <rect
+          v-for="(bar, index) in bars"
+          :key="index"
+          class="bar"
+          :class="{ on: hover === index }"
+          :x="bar.x"
+          :y="bar.y"
+          :width="bar.width"
+          :height="bar.height"
+        />
+        <path class="kde" :d="linePath" />
+
+        <line class="median" :x1="medianX" :x2="medianX" :y1="PAD.top" :y2="bottom" />
+        <text
+          class="median-label"
+          :x="medianX + (medianAnchor === 'end' ? -6 : 6)"
+          :y="PAD.top + 12"
+          :text-anchor="medianAnchor"
+        >
+          中位數 {{ median.toLocaleString('zh-TW') }} 天
+        </text>
+
+        <g class="axis">
+          <line :x1="PAD.left" :x2="W - PAD.right" :y1="bottom" :y2="bottom" />
+          <template v-for="tick in ticks" :key="`t${tick.at}`">
+            <line :x1="tick.at" :x2="tick.at" :y1="bottom" :y2="bottom + 4" />
+            <text :x="tick.at" :y="bottom + 18" text-anchor="middle">{{ tick.label }}</text>
+          </template>
+          <text :x="PAD.left" :y="PAD.top - 4">密度</text>
+        </g>
+      </svg>
+    </div>
 
     <figcaption v-if="hovered" class="readout">
       <strong>{{ binRange(hovered.x0, hovered.x1) }}</strong>
       <span>{{ hovered.count.toLocaleString('zh-TW') }} 隻</span>
     </figcaption>
-    <figcaption v-else class="readout muted">
-      滑過長條可讀出該區間的隻數。曲線為核密度估計，頻寬 {{ curve.bandwidth }}
-      <template v-if="scale === 'log'">（log₁₀ 天）</template>
-      <template v-else>天</template>
-    </figcaption>
+    <figcaption v-else class="readout muted">滑過長條可讀出該區間的隻數。</figcaption>
   </figure>
 </template>
 
@@ -204,52 +182,56 @@ function binRange(x0: number, x1: number): string {
   margin: 0;
 }
 
+/* Scrolls sideways on a phone rather than shrinking the tick labels past
+   reading. */
+.frame {
+  overflow-x: auto;
+}
+
 svg {
   display: block;
   width: 100%;
+  min-width: 560px;
   height: auto;
 }
 
-.grid line {
+.gridline {
   stroke: var(--hairline);
-  stroke-width: 1;
+  stroke-dasharray: 2 4;
 }
 
-.bars {
-  fill: var(--surface-sunk);
-  stroke: var(--hairline);
-  stroke-width: 1;
+.bar {
+  fill: var(--ramp-2);
+
+  &.on {
+    fill: var(--ramp-4);
+  }
 }
 
 .kde {
   fill: none;
+  stroke: var(--ramp-5);
   stroke-width: 2;
   stroke-linejoin: round;
 }
 
-.axis {
-  stroke: var(--ink-muted);
-  stroke-width: 1;
-}
-
 .median {
-  stroke: var(--ink-secondary);
-  stroke-width: 1;
-  stroke-dasharray: 3 3;
+  stroke: var(--ink);
+  stroke-width: 1.2;
+  stroke-dasharray: 4 4;
 }
 
 .median-label {
-  fill: var(--ink-secondary);
-  font-size: 11px;
+  fill: var(--ink);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
 }
 
-.cursor {
-  stroke: var(--ink-muted);
-  stroke-width: 1;
+.axis line {
+  stroke: var(--hairline);
 }
 
-.tick,
-.axis-title {
+.axis text {
   fill: var(--ink-muted);
   font-size: 11px;
 }
@@ -258,13 +240,14 @@ svg {
   display: flex;
   gap: 0.6rem;
   align-items: baseline;
-  margin-top: 0.4rem;
   min-height: 1.4rem;
-  font-size: 0.8rem;
+  margin-top: 0.4rem;
   color: var(--ink-secondary);
-}
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
 
-.readout.muted {
-  color: var(--ink-muted);
+  &.muted {
+    color: var(--ink-muted);
+  }
 }
 </style>

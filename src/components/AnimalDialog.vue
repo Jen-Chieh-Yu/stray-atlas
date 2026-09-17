@@ -215,11 +215,11 @@ async function copyLink() {
   font-size: 1.35rem;
   line-height: 1;
   cursor: pointer;
-}
 
-.close:hover {
-  background: var(--surface-sunk);
-  color: var(--ink);
+  &:hover {
+    background: var(--surface-sunk);
+    color: var(--ink);
+  }
 }
 
 .photo {
@@ -228,22 +228,22 @@ async function copyLink() {
   background: var(--surface-sunk);
   display: grid;
   place-items: center;
-}
 
-/* A 3:2 void is a lot of nothing when there is no photo to put in it. */
-.photo.bare {
-  aspect-ratio: auto;
-  min-height: 5.5rem;
-}
+  /* A 3:2 void is a lot of nothing when there is no photo to put in it. */
+  &.bare {
+    aspect-ratio: auto;
+    min-height: 5.5rem;
+  }
 
-.photo img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  /* contain, not cover: cropping an animal out of its own portrait is worse
+  & img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    /* contain, not cover: cropping an animal out of its own portrait is worse
      than a band of empty surface beside it. */
-  object-fit: contain;
+    object-fit: contain;
+  }
 }
 
 .no-photo {
@@ -300,11 +300,11 @@ async function copyLink() {
   margin: 0;
   font-size: 0.95rem;
   color: var(--accent-text);
-}
 
-.duration strong {
-  font-size: 1.45rem;
-  font-variant-numeric: tabular-nums;
+  & strong {
+    font-size: 1.45rem;
+    font-variant-numeric: tabular-nums;
+  }
 }
 
 .years {

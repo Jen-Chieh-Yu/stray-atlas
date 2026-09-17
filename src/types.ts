@@ -136,6 +136,24 @@ export interface DistributionPayload {
   scopes: Record<Scope, ScopeDistribution>
 }
 
+/** stats/foundplace.json, the fields the analysis page reads. The file holds
+ *  more (samples, place kinds, confidence bands). */
+export interface FoundplacePayload {
+  snapshot_date: string
+  rows: number
+  /** Where each row's county came from: the found-place text itself, the
+   *  shelter holding the animal, or nowhere. */
+  county_source: { text: number; shelter: number; none: number }
+  /** Rows whose found-place text names a county other than the shelter's. */
+  county_from_text_differs_from_shelter: number
+}
+
+/** meta.json, the field the site footer reads. The file also records the
+ *  source file, row counts and the columns the cleaner dropped. */
+export interface MetaPayload {
+  snapshot_date: string
+}
+
 export interface ShelterPoint {
   id: string
   name: string

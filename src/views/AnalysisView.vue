@@ -1,5 +1,6 @@
 <script setup lang="ts">
-/** Duration analysis: histogram + KDE, and an ECDF comparing 狗 with 貓.
+/** Duration analysis: histogram + KDE, an ECDF comparing 狗 with 貓, the
+ *  quantile table and the county list.
  *
  *  The page is built around one caveat rather than decorated with it. Every
  *  animal here is still in a shelter, so the numbers describe who is currently
@@ -7,19 +8,49 @@
  *  quotable figures come from a curve with no bandwidth in it.
  */
 import { computed, onMounted, ref } from 'vue'
-import { fetchDistribution, useAtlasData } from '@/composables/useAtlasData'
-import CountyTable from '@/components/CountyTable.vue'
+import { useRoute, useRouter } from 'vue-router'
 import DistributionChart from '@/components/DistributionChart.vue'
 import EcdfChart from '@/components/EcdfChart.vue'
-import type { CountyStats, DistributionPayload, Metric, Scale, Scope, Smoothing } from '@/types'
+import LucideIcon from '@/components/LucideIcon.vue'
+import PageHead from '@/components/PageHead.vue'
+import { fetchDistribution, fetchFoundplace, useAtlasData } from '@/composables/useAtlasData'
+import { formatCount } from '@/lib/animals'
+import type {
+  DistributionPayload,
+  FoundplacePayload,
+  Scale,
+  Scope,
+  Smoothing,
+} from '@/types'
+
+const route = useRoute()
+const router = useRouter()
+const { stats } = useAtlasData()
 
 const data = ref<DistributionPayload | null>(null)
+const foundplace = ref<FoundplacePayload | null>(null)
 const error = ref<string | null>(null)
 
-const scope = ref<Scope>('all')
-const scale = ref<Scale>('log')
-const smoothing = ref<Smoothing>('standard')
+onMounted(async () => {
+  try {
+    data.value = await fetchDistribution()
+  } catch (cause) {
+    error.value = cause instanceof Error ? cause.message : String(cause)
+  }
+  try {
+    foundplace.value = await fetchFoundplace()
+  } catch {
+    // Only one sentence in the county note reads this; without it the
+    // sentence is left out rather than the page failing.
+    foundplace.value = null
+  }
+})
 
+/* ── Settings live in the URL, as on the other pages ──────────────────────
+ *
+ *  kind=dog|cat, axis=linear, smooth=fine|smooth. The defaults (全部, 對數,
+ *  標準) are left out of the URL.
+ */
 const SCOPES: { id: Scope; label: string }[] = [
   { id: 'all', label: '全部' },
   { id: 'dog', label: '狗' },
@@ -35,40 +66,43 @@ const SMOOTHINGS: { id: Smoothing; label: string }[] = [
   { id: 'smooth', label: '較平滑' },
 ]
 
-onMounted(async () => {
-  try {
-    data.value = await fetchDistribution()
-  } catch (cause) {
-    error.value = cause instanceof Error ? cause.message : String(cause)
-  }
-})
+const scope = computed<Scope>(() =>
+  route.query.kind === 'dog' || route.query.kind === 'cat' ? route.query.kind : 'all',
+)
+const scale = computed<Scale>(() => (route.query.axis === 'linear' ? 'linear' : 'log'))
+const smoothing = computed<Smoothing>(() =>
+  route.query.smooth === 'fine' || route.query.smooth === 'smooth'
+    ? route.query.smooth
+    : 'standard',
+)
+
+function update(patch: Partial<{ scope: Scope; scale: Scale; smoothing: Smoothing }>) {
+  const next = { scope: scope.value, scale: scale.value, smoothing: smoothing.value, ...patch }
+  const query: Record<string, string> = {}
+  if (next.scope !== 'all') query.kind = next.scope
+  if (next.scale !== 'log') query.axis = next.scale
+  if (next.smoothing !== 'standard') query.smooth = next.smoothing
+  void router.replace({ query })
+}
+
+const labelOf = <T extends string>(options: { id: T; label: string }[], id: T) =>
+  options.find((option) => option.id === id)?.label ?? ''
 
 const current = computed(() => data.value?.scopes[scope.value] ?? null)
 const block = computed(() => (current.value ? current.value[scale.value] : null))
 
 /** Stated beside the controls: the bandwidth is the one setting whose effect
  *  on the curve is invisible until it is named. */
-const curveBandwidth = computed(() => block.value?.kde[smoothing.value].bandwidth ?? 0)
-
-const scopeColour = computed(() =>
-  scope.value === 'cat' ? 'var(--series-b)' : 'var(--series-a)',
-)
+const bandwidth = computed(() => {
+  const value = block.value?.kde[smoothing.value].bandwidth ?? 0
+  return scale.value === 'log' ? `${value.toFixed(3)} log₁₀ 天` : `${formatCount(Math.round(value))} 天`
+})
 
 const ecdfSeries = computed(() => {
   if (!data.value) return []
   return [
-    {
-      key: 'dog',
-      label: '狗',
-      colour: 'var(--series-a)',
-      points: data.value.scopes.dog.ecdf,
-    },
-    {
-      key: 'cat',
-      label: '貓',
-      colour: 'var(--series-b)',
-      points: data.value.scopes.cat.ecdf,
-    },
+    { key: 'dog', label: '狗', colour: 'var(--series-a)', points: data.value.scopes.dog.ecdf },
+    { key: 'cat', label: '貓', colour: 'var(--series-b)', points: data.value.scopes.cat.ecdf },
   ]
 })
 
@@ -76,235 +110,215 @@ function pct(value: number): string {
   return `${(value * 100).toFixed(1)}%`
 }
 
-function years(days: number): string {
-  return `約 ${(days / 365).toFixed(1)} 年`
+/** The whole-number percentage used in running text. */
+function pctRound(value: number): string {
+  return `${Math.round(value * 100)}%`
 }
 
-/* ---------------------------------------------------------- county rank --
- * Moved off the map page. There it sat beside the choropleth and said the
- * same thing in a second form, while the map wanted the width; here it is one
- * more way of reading the same distribution, which is what this page is for.
- */
-const { stats } = useAtlasData()
-const rankMetric = ref<Metric>('count')
-const RANK_METRICS: { id: Metric; label: string }[] = [
-  { id: 'count', label: '在所數' },
-  { id: 'median', label: '滯留中位數' },
-]
-
-function rankValue(county: CountyStats): number | null {
-  if (rankMetric.value === 'count') return county.all.count
-  // A median over a handful of animals is noise, not a signal.
-  return county.all.count >= 20 ? county.all.median_days : null
+function ratio(a: number, b: number): string {
+  return b === 0 ? '—' : (a / b).toFixed(1)
 }
 
-/** Every row carries both numbers: sorting by one and printing only that one
+/* ── County list ───────────────────────────────────────────────────────────
+ *
+ *  Every row carries both numbers: sorting by one and printing only that one
  *  hides the fact that the two disagree — 桃園市 is fourth by headcount and
- *  first by median. The accent marks a median at least twice the national one,
- *  which is a stated rule rather than a judgement about the county. */
-const rankRows = computed(() => {
-  if (!stats.value) return []
-  const national = stats.value.total.median_days ?? 0
-  return stats.value.counties
-    .map((county) => ({
-      county,
-      value: rankValue(county),
-      sub:
-        rankMetric.value === 'count'
-          ? county.all.median_days === null
-            ? '—'
-            : `${county.all.median_days.toLocaleString('zh-TW')} 天`
-          : `${county.all.count.toLocaleString('zh-TW')} 隻`,
-      alert:
-        rankMetric.value === 'count' &&
-        national > 0 &&
-        (county.all.median_days ?? 0) >= national * 2,
-    }))
-    .sort((a, b) => (b.value ?? -1) - (a.value ?? -1))
-})
+ *  first by median. The accent marks a median at least twice the national
+ *  one, a stated rule rather than a judgement about the county.
+ */
+const national = computed(() => stats.value?.total.median_days ?? null)
+const hotLine = computed(() => (national.value === null ? null : national.value * 2))
 
-const rankMax = computed(() => Math.max(...rankRows.value.map((row) => row.value ?? 0), 0))
+const countyRows = computed(() =>
+  [...(stats.value?.counties ?? [])]
+    .sort((a, b) => b.all.count - a.all.count)
+    .map((county) => ({
+      name: county.name,
+      shelters: county.shelters,
+      count: county.all.count,
+      median: county.all.median_days,
+      hot:
+        hotLine.value !== null &&
+        county.all.median_days !== null &&
+        county.all.median_days >= hotLine.value,
+    })),
+)
+
+const hotCount = computed(() => countyRows.value.filter((row) => row.hot).length)
+const shelterRange = computed(() => {
+  const counts = countyRows.value.map((row) => row.shelters)
+  return counts.length ? [Math.min(...counts), Math.max(...counts)] : [0, 0]
+})
 </script>
 
 <template>
-  <section class="page">
-    <header class="intro">
-      <h2>在所天數分佈</h2>
-      <p>
-        這一頁只回答一個問題：<strong>此刻還在收容所裡的動物，已經待了多久</strong>。它不是「一隻動物會待多久」的分佈——那需要離所事件，而這份資料看不到。
-      </p>
-    </header>
+  <div class="page">
+    <PageHead title="資料分析">
+      地圖答不了的那個問題：在所天數的分布長什麼樣。這頁只有在下面那張警語卡先被讀過之後才是誠實的，所以它放在圖表上面，不是放在註腳。
+    </PageHead>
 
-    <p v-if="error" class="state">分佈資料載入失敗：{{ error }}</p>
-    <p v-else-if="!current || !block" class="state">載入中…</p>
+    <!-- Not a footnote. Each column names its statistical term in English as
+         well: a reader who knows the term can stop at the heading, and one who
+         does not gets the words they would need to look it up. -->
+    <section class="warncard" aria-labelledby="warn-title">
+      <div class="warn-top">
+        <span id="warn-title" class="pill">
+          <LucideIcon name="triangle-alert" :size="15" />方法學指引與資料邊界
+        </span>
+        <span class="kicker">DATA BOUNDARY &amp; BIAS</span>
+      </div>
+      <div class="warn-cols">
+        <div class="warn-col">
+          <span class="no">01</span>
+          <h2>右設限<em>Right-Censoring</em></h2>
+          <p>
+            這份資料只看得到<strong>目前仍在所</strong>的動物。每一筆的在所天數都還在往上加，沒有一筆是完整的停留長度。已經被認養、被領回、或因其他原因離開的動物，全部不在這份快照裡。
+          </p>
+          <span class="status">所有觀測值都只是下界</span>
+        </div>
+        <div class="warn-col">
+          <span class="no">02</span>
+          <h2>長度偏差抽樣<em>Length-Biased Sampling</em></h2>
+          <p>
+            在某一天對收容所拍一張快照，待得越久的動物被拍到的機率天生就越高。很快就離所的動物幾乎不會出現在任何一張快照裡，所以牠們在這份資料中被系統性地低估。
+          </p>
+          <span class="status">快照必然高估停留時間</span>
+        </div>
+        <div class="warn-col">
+          <span class="no">03</span>
+          <h2>存活分析<em>Survival Analysis</em></h2>
+          <p>
+            要回答「一隻狗平均多久會被認養」，需要的是 Kaplan–Meier 這一類處理設限資料的方法，以及進出所的時間序列。本站只有單日快照，兩者都沒有。
+          </p>
+          <span class="status">本站不做認養速度的推論</span>
+        </div>
+      </div>
+    </section>
+
+    <p v-if="error" class="state">分布資料載入失敗：{{ error }}</p>
+    <p v-else-if="!data || !current || !block" class="state">載入中…</p>
 
     <template v-else>
-      <!-- Three columns, each naming its statistical term in English as well.
-           A reader who knows the term can stop after the heading; one who does
-           not gets the sentence — and the term is the thing they would need to
-           look it up. -->
-      <div class="caveat card">
-        <div class="caveat-head">
-          <span class="caveat-tag"><span aria-hidden="true">⚠</span> 方法學指引與資料邊界</span>
-          <span class="caveat-mark">DATA BOUNDARY &amp; BIAS</span>
-        </div>
-        <h3>為什麼不能把這張圖讀成「停留時間」</h3>
-        <p class="caveat-lead">
-          這頁呈現的是全臺公立收容所「目前仍在所」動物的截面存量。把這些數字直接讀成「一隻動物平均要待多久才能離開」，會犯下三項統計推論錯誤。
-        </p>
-        <ol class="caveat-grid">
-          <li>
-            <span class="caveat-num">01</span>
-            <h4>右設限（Right-Censoring）</h4>
-            <p>
-              每一筆都還在所內，所以天數是「至少待了這麼久」，不是最終停留長度。等於只量到一半就記錄下來。
-            </p>
-            <p class="caveat-foot">狀態：事件未發生（Censored）</p>
-          </li>
-          <li>
-            <span class="caveat-num">02</span>
-            <h4>長度偏誤（Length-Biased Sampling）</h4>
-            <p>
-              待越久的動物，出現在任何一天快照裡的機率越高。這份樣本天生就過度代表長期滯留者，中位數 {{ current.median_days }} 天高於實際的停留中位數。
-            </p>
-            <p class="caveat-foot">現象：長期滯留個體被過度代表</p>
-          </li>
-          <li>
-            <span class="caveat-num">03</span>
-            <h4>正確工具：存活分析（Survival Analysis）</h4>
-            <p>
-              需要「離開」這個事件，階段 3 會用連續快照相減把它還原出來；在那之前，這頁只描述族群組成。
-            </p>
-            <p class="caveat-foot">解方：需要隊列歷程資料（Cohort）</p>
-          </li>
-        </ol>
-      </div>
-
-      <div class="controls">
-        <fieldset>
-          <legend>對象</legend>
-          <button
-            v-for="option in SCOPES"
-            :key="option.id"
-            type="button"
-            :class="{ chip: true, on: scope === option.id }"
-            :aria-pressed="scope === option.id"
-            @click="scope = option.id"
-          >
-            {{ option.label }}
-          </button>
-        </fieldset>
-
-        <fieldset>
-          <legend>橫軸</legend>
-          <button
-            v-for="option in SCALES"
-            :key="option.id"
-            type="button"
-            :class="{ chip: true, on: scale === option.id }"
-            :aria-pressed="scale === option.id"
-            @click="scale = option.id"
-          >
-            {{ option.label }}
-          </button>
-        </fieldset>
-
-        <fieldset>
-          <legend>平滑程度</legend>
-          <button
-            v-for="option in SMOOTHINGS"
-            :key="option.id"
-            type="button"
-            :class="{ chip: true, on: smoothing === option.id }"
-            :aria-pressed="smoothing === option.id"
-            @click="smoothing = option.id"
-          >
-            {{ option.label }}
-          </button>
-        </fieldset>
-
-        <!-- What the controls above currently add up to. Three chip groups can
-             be read four ways; this states the answer once. -->
-        <p class="applied">
-          已套用：{{ SCOPES.find((s) => s.id === scope)?.label }}（{{
-            current.count.toLocaleString('zh-TW')
-          }} 隻）・{{ scale === 'log' ? '對數軸' : '線性軸' }}・頻寬 {{ curveBandwidth }}
-        </p>
-      </div>
-
-      <section class="card">
-        <div class="card-head">
-          <div>
-            <h3><span class="dot" aria-hidden="true" />長條圖與核密度估計</h3>
-            <p class="card-sub">中位數以虛線標示・{{ scale === 'log' ? '對數' : '線性' }}橫軸</p>
+      <section class="acard controls" aria-label="圖表設定">
+        <div class="field">
+          <span id="a-scope" class="label">對象</span>
+          <div class="pills" role="group" aria-labelledby="a-scope">
+            <button
+              v-for="option in SCOPES"
+              :key="option.id"
+              type="button"
+              class="pill-btn"
+              :aria-pressed="scope === option.id"
+              @click="update({ scope: option.id })"
+            >
+              {{ option.label }}
+            </button>
           </div>
-          <span class="hint">
-            中位數 {{ current.median_days.toLocaleString('zh-TW') }} 天（P50）
+        </div>
+        <div class="field">
+          <span id="a-scale" class="label">橫軸</span>
+          <div class="pills" role="group" aria-labelledby="a-scale">
+            <button
+              v-for="option in SCALES"
+              :key="option.id"
+              type="button"
+              class="pill-btn"
+              :aria-pressed="scale === option.id"
+              @click="update({ scale: option.id })"
+            >
+              {{ option.label }}
+            </button>
+          </div>
+        </div>
+        <div class="field">
+          <span id="a-smooth" class="label">平滑程度</span>
+          <div class="pills" role="group" aria-labelledby="a-smooth">
+            <button
+              v-for="option in SMOOTHINGS"
+              :key="option.id"
+              type="button"
+              class="pill-btn"
+              :aria-pressed="smoothing === option.id"
+              @click="update({ smoothing: option.id })"
+            >
+              {{ option.label }}
+            </button>
+          </div>
+        </div>
+        <!-- What the three groups currently add up to, stated once. -->
+        <p class="applied" aria-live="polite">
+          已套用：<b>{{ labelOf(SCOPES, scope) }} {{ formatCount(current.count) }} 隻</b>
+          · {{ scale === 'log' ? '對數軸' : '線性軸' }} · 平滑度
+          {{ labelOf(SMOOTHINGS, smoothing) }}（頻寬 <b>{{ bandwidth }}</b>）
+        </p>
+      </section>
+
+      <section class="acard" aria-labelledby="a-hist">
+        <div class="an-head">
+          <h2 id="a-hist">在所天數的分布</h2>
+          <span class="sub">
+            {{ labelOf(SCOPES, scope) }} {{ formatCount(current.count) }} 隻 ·
+            {{ block.bins.length }} 個區間
           </span>
         </div>
-
         <DistributionChart
           :block="block"
           :scale="scale"
           :smoothing="smoothing"
-          :log-ticks="data!.log_ticks"
-          :max-days="current.max_days"
+          :log-ticks="data.log_ticks"
           :median="current.median_days"
-          :colour="scopeColour"
         />
-
+        <div class="chart-legend">
+          <span class="k bar">長條：各區間的密度</span>
+          <span class="k kde">曲線：核密度估計</span>
+          <span class="k median">中位數</span>
+        </div>
         <div class="note">
-          <h4 class="note-title">數據判讀與尺度邊界</h4>
+          <h3>數據判讀與尺度邊界</h3>
           <p>
-          <template v-if="scale === 'log'">
-            對數軸下可以看見兩個隆起：一個在一年以內，一個在數年之後，中間有明顯凹陷。這是「數量級」上的雙峰——換成線性軸，密度是單調遞減的長尾，沒有第二個峰。兩張圖是同一組數字，說的是不同層次的事，所以兩個都放在這裡讓你切換。
-          </template>
-          <template v-else>
-            線性軸上密度單調遞減，全部結構被壓在最前面幾百天。這才是「天數」尺度下的真相；切到對數軸看的是數量級尺度下的結構。
-          </template>
+            線性軸下這是一條單調遞減的長尾，全部結構都被壓在最前面幾百天；切到對數軸才看得到兩個隆起——一群已在所一年上下，另一群已在所數年。同一組數字，兩種軸說的是不同層次的事，所以兩種都放在這裡讓你切換。
           </p>
           <p>
-            切換平滑程度會改變結論：頻寬夠窄時每個小起伏都變成一個峰，夠寬時第二個峰整個消失。狗的雙峰撐得過「標準」但撐不過「較平滑」，貓在「較平滑」下則收斂成單峰。一個經得起平滑的結構才值得下結論。
+            曲線的形狀有一半是頻寬的主張。三段平滑度分別是 Silverman 參考值的 0.6／1.0／1.7 倍，當前數值就寫在控制列右端——把選擇公開，讀者才有機會不同意。
           </p>
         </div>
       </section>
 
-      <section class="card">
-        <div class="card-head">
-          <div>
-            <h3><span class="dot" aria-hidden="true" />累積分佈：狗與貓</h3>
-            <p class="card-sub">無頻寬、無平滑假設・階梯式累積經驗分佈</p>
-          </div>
-          <span class="hint">
-            狗 {{ data!.scopes.dog.count.toLocaleString('zh-TW') }}・貓
-            {{ data!.scopes.cat.count.toLocaleString('zh-TW') }}
-          </span>
+      <section class="acard" aria-labelledby="a-ecdf">
+        <div class="an-head">
+          <h2 id="a-ecdf">累積分布（ECDF）</h2>
+          <span class="sub">狗與貓兩條，橫軸跟著上面的設定走</span>
         </div>
-
         <EcdfChart
           :series="ecdfSeries"
-          :max-days="Math.max(data!.scopes.dog.max_days, data!.scopes.cat.max_days)"
-          :ticks="data!.log_ticks"
+          :max-days="Math.max(data.scopes.dog.max_days, data.scopes.cat.max_days)"
+          :ticks="data.log_ticks"
+          :scale="scale"
         />
-
+        <div class="chart-legend">
+          <span class="k dog">狗</span>
+          <span class="k cat">貓</span>
+        </div>
         <div class="note">
-          <h4 class="note-title">階梯曲線判讀指引</h4>
+          <h3>階梯曲線判讀指引</h3>
           <p>
-          兩條線分得很開，而且沒有交叉：在任何一個天數以內，貓的累積比例都高於狗。狗的在所中位數是 {{ data!.scopes.dog.median_days.toLocaleString('zh-TW') }} 天，貓是 {{ data!.scopes.cat.median_days.toLocaleString('zh-TW') }} 天；待超過一年的比例，狗 {{ pct(data!.scopes.dog.over_year) }}、貓 {{ pct(data!.scopes.cat.over_year) }}。這些數字直接讀自這條曲線，不經過任何平滑。
+            <strong>要引用的數字請讀這一張，不要讀上面那一張。</strong>ECDF 沒有頻寬、沒有平滑假設，「{{
+              pctRound(data.scopes.dog.over_year)
+            }} 的狗已在所超過一年」這種句子不該取決於一個讀者可以自己拖動的控制項。
+          </p>
+          <p>
+            畫成階梯而不是折線是有理由的：ECDF 在每一個觀測值上跳躍，在兩隻動物之間畫一條斜線，等於宣稱有一個沒人擁有過的數值存在。
           </p>
         </div>
       </section>
 
-      <section class="card">
-        <div class="card-head">
-          <div>
-            <h3><span class="dot" aria-hidden="true" />分位數</h3>
-            <p class="card-sub">主要指標分佈統計（天數與長期滯留比例）</p>
-          </div>
-          <span class="hint">單位：天數／佔該群體比例</span>
+      <section class="acard" aria-labelledby="a-quant">
+        <div class="an-head">
+          <h2 id="a-quant">分位數</h2>
+          <span class="sub">單位：天</span>
         </div>
         <div class="table-scroll">
-          <table>
+          <table class="qtable">
             <thead>
               <tr>
                 <th scope="col">對象</th>
@@ -313,6 +327,7 @@ const rankMax = computed(() => Math.max(...rankRows.value.map((row) => row.value
                 <th scope="col">中位數</th>
                 <th scope="col">P75</th>
                 <th scope="col">P90</th>
+                <th scope="col">最長</th>
                 <th scope="col">超過 1 年</th>
                 <th scope="col">超過 4 年</th>
               </tr>
@@ -320,337 +335,460 @@ const rankMax = computed(() => Math.max(...rankRows.value.map((row) => row.value
             <tbody>
               <tr v-for="option in SCOPES" :key="option.id">
                 <th scope="row">{{ option.label }}</th>
-                <td>{{ data!.scopes[option.id].count.toLocaleString('zh-TW') }}</td>
-                <td>{{ data!.scopes[option.id].p25_days.toLocaleString('zh-TW') }}</td>
-                <td class="lead">
-                  {{ data!.scopes[option.id].median_days.toLocaleString('zh-TW') }}
-                  <span>{{ years(data!.scopes[option.id].median_days) }}</span>
-                </td>
-                <td>{{ data!.scopes[option.id].p75_days.toLocaleString('zh-TW') }}</td>
-                <td>{{ data!.scopes[option.id].p90_days.toLocaleString('zh-TW') }}</td>
-                <td>{{ pct(data!.scopes[option.id].over_year) }}</td>
-                <td>{{ pct(data!.scopes[option.id].over_4_years) }}</td>
+                <td>{{ formatCount(data.scopes[option.id].count) }}</td>
+                <td>{{ formatCount(data.scopes[option.id].p25_days) }}</td>
+                <td>{{ formatCount(data.scopes[option.id].median_days) }}</td>
+                <td>{{ formatCount(data.scopes[option.id].p75_days) }}</td>
+                <td>{{ formatCount(data.scopes[option.id].p90_days) }}</td>
+                <td>{{ formatCount(data.scopes[option.id].max_days) }}</td>
+                <td>{{ pct(data.scopes[option.id].over_year) }}</td>
+                <td>{{ pct(data.scopes[option.id].over_4_years) }}</td>
               </tr>
             </tbody>
           </table>
         </div>
         <div class="note">
-          <h4 class="note-title">偏態分布判讀重點</h4>
+          <h3>偏態分布判讀重點</h3>
           <p>
-            這份分布是右偏的：極端的長期滯留個體會把平均數拉高，使平均值失去中心代表性，因此表格以中位數為主。表格同時是圖表之外的替代讀法——每個數字都能被複製與查證，不必靠辨色。
+            全部動物的平均是 {{ formatCount(data.scopes.all.mean_days) }} 天、中位數是
+            {{ formatCount(data.scopes.all.median_days) }} 天，差了
+            {{ ratio(data.scopes.all.mean_days, data.scopes.all.median_days) }}
+            倍。這種偏態下平均數沒有代表性，所以全站一律用中位數；表裡把每個分位數都列出來，是為了讓圖上的每個判斷都能被單獨查證，不必靠辨色。
+          </p>
+          <p>
+            狗與貓不是同一回事：狗的中位數 {{ formatCount(data.scopes.dog.median_days) }} 天、貓
+            {{ formatCount(data.scopes.cat.median_days) }}
+            天。把兩者混在一起談「收容動物平均待多久」，等於用狗的數字去描述貓。
           </p>
         </div>
       </section>
 
-      <section v-if="rankRows.length" class="card">
-        <div class="card-head">
-          <div>
-            <h3>
-              <span class="dot" aria-hidden="true" />各縣市{{
-                rankMetric === 'count' ? '在所數' : '滯留中位數'
-              }}排行
-            </h3>
-            <p class="rank-sub">公立動物收容設施之即時盤點存量排序</p>
-          </div>
-          <fieldset>
-            <button
-              v-for="option in RANK_METRICS"
-              :key="option.id"
-              type="button"
-              :class="{ chip: true, small: true, on: rankMetric === option.id }"
-              :aria-pressed="rankMetric === option.id"
-              @click="rankMetric = option.id"
-            >
-              {{ option.label }}
-            </button>
-          </fieldset>
+      <section v-if="countyRows.length" class="acard" aria-labelledby="a-county">
+        <div class="an-head">
+          <h2 id="a-county">各縣市</h2>
+          <span class="sub">依在所數排序 · 右側同時顯示在所數與中位數</span>
         </div>
-        <CountyTable
-          :rows="rankRows"
-          :metric="rankMetric"
-          :max="rankMax"
-          :selected="null"
-          ranked
-        />
+        <ol class="ranklist">
+          <li v-for="(row, index) in countyRows" :key="row.name" class="rank-row" :class="{ hot: row.hot }">
+            <span class="rk">{{ String(index + 1).padStart(2, '0') }}</span>
+            <span class="nm">{{ row.name }}</span>
+            <span class="sh">{{ row.shelters }} 間</span>
+            <span class="v1">{{ formatCount(row.count) }} 隻</span>
+            <span class="v2">{{ row.median === null ? '—' : `${formatCount(row.median)} 天` }}</span>
+          </li>
+        </ol>
         <div class="note">
-          <h4 class="note-title">縣市排行資料背景與口徑差異</h4>
+          <h3>縣市排行資料背景與口徑差異</h3>
           <p>
-            縣市指的是收容動物的收容所所在地，不是動物被尋獲的地點——只有 2.4% 的紀錄自己寫出縣市，其中還有十二筆與收容它的收容所不同縣市。
+            縣市是用「動物現在在哪一間收容所」推得的，不是動物被撿到的地方<template v-if="foundplace"
+              >——全部 {{ formatCount(foundplace.rows) }} 筆裡只有
+              {{ formatCount(foundplace.county_source.text) }} 筆（{{
+                pct(foundplace.county_source.text / foundplace.rows)
+              }}）的尋獲地寫得出縣市名，其中又有
+              {{ formatCount(foundplace.county_from_text_differs_from_shelter) }}
+              筆與收容所不同縣市</template
+            >。所以這張表講的是收容所的負擔分布，不是流浪動物的地理分布。
+          </p>
+          <p v-if="hotLine !== null">
+            強調色的門檻是<strong>中位數達全國兩倍</strong>，也就是 {{ formatCount(hotLine) }}
+            天以上，目前有 {{ hotCount }} 個縣市達到。門檻寫出來，讀者可以不同意；沒寫出來的門檻，就變成對那幾個縣市的指控。
           </p>
           <p>
-            在所數是存量不是流量：高在所數可能來自收容空間充裕，低在所數也可能是硬體已滿而嚴格控管入所，兩者無法由長度區分。右側的中位數以強調色標出高於全國中位數兩倍者，代表該縣市在所動物有一半已待超過該天數；這些數字不足以評價地方主管機關的作為。
+            各縣市的收容所數量差很多（{{ shelterRange[0] }} 到 {{ shelterRange[1] }}
+            間不等），在所數同時混著「動物量」和「幾間收容所」兩件事，欄位裡一併列出間數供對照。在所數也是存量不是流量：數字高可能是空間充裕、長期安置，數字低也可能是已經滿載而嚴格控管入所，不足以評價地方主管機關的作為。
           </p>
         </div>
       </section>
     </template>
-  </section>
+  </div>
 </template>
 
 <style scoped>
-.page {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+.page > * + * {
+  margin-top: 1.25rem;
 }
 
-.intro h2 {
-  font-size: 1.15rem;
-  margin: 0 0 0.4rem;
-}
-
-.intro p {
-  margin: 0;
-  max-width: 62ch;
-  font-size: 0.92rem;
-  line-height: 1.75;
-  color: var(--ink-secondary);
+.page > :first-child + * {
+  margin-top: 1.75rem;
 }
 
 .state {
-  margin: 0;
   color: var(--ink-muted);
 }
 
-/* Not a footnote. The whole page is only honest if this is read first, so it
-   sits above the charts rather than under them. */
-.caveat {
+/* ── Warning card ── */
+.warncard {
+  padding: 1.6rem;
+  border-radius: var(--radius);
   background: var(--surface-sunk);
 }
 
-.caveat-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.7rem;
-}
-
-.caveat-tag {
-  font-size: 0.75rem;
-  color: var(--accent-text);
-  border: 1px solid var(--hairline);
-  border-radius: 999px;
-  padding: 0.2rem 0.6rem;
-  background: var(--surface);
-  white-space: nowrap;
-}
-
-.caveat-mark {
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
-  color: var(--ink-muted);
-  white-space: nowrap;
-}
-
-.caveat h3 {
-  font-size: 1.05rem;
-  margin: 0 0 0.5rem;
-}
-
-.caveat-lead {
-  margin: 0 0 1rem;
-  max-width: 74ch;
-  font-size: 0.85rem;
-  line-height: 1.8;
-  color: var(--ink-secondary);
-}
-
-/* Three columns rather than a numbered list. Each caveat is a self-contained
-   claim, and stacking them made the third one read as an afterthought. */
-.caveat-grid {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1px;
-  background: var(--hairline);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.caveat-grid > li {
-  display: flex;
-  flex-direction: column;
-  background: var(--surface);
-  padding: 0.9rem 1rem 0.8rem;
-}
-
-.caveat-num {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--accent-text);
-  font-variant-numeric: tabular-nums;
-}
-
-.caveat-grid h4 {
-  margin: 0.15rem 0 0.5rem;
-  font-size: 0.9rem;
-}
-
-.caveat-grid p {
-  margin: 0;
-  font-size: 0.82rem;
-  line-height: 1.8;
-  color: var(--ink-secondary);
-}
-
-/* Pushed to the bottom so the three footers line up however long the
-   paragraphs above them run. */
-.caveat-foot {
-  margin-top: auto !important;
-  padding-top: 0.7rem;
-  border-top: 1px solid var(--hairline);
-  font-size: 0.74rem !important;
-  color: var(--ink-muted) !important;
-}
-
-@media (max-width: 860px) {
-  .caveat-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-.controls {
+.warn-top {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1.75rem;
-}
-
-/* The applied-scope readout sits at the far end of the control row. */
-.controls .applied {
-  margin-left: auto;
-}
-
-fieldset {
-  border: 0;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-legend {
-  float: left;
-  margin-right: 0.65rem;
-  font-size: 0.85rem;
-  color: var(--ink-muted);
-}
-
-.card-head {
-  display: flex;
-  align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 0.9rem;
+  margin-bottom: 1.25rem;
 }
 
-.card-head h3 {
-  font-size: 1rem;
-  margin: 0;
-  display: flex;
+.pill {
+  display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-}
-
-.dot {
-  width: 7px;
-  height: 7px;
+  padding: 0.12rem 0.75rem;
+  border: 1px solid var(--hairline);
   border-radius: 999px;
-  background: var(--ramp-4);
-  display: inline-block;
+  background: var(--surface);
+  font-size: 0.84rem;
+
+  & svg {
+    color: var(--accent-text);
+  }
 }
 
-.hint {
-  font-size: 0.78rem;
+.kicker {
   color: var(--ink-muted);
-  white-space: nowrap;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
 }
 
-/* The notes carry a heading now. Unlabelled grey paragraphs under a chart get
-   read as a caption and skipped, and on this page they are the argument. */
-.note {
-  margin: 1rem 0 0;
-  padding: 0.85rem 1rem;
-  background: var(--surface-sunk);
+.warn-cols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.warn-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  & .no {
+    color: var(--accent-text);
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  & h2 {
+    font-size: 0.98rem;
+
+    & em {
+      display: block;
+      color: var(--ink-muted);
+      font-size: 0.76rem;
+      font-style: normal;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
+  }
+
+  & p {
+    margin: 0;
+    color: var(--ink-secondary);
+    font-size: 0.86rem;
+    line-height: 1.65;
+  }
+
+  & strong {
+    color: var(--ink);
+  }
+
+  /* The three texts differ in length; margin-top: auto lines the footers up. */
+  & .status {
+    margin-top: auto;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--hairline);
+    color: var(--ink-muted);
+    font-size: 0.78rem;
+  }
+}
+
+/* ── Cards ── */
+.acard {
+  padding: 1.5rem;
+  border: 1px solid var(--hairline);
   border-radius: var(--radius);
+  background: var(--surface);
 }
 
-.note-title {
-  margin: 0 0 0.4rem;
-  font-size: 0.82rem;
-  font-weight: 600;
+.an-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.4rem 1rem;
+  margin-bottom: 0.9rem;
+
+  & h2 {
+    font-size: 1.15rem;
+  }
+
+  & .sub {
+    color: var(--ink-muted);
+    font-size: 0.84rem;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ── Controls ── */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1.25rem 1.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+
+  & > .label {
+    color: var(--ink-muted);
+    font-size: 0.8rem;
+  }
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.pill-btn {
+  padding: 0.35rem 0.9rem;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: transparent;
   color: var(--ink-secondary);
-}
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease;
 
-.note p {
-  margin: 0;
-  max-width: 76ch;
-  font-size: 0.82rem;
-  line-height: 1.85;
-  color: var(--ink-muted);
-}
+  &:hover {
+    border-color: var(--ramp-3);
+    color: var(--ink);
+  }
 
-.note p + p {
-  margin-top: 0.6rem;
-}
-
-.card-sub {
-  margin: 0.15rem 0 0;
-  font-size: 0.78rem;
-  color: var(--ink-muted);
+  &[aria-pressed='true'] {
+    border-color: var(--ramp-4);
+    background: var(--ramp-4);
+    color: var(--on-accent);
+  }
 }
 
 .applied {
-  margin: 0;
-  font-size: 0.78rem;
-  color: var(--ink-muted);
+  margin: 0 0 0 auto;
+  color: var(--ink-secondary);
+  font-size: 0.84rem;
+  line-height: 1.6;
+  text-align: right;
   font-variant-numeric: tabular-nums;
+
+  & b {
+    color: var(--accent-text);
+    font-weight: 500;
+  }
 }
 
-.rank-sub {
-  margin: 0.15rem 0 0;
-  font-size: 0.78rem;
-  color: var(--ink-muted);
+/* ── Chart legends and notes ── */
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin-top: 0.4rem;
+  color: var(--ink-secondary);
+  font-size: 0.84rem;
+
+  & .k {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    &::before {
+      content: '';
+      width: 14px;
+      height: 3px;
+      border-radius: 2px;
+    }
+  }
+
+  & .bar::before {
+    width: 12px;
+    height: 10px;
+    background: var(--ramp-2);
+  }
+
+  & .kde::before {
+    background: var(--ramp-5);
+  }
+
+  & .median::before {
+    height: 0;
+    border-top: 1.5px dashed var(--ink);
+    border-radius: 0;
+  }
+
+  & .dog::before {
+    background: var(--series-a);
+  }
+
+  & .cat::before {
+    background: var(--series-b);
+  }
 }
 
+/* A caption with its own heading and a sunk ground, not grey small print. */
+.note {
+  margin-top: 1.1rem;
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunk);
+
+  & h3 {
+    margin-bottom: 0.4rem;
+    font-size: 0.88rem;
+  }
+
+  & p {
+    max-width: 52rem;
+    margin: 0;
+    color: var(--ink-secondary);
+    font-size: 0.85rem;
+    line-height: 1.7;
+    font-variant-numeric: tabular-nums;
+
+    & + p {
+      margin-top: 0.5rem;
+    }
+  }
+
+  & strong {
+    color: var(--ink);
+  }
+}
+
+/* ── Quantile table ── */
 .table-scroll {
   overflow-x: auto;
 }
 
-table {
+.qtable {
   width: 100%;
+  min-width: 620px;
   border-collapse: collapse;
-  font-size: 0.85rem;
   font-variant-numeric: tabular-nums;
+
+  & th,
+  & td {
+    padding: 0.6rem 0.5rem;
+    font-size: 0.88rem;
+    text-align: right;
+  }
+
+  & thead th {
+    border-bottom: 1px solid var(--hairline);
+    color: var(--ink-muted);
+    font-size: 0.78rem;
+    font-weight: 400;
+  }
+
+  & thead th:first-child,
+  & tbody th {
+    text-align: left;
+  }
+
+  & tbody th {
+    font-weight: 700;
+  }
+
+  & tbody tr + tr > * {
+    border-top: 1px solid var(--hairline);
+  }
 }
 
-th,
-td {
-  text-align: right;
-  padding: 0.5rem 0.6rem;
+/* ── County list ── */
+.ranklist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rank-row {
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr) auto 5.5rem 5.5rem;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.55rem 0.5rem;
   border-bottom: 1px solid var(--hairline);
-  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  & .rk,
+  & .sh {
+    color: var(--ink-muted);
+    font-size: 0.78rem;
+  }
+
+  & .v1,
+  & .v2 {
+    font-size: 0.9rem;
+    text-align: right;
+  }
+
+  & .v2 {
+    color: var(--ink-secondary);
+  }
+
+  &.hot .v2 {
+    color: var(--accent-text);
+    font-weight: 700;
+  }
 }
 
-thead th {
-  font-weight: 600;
-  color: var(--ink-muted);
-  font-size: 0.78rem;
+@media (max-width: 900px) {
+  .warn-cols {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+
+  .warn-col .status {
+    margin-top: 0;
+  }
+
+  .applied {
+    width: 100%;
+    margin-left: 0;
+    text-align: left;
+  }
+
+  .rank-row {
+    grid-template-columns: 2rem minmax(0, 1fr) 4.6rem 4.6rem;
+
+    & .sh {
+      display: none;
+    }
+  }
 }
 
-tbody th {
-  text-align: left;
-  font-weight: 600;
-}
+@media (max-width: 520px) {
+  .warncard,
+  .acard {
+    padding: 1.1rem;
+  }
 
-.lead span {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 400;
-  color: var(--ink-muted);
+  .field {
+    width: 100%;
+  }
 }
 </style>

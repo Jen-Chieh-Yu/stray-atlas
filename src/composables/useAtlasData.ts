@@ -4,6 +4,8 @@ import type {
   CountyCollection,
   CountyPayload,
   DistributionPayload,
+  FoundplacePayload,
+  MetaPayload,
   ShelterPayload,
   ShelterPointPayload,
 } from '@/types'
@@ -80,6 +82,8 @@ let sheltersOnce: Promise<ShelterPayload> | null = null
 let animalsOnce: Promise<Animal[]> | null = null
 let distributionOnce: Promise<DistributionPayload> | null = null
 let pointsOnce: Promise<ShelterPointPayload> | null = null
+let foundplaceOnce: Promise<FoundplacePayload> | null = null
+let metaOnce: Promise<MetaPayload> | null = null
 
 /** Both files are fetched at most once per visit and shared by every view.
  *  animals.json is 272 KB gzipped for all 8,265 records — more than a single
@@ -121,6 +125,27 @@ export function fetchShelterPoints(): Promise<ShelterPointPayload> {
     return response.json() as Promise<ShelterPointPayload>
   })
   return pointsOnce
+}
+
+/** How much of the found-place column names a county. The analysis page
+ *  quotes these counts, so they follow the snapshot instead of being typed
+ *  into the page. */
+export function fetchFoundplace(): Promise<FoundplacePayload> {
+  foundplaceOnce ??= fetch(dataUrl('stats/foundplace.json')).then((response) => {
+    if (!response.ok) throw new Error(`foundplace.json ${response.status}`)
+    return response.json() as Promise<FoundplacePayload>
+  })
+  return foundplaceOnce
+}
+
+/** The snapshot date for the site footer. meta.json is a few kilobytes, so
+ *  every page can show the date without pulling a page's own data. */
+export function fetchMeta(): Promise<MetaPayload> {
+  metaOnce ??= fetch(dataUrl('meta.json')).then((response) => {
+    if (!response.ok) throw new Error(`meta.json ${response.status}`)
+    return response.json() as Promise<MetaPayload>
+  })
+  return metaOnce
 }
 
 /** Days in the shelter, measured against the snapshot rather than today. */

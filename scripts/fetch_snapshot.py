@@ -32,10 +32,10 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-# CLAUDE.md 2.1: never hard-code the repository root directory name. The CI
-# checkout directory is "stray-atlas", the local one is "StrayAtlas".
-ROOT = Path(__file__).resolve().parents[1]
-RAW_DIR = ROOT / "data" / "raw"
+# The daily job's only local import. common.py is standard library too, so the
+# workflow still needs no install step.
+from common import RAW_DIR, log, relative, snapshot_paths, utc_now
+
 MANIFEST_PATH = RAW_DIR / "_manifest.csv"
 
 # Resource link published on https://data.gov.tw/dataset/85903 (agency: 農業部).
@@ -65,10 +65,6 @@ REQUIRED_COLUMNS = (
 MANIFEST_HEADER = ["date", "status", "rows", "bytes", "sha256", "fetched_at_utc"]
 
 
-def log(message: str) -> None:
-    print(message, flush=True)
-
-
 def taipei_today() -> str:
     """Snapshot date in Asia/Taipei.
 
@@ -78,10 +74,6 @@ def taipei_today() -> str:
     the Taipei date it actually ran on.
     """
     return datetime.now(timezone(timedelta(hours=8))).strftime("%Y-%m-%d")
-
-
-def utc_now() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def download(url: str) -> bytes:
@@ -149,10 +141,6 @@ def write_gzip(path: Path, payload: bytes) -> None:
     temporary = path.with_name(path.name + ".tmp")
     temporary.write_bytes(buffer.getvalue())
     temporary.replace(path)
-
-
-def snapshot_paths() -> list[Path]:
-    return sorted(RAW_DIR.glob("[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].csv.gz"))
 
 
 def previous_snapshot(date: str) -> Path | None:
@@ -302,7 +290,7 @@ def main() -> int:
         write_step_summary(
             date,
             "skipped",
-            note=f"`{target.relative_to(ROOT).as_posix()}` already archived; nothing was fetched",
+            note=f"`{relative(target)}` already archived; nothing was fetched",
         )
         set_output(status="skipped", date=date, commit_message="")
         return 0
@@ -350,14 +338,14 @@ def main() -> int:
 
     write_gzip(target, payload)
     record(date, "stored", rows, len(payload), digest)
-    log(f"stored {target.relative_to(ROOT)} ({target.stat().st_size} bytes gzipped)")
+    log(f"stored {relative(target)} ({target.stat().st_size} bytes gzipped)")
     write_step_summary(
         date,
         "stored",
         rows=f"{rows:,}" + (f" ({signed(rows - expected)} vs previous)" if expected else ""),
         columns=str(columns),
         payload=f"{len(payload):,} bytes ({human_bytes(len(payload))})",
-        archived=f"`{target.relative_to(ROOT).as_posix()}` ({human_bytes(target.stat().st_size)})",
+        archived=f"`{relative(target)}` ({human_bytes(target.stat().st_size)})",
         sha256=f"`{digest[:16]}`",
         source=args.url,
     )

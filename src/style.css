@@ -1,16 +1,17 @@
 /* Design tokens.
  *
- * Dark values are declared twice on purpose: once under the media query for
- * the OS setting, and once under [data-theme='dark'] for the in-page toggle,
- * which has to win in both directions. The media block is guarded with
- * :not([data-theme='light']) so an explicit light choice beats an OS set to
- * dark.
+ * Light only (decided 2026-09-15 with the layout redesign): the dark palette
+ * and the in-page theme toggle were removed. color-scheme is pinned so form
+ * controls and scrollbars do not turn dark under an OS dark setting either.
  *
  * Warm direction, chosen 2026-09-03. The sequential ramp is a single orange
- * hue, light to dark, and both modes were validated with the data-viz
- * palette checker against the surfaces below: monotone lightness, adjacent
- * ΔL ≥ 0.06, single hue, and the step nearest the surface clearing 2:1 so the
- * lowest county never dissolves into the page.
+ * hue, light to dark, validated with the data-viz palette checker against the
+ * surfaces below: monotone lightness, adjacent ΔL ≥ 0.06, single hue, and the
+ * step nearest the surface clearing 2:1 so the lowest county never dissolves
+ * into the page.
+ *
+ * Used by: every component, through var(--…). --on-accent is used by the
+ * selected .chip below and by HomeView.vue's orange bands and filter box.
  */
 :root {
   color-scheme: light;
@@ -44,61 +45,21 @@
   --series-a: #d66a27;
   --series-b: #00799a;
 
+  /* Shelter pins on the county map (chosen 2026-09-16). A cool slate so the
+     pins read as a separate layer from the orange choropleth, and far enough
+     from --series-b that a pin is never taken for "貓". White numerals on it
+     clear 7:1. Used by: CountyChoropleth.vue. */
+  --pin: #3d5a73;
+
   --radius: 12px;
   --radius-sm: 8px;
-  --font: system-ui, -apple-system, 'Segoe UI', 'Noto Sans TC', sans-serif;
-}
+  /* Text and icons that sit on a --ramp-4 fill (selected chips, primary
+     buttons). A token rather than #fff so the pairing is named once. */
+  --on-accent: #fdfaf6;
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    color-scheme: dark;
-
-    --plane: #12110f;
-    --surface: #1a1917;
-    --surface-sunk: #23211e;
-
-    --ink: #faf7f2;
-    --ink-secondary: #c9c1b6;
-    --ink-muted: #948b80;
-    --hairline: #332f2a;
-
-    --ramp-1: #824624;
-    --ramp-2: #a25223;
-    --ramp-3: #c35e20;
-    --ramp-4: #da7338;
-    --ramp-5: #e69062;
-    --ramp-6: #f1ab88;
-    --no-data: #2b2824;
-    --accent-text: #e69062;
-
-  --series-a: #da7338;
-  --series-b: #2b99bf;
-  }
-}
-
-:root[data-theme='dark'] {
-  color-scheme: dark;
-
-  --plane: #12110f;
-  --surface: #1a1917;
-  --surface-sunk: #23211e;
-
-  --ink: #faf7f2;
-  --ink-secondary: #c9c1b6;
-  --ink-muted: #948b80;
-  --hairline: #332f2a;
-
-  --ramp-1: #824624;
-  --ramp-2: #a25223;
-  --ramp-3: #c35e20;
-  --ramp-4: #da7338;
-  --ramp-5: #e69062;
-  --ramp-6: #f1ab88;
-  --no-data: #2b2824;
-  --accent-text: #e69062;
-
-  --series-a: #da7338;
-  --series-b: #2b99bf;
+  /* Noto Sans TC is loaded in index.html; the system stack covers the moment
+     before it arrives and any visitor who blocks web fonts. */
+  --font: 'Noto Sans TC', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
 * {
@@ -128,15 +89,23 @@ a {
   color: inherit;
 }
 
-/* Shared shell pieces. Kept global because every view uses them and scoped
-   copies would drift apart. */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius);
-  padding: 1.25rem;
+/* Page-width column. Only side padding: a padding shorthand here would zero
+   the vertical padding of whatever else sits on the same element.
+   Used by: App.vue (top bar, main, footer), and HomeView.vue, whose sections
+   each bring their own column.
+   The name is global, so no component may use "wrap" for its own class. */
+.wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
+/* Shared shell pieces. Kept global because every view uses them and scoped
+   copies would drift apart. */
+
+/* Pill button; .on marks the selected one, .small is the compact size.
+   Used by: AnimalDialog. The redesigned pages use their own pill styles. */
 .chip {
   font: inherit;
   font-size: 0.9rem;
@@ -147,30 +116,19 @@ a {
   color: var(--ink-secondary);
   cursor: pointer;
   transition: all 120ms ease;
-}
 
-.chip:hover {
-  border-color: var(--ramp-3);
-}
+  &:hover {
+    border-color: var(--ramp-3);
+  }
 
-.chip.on {
-  background: var(--ramp-4);
-  border-color: var(--ramp-4);
-  color: #fff;
-}
+  &.on {
+    background: var(--ramp-4);
+    border-color: var(--ramp-4);
+    color: var(--on-accent);
+  }
 
-.chip.small {
-  font-size: 0.82rem;
-  padding: 0.2rem 0.7rem;
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
+  &.small {
+    font-size: 0.82rem;
+    padding: 0.2rem 0.7rem;
+  }
 }
