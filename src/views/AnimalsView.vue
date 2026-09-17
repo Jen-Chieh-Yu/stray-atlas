@@ -7,6 +7,7 @@ import LucideIcon from '@/components/LucideIcon.vue'
 import PageHead from '@/components/PageHead.vue'
 import { useRoster } from '@/composables/useRoster'
 import { closeAnimalDialog } from '@/lib/dialogRoute'
+import { vReveal } from '@/lib/reveal'
 import {
   BODY_LABEL,
   DAY_BANDS,
@@ -322,7 +323,7 @@ function onSort(event: Event) {
 
     <template v-else>
       <!-- Region above the line, the animal itself below it (DESIGN.md §6). -->
-      <div class="findbox">
+      <div v-reveal class="findbox">
         <div class="find-row upper">
           <div class="field">
             <label for="f-county">縣市</label>
@@ -490,6 +491,7 @@ function onSort(event: Event) {
           <AnimalCard
             v-for="animal in visible"
             :key="animal.id"
+            v-reveal
             :animal="animal"
             :days="daysOf(animal)"
             :percentile="percentileOf(animal)"
@@ -527,7 +529,7 @@ function onSort(event: Event) {
 
       <!-- Kept from the previous page on purpose (DESIGN.md §12.3): the draft
            has no boundary card here, but every page carries one. -->
-      <section class="boundary">
+      <section v-reveal class="boundary">
         <div class="boundary-head">
           <span class="pill">這些卡片不能拿來說什麼</span>
           <span class="kicker">DATA BOUNDARY</span>

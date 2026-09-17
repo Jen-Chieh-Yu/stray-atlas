@@ -131,7 +131,7 @@ stray-atlas/
 │   ├── views/               七個頁面（Home、Animals、ShelterList、Shelter、Map、Analysis、About）
 │   ├── components/          動物卡片與詳細資料、首頁照片輪播、縣市地圖、分析圖表、圖示
 │   ├── composables/         資料載入（useAtlasData）與動物名冊（useRoster）
-│   └── lib/                 共用函式：動物、在所天數、收容所地址、詳細資料視窗路由、圖示資料、首頁照片與出處
+│   └── lib/                 共用函式：動物、在所天數、收容所地址、詳細資料視窗路由、圖示資料、首頁照片與出處、捲動淡入
 ├── index.html、vite.config.ts、tsconfig*.json、env.d.ts
 ├── .env.example             Google Maps Embed 金鑰範本（複製成 .env.local）
 ├── CLAUDE.md                AI 協作工作規則

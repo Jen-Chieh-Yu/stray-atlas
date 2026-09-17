@@ -6,6 +6,7 @@ import PageHead from '@/components/PageHead.vue'
 import ShelterSpark from '@/components/ShelterSpark.vue'
 import { useRoster } from '@/composables/useRoster'
 import { animalsLink, formatCount } from '@/lib/animals'
+import { vReveal } from '@/lib/reveal'
 import {
   addressesOf,
   duplicateSpellings,
@@ -195,7 +196,7 @@ function names(list: Shelter[]): string {
         </div>
       </div>
 
-      <div class="findbox">
+      <div v-reveal class="findbox">
         <div class="find-row upper">
           <div class="field">
             <label for="s-county">縣市</label>
@@ -329,7 +330,7 @@ function names(list: Shelter[]): string {
       <!-- Rows: the same facts as a card, laid out left to right so a long
            list can be scanned and compared column by column. -->
       <ul v-if="results.length && filters.view === 'list'" class="rows">
-        <li v-for="shelter in results" :key="shelter.id" class="srow">
+        <li v-for="shelter in results" :key="shelter.id" v-reveal class="srow">
           <div class="r-main">
             <div class="scard-top">
               <span class="county">{{ shelter.county }}</span>
@@ -374,7 +375,7 @@ function names(list: Shelter[]): string {
       </ul>
 
       <div v-else-if="results.length" class="shelters">
-        <article v-for="shelter in results" :key="shelter.id" class="scard">
+        <article v-for="shelter in results" :key="shelter.id" v-reveal class="scard">
           <div class="scard-top">
             <span class="county">{{ shelter.county }}</span>
             <span class="scard-n">在所 {{ formatCount(shelter.all.count) }} 隻</span>
@@ -418,7 +419,7 @@ function names(list: Shelter[]): string {
       </div>
       <p v-else class="empty-state">沒有符合條件的收容所，試著放寬條件。</p>
 
-      <section class="boundary">
+      <section v-reveal class="boundary">
         <div class="boundary-head">
           <span class="kicker">這一頁不能拿來說什麼</span>
         </div>

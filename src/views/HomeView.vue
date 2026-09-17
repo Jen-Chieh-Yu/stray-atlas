@@ -7,6 +7,7 @@ import HeroCarousel from '@/components/HeroCarousel.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
 import { useRoster } from '@/composables/useRoster'
 import { closeAnimalDialog } from '@/lib/dialogRoute'
+import { vReveal } from '@/lib/reveal'
 import {
   AGE_LABEL,
   BODY_LABEL,
@@ -334,7 +335,7 @@ const FLOW = [
 
     <template v-else>
       <!-- Three numbers -->
-      <section class="wrap">
+      <section v-reveal class="wrap">
         <div class="stats">
           <div class="stat">
             <b>{{ formatCount(animals.length) }}</b><span>隻動物目前仍在所</span>
@@ -350,7 +351,7 @@ const FLOW = [
       </section>
 
       <!-- Longest stays, dogs and cats together -->
-      <section class="wrap">
+      <section v-reveal class="wrap">
         <div class="sec-head">
           <h2><LucideIcon name="clock" :size="22" /> 等最久的</h2>
           <RouterLink :to="animalsLink({ sort: 'longest' })">依已在所天數排序 →</RouterLink>
@@ -396,7 +397,7 @@ const FLOW = [
       </section>
 
       <!-- Newest dogs, newest cats -->
-      <section v-for="block in newestBlocks" :key="block.kind" class="wrap">
+      <section v-for="block in newestBlocks" :key="block.kind" v-reveal class="wrap">
         <div class="sec-head">
           <h2><LucideIcon :name="block.icon" :size="22" /> {{ block.title }}</h2>
           <RouterLink :to="animalsLink({ kind: block.kind })">
@@ -423,7 +424,7 @@ const FLOW = [
       </section>
 
       <!-- Adoption steps -->
-      <section class="wrap">
+      <section v-reveal class="wrap">
         <div class="sec-head"><h2>認養流程</h2></div>
         <p class="sec-note">
           本站不辦理認養，也不代收申請。認養一律由該動物所在的收容所受理，這裡只負責把你需要的資訊整理齊全。
@@ -453,7 +454,7 @@ const FLOW = [
       </section>
 
       <!-- Browse by kind -->
-      <div class="kindband">
+      <div v-reveal class="kindband">
         <div class="wrap">
           <div class="kindband-head">
             <h2>
@@ -496,7 +497,7 @@ const FLOW = [
       </div>
 
       <!-- Browse by condition -->
-      <div class="kindband">
+      <div v-reveal class="kindband">
         <div class="wrap">
           <div class="kindband-head">
             <h2><LucideIcon name="sliders-horizontal" :size="22" /> 依條件瀏覽</h2>

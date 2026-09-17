@@ -132,3 +132,33 @@ a {
     padding: 0.2rem 0.7rem;
   }
 }
+
+/* Scroll reveal. v-reveal (src/lib/reveal.ts) adds .reveal to blocks that
+   start below the fold (or that the visitor just asked for), and
+   .is-visible when one comes into view. Without the directive, or under
+   reduced motion, neither class is set and the block is simply shown.
+
+   A keyframe animation rather than a transition: cards declare their own
+   transition for hover, which would replace this one. */
+.reveal {
+  opacity: 0;
+
+  &.is-visible {
+    opacity: 1;
+    animation: reveal-in 520ms ease-out var(--reveal-delay, 0ms) backwards;
+  }
+}
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@media print {
+  .reveal {
+    opacity: 1;
+    animation: none;
+  }
+}
