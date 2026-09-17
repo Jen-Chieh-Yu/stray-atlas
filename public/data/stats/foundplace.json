@@ -1,42 +1,42 @@
 {
-  "snapshot_date": "2026-09-15",
-  "generated_at_utc": "2026-09-17T00:42:36Z",
-  "rows": 8374,
+  "snapshot_date": "2026-09-16",
+  "generated_at_utc": "2026-09-17T00:52:34Z",
+  "rows": 8336,
   "district_reference": "loaded",
   "place_kinds": {
-    "blank": 1019,
-    "address": 5115,
-    "landmark": 914,
-    "district": 1210,
+    "district": 1208,
+    "address": 5090,
+    "blank": 1011,
+    "landmark": 911,
     "non_place": 116
   },
   "confidence": {
     "high": {
-      "rows": 8,
-      "share": 0.001
+      "rows": 7,
+      "share": 0.0008
     },
     "medium": {
-      "rows": 1822,
-      "share": 0.2176
+      "rows": 1820,
+      "share": 0.2183
     },
     "low": {
-      "rows": 5409,
-      "share": 0.6459
+      "rows": 5382,
+      "share": 0.6456
     },
     "none": {
-      "rows": 1135,
-      "share": 0.1355
+      "rows": 1127,
+      "share": 0.1352
     }
   },
   "county_source": {
-    "text": 193,
-    "shelter": 7046,
-    "none": 1135
+    "text": 192,
+    "shelter": 7017,
+    "none": 1127
   },
   "county_from_text_differs_from_shelter": 11,
   "district": {
-    "extracted": 3036,
-    "verified_against_reference": 3033,
+    "extracted": 3031,
+    "verified_against_reference": 3028,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,23 +48,23 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
+      "鶯歌區二甲路219號",
       "板橋區文化路",
       "板橋區板城路465-1號",
       "新莊區天祥街",
-      "三重區五華街",
-      "林口區蘆洲區中山一路167號"
+      "三重區五華街"
     ],
     "low": [
-      "工業路全家便利商店",
-      "清和巷",
-      "改良場",
-      "頂崁巷27號",
-      "中正路"
+      "竹南鎮營盤里",
+      "文華路2段1246巷",
+      "城西街三段510巷 附近漁塭",
+      "行大一街799號",
+      "中正路2段187巷6弄14號"
     ],
     "none": [
+      "民眾不擬續養",
       "動物之家",
       "所內生產，媽媽1110241",
-      "民眾不擬續養",
       "所內出生",
       "所內生產"
     ]
