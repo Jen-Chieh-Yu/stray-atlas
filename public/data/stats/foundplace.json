@@ -1,72 +1,72 @@
 {
-  "snapshot_date": "2026-09-03",
-  "generated_at_utc": "2026-09-16T09:38:02Z",
-  "rows": 8265,
+  "snapshot_date": "2026-09-15",
+  "generated_at_utc": "2026-09-17T00:42:36Z",
+  "rows": 8374,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 4977,
-    "district": 1217,
-    "landmark": 911,
-    "blank": 1044,
+    "blank": 1019,
+    "address": 5115,
+    "landmark": 914,
+    "district": 1210,
     "non_place": 116
   },
   "confidence": {
     "high": {
-      "rows": 10,
-      "share": 0.0012
+      "rows": 8,
+      "share": 0.001
     },
     "medium": {
-      "rows": 1773,
-      "share": 0.2145
+      "rows": 1822,
+      "share": 0.2176
     },
     "low": {
-      "rows": 5322,
-      "share": 0.6439
+      "rows": 5409,
+      "share": 0.6459
     },
     "none": {
-      "rows": 1160,
-      "share": 0.1404
+      "rows": 1135,
+      "share": 0.1355
     }
   },
   "county_source": {
-    "text": 197,
-    "shelter": 6908,
-    "none": 1160
+    "text": 193,
+    "shelter": 7046,
+    "none": 1135
   },
-  "county_from_text_differs_from_shelter": 12,
+  "county_from_text_differs_from_shelter": 11,
   "district": {
-    "extracted": 2994,
-    "verified_against_reference": 2990,
-    "not_in_that_county": 4
+    "extracted": 3036,
+    "verified_against_reference": 3033,
+    "not_in_that_county": 3
   },
   "samples": {
     "high": [
-      "臺東縣長濱鄉忠勇村25-1號",
       "新北市三峽區中山路365-13號",
       "基隆市安樂區崇德路18號1樓",
       "桃園市平鎮區龍南路244號",
-      "新北市糞箕湖95號"
+      "新北市糞箕湖95號",
+      "新北市淡水區埤島里65號"
     ],
     "medium": [
-      "南投縣南投市軍功里軍功路",
-      "新店區安忠路25號",
-      "外縣市龜山區優美街",
-      "汐止區南陽街117號5樓",
-      "新店區安和路三段100號"
+      "板橋區文化路",
+      "板橋區板城路465-1號",
+      "新莊區天祥街",
+      "三重區五華街",
+      "林口區蘆洲區中山一路167號"
     ],
     "low": [
-      "梅村路",
-      "三芝區埔坪里",
-      "石門區老梅里",
-      "三芝區埔頭里",
-      "南八里29號"
+      "工業路全家便利商店",
+      "清和巷",
+      "改良場",
+      "頂崁巷27號",
+      "中正路"
     ],
     "none": [
       "動物之家",
+      "所內生產，媽媽1110241",
+      "民眾不擬續養",
       "所內出生",
-      "所內生產",
-      "不擬續養",
-      "所內生產，媽媽1110241"
+      "所內生產"
     ]
   }
 }
