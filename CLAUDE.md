@@ -82,14 +82,14 @@ Project site 掛在 `/stray-atlas/` 子路徑下。以下三處只要漏一個�
 
 > 理由：此階段累積的是「時間」而非「工時」。晚一天啟動就永久少一天的標籤資料。
 
-- [ ] GitHub Actions cron workflow：每日下載 CSV，存為 `data/raw/YYYY-MM-DD.csv.gz` 並 commit 回 repo
+- [x] GitHub Actions cron workflow：每日下載 CSV，存為 `data/raw/YYYY-MM-DD.csv.gz` 並 commit 回 repo
   - 需處理：下載失敗重試、當日檔案已存在時跳過、UTF-8 BOM
-- [ ] 資料清理腳本 `scripts/clean.py`
+- [x] 資料清理腳本 `scripts/clean.py`
   - 移除零資訊量欄位（見 `PROJECT_BRIEF.md` §4.1）
   - `animal_Variety` strip trailing spaces
   - `animal_opendate` 的 `1900-01-01` 哨兵值轉為 null
   - `animal_area_pkid` → 縣市對照表（由 `shelter_address` 建立，共 22 縣市）
-- [ ] `animal_foundplace` 前處理腳本 `scripts/geocode.py`
+- [x] `animal_foundplace` 前處理腳本 `scripts/geocode.py`
   - 非地點值分類（建立關鍵詞黑名單）
   - 縣市補全（以收容所縣市為前綴）
   - 信心分級：`high`（原文含縣市＋完整門牌）/ `medium`（含區＋路名）/ `low`（僅路名，靠收容所推斷）/ `none`
@@ -104,8 +104,10 @@ Project site 掛在 `/stray-atlas/` 子路徑下。以下三處只要漏一個�
   - [ ] 鄉鎮區 choropleth 仍為可選圖層，未實作；一旦實作必須在 UI 上顯示
         各縣市的區級覆蓋率
   - [x] 互動需求：縣市篩選、犬／貓切換、滯留天數區間篩選
-  - [x] 找動物頁（全部動物，分頁 20 筆）、收容所列表與單一收容所頁
+  - [x] 找動物頁（全部動物，每頁 16 筆）、收容所列表與單一收容所頁
 - [x] GitHub Pages 部署 workflow
+- [x] 版面改版（2026-09-15 起）：首頁、找動物、收容所列表與介紹頁、縣市地圖
+      （移至 `/map`）、分析頁、關於本站。介面規格以 `DESIGN.md` 為準
 
 > **尋獲地點位泡泡層取消。** 達到 high 信心的僅 10 筆（0.1%），畫出來是編碼
 > 品質的地圖。地圖上的泡泡改為**收容所**位置，那是資料能支持的定位。
@@ -322,6 +324,13 @@ git push origin main
 - 農業部「全國公立動物收容所收容處理情形統計表」（用於存量殘存曲線）
 - 內政部鄉鎮區人口／家戶數（用於每萬人尋獲數）
 - 各收容所公告最大留容量（用於佔床率，可能需人工蒐集）
+
+**現行資料源**：農業部「動物認領養」，介接網址
+`https://data.moa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL`。
+`scripts/fetch_snapshot.py` 以同一端點加上 `&FOTT=CSV&IsTransData=1` 取得 CSV。
+官方亦提供 JSON；是否改為介接 JSON 尚未決定，改動前先問。若切換，`clean.py`
+必須能同時讀取既有的 CSV 快照與新格式，`data/raw/` 已存的快照不可改寫。
+評估時以 README〈儲存成本（觀察用）〉的實測數字為比較基準。
 
 **爬蟲禮儀**：若執行影像模組，下載 `album_file` 圖片時必須限速並建立本機快取，不可重複打政府網站。同時確認圖片授權範圍。
 
