@@ -88,9 +88,25 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
+  <!-- The paw mark is public/favicon.svg drawn with the palette tokens, so the
+       header and the browser tab carry one identity. -->
   <header class="topbar">
     <div class="wrap topbar-inner">
-      <RouterLink to="/" class="wordmark">StrayAtlas 浪浪地圖</RouterLink>
+      <RouterLink to="/" class="wordmark">
+        <svg class="mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+          <rect width="32" height="32" rx="7" />
+          <g>
+            <ellipse cx="10.5" cy="11" rx="2.6" ry="3.4" />
+            <ellipse cx="21.5" cy="11" rx="2.6" ry="3.4" />
+            <ellipse cx="5.6" cy="17.4" rx="2.4" ry="3" />
+            <ellipse cx="26.4" cy="17.4" rx="2.4" ry="3" />
+            <path
+              d="M16 15.4c3.9 0 7.2 3.3 7.2 6.6 0 2.6-2.2 4-4.6 4-1 0-1.8-.3-2.6-.3s-1.6.3-2.6.3c-2.4 0-4.6-1.4-4.6-4 0-3.3 3.3-6.6 7.2-6.6z"
+            />
+          </g>
+        </svg>
+        StrayAtlas 浪浪地圖
+      </RouterLink>
 
       <nav class="mainnav" aria-label="主要導覽">
         <RouterLink
@@ -119,7 +135,21 @@ onBeforeUnmount(() => {
 
     <nav id="navpanel" class="navpanel" :class="{ open: navOpen }" aria-label="主要導覽（選單）">
       <div class="wrap navpanel-head">
-        <RouterLink to="/" class="wordmark">StrayAtlas 浪浪地圖</RouterLink>
+        <RouterLink to="/" class="wordmark">
+          <svg class="mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+            <rect width="32" height="32" rx="7" />
+            <g>
+              <ellipse cx="10.5" cy="11" rx="2.6" ry="3.4" />
+              <ellipse cx="21.5" cy="11" rx="2.6" ry="3.4" />
+              <ellipse cx="5.6" cy="17.4" rx="2.4" ry="3" />
+              <ellipse cx="26.4" cy="17.4" rx="2.4" ry="3" />
+              <path
+                d="M16 15.4c3.9 0 7.2 3.3 7.2 6.6 0 2.6-2.2 4-4.6 4-1 0-1.8-.3-2.6-.3s-1.6.3-2.6.3c-2.4 0-4.6-1.4-4.6-4 0-3.3 3.3-6.6 7.2-6.6z"
+              />
+            </g>
+          </svg>
+          StrayAtlas 浪浪地圖
+        </RouterLink>
         <button
           ref="closeButton"
           type="button"
@@ -194,6 +224,9 @@ onBeforeUnmount(() => {
 }
 
 .wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
   font-weight: 700;
   font-size: 1.05rem;
   white-space: nowrap;
@@ -202,6 +235,18 @@ onBeforeUnmount(() => {
 
   &:hover {
     color: var(--accent-text);
+  }
+
+  & .mark {
+    flex: none;
+
+    & rect {
+      fill: var(--ramp-4);
+    }
+
+    & g {
+      fill: var(--on-accent);
+    }
   }
 }
 
