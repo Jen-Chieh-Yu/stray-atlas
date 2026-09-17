@@ -192,9 +192,9 @@ public/data/
 |---|---|
 | 文件、README、網頁 UI 文案 | 繁體中文（臺灣用語） |
 | 程式碼、變數命名、註解 | 英文 |
-| commit message（標題與內文） | 英文 |
+| commit message、PR 標題與內文 | 英文 |
 
-commit message 一律全英文，標題與內文皆然。理由：`git log` 全篇語言一致，且 GitHub 上的 diff、blame、PR 介面對英文 commit 的呈現最無摩擦；面試官掃 commit history 時不會遇到語言切換。
+commit message 與 PR 一律全英文，標題與內文皆然。理由：`git log` 全篇語言一致，且 GitHub 上的 diff、blame、PR 介面對英文 commit 的呈現最無摩擦；面試官掃 commit history 時不會遇到語言切換。
 
 **一經確立不再更動。** 同一 repo 內語言混用造成的印象傷害，大於選錯語言本身。
 
@@ -293,9 +293,17 @@ AI 協作者**不得執行**任何改動 repo 狀態的 git 指令，包含但�
 
 ```powershell
 git add scripts/ .github/
-git commit -F .git/msg.txt
+git commit -F .git/msg50.txt
 git push -u origin feature/YYYYMMDD-topic
 ```
+
+暫存檔的規則：
+
+- commit message 寫成 `.git/msgNN.txt`，PR 內文寫成 `.git/prNN.md`（§6.6）；`NN` 沿用 `.git/` 內現有最大編號加一，PR 內文與該 PR 第一筆 commit 同號
+- 一筆 commit 一個檔案，**編號不重複使用**；尚未提交的 message 要修改時，直接改原檔並告知人類
+- 寫入時用 UTF-8、LF 換行，逐行檢查 72 字元上限（§6.4）
+- 交付時在回覆中附上檔名與完整內容，讓人類不開檔也能審閱
+- 計畫改變而用不到的檔案不刪除（AI 沒有刪除權限），改名為 `msgNN.unused.txt`；`.git/` 內的暫存檔由人類自行清理
 
 理由：
 
@@ -308,7 +316,7 @@ git push -u origin feature/YYYYMMDD-topic
 - 分支**一律經 PR 併回 `main`**，合併方式用 Create a merge commit；不在本機 merge 後直接推 `main`
 - 例外：每日排程機器人直接 commit 到 `main`（快照與重建後的 `public/data/`）
 - 機器人每天推 `main`，所以開分支前先 `git switch main`、`git pull --ff-only`；PR 合併後本機再 pull 一次
-- AI 協作者交付 commit message 時，一併提供 PR 標題（沿用 commit 標題）與繁體中文 PR 內文，寫入 `.git/prNN.md`；內文含「變更」與「合併後驗證」清單
+- AI 協作者交付 commit message 時，一併提供 PR 標題（沿用 commit 標題）與英文 PR 內文，寫入 `.git/prNN.md`；內文含 Summary、Commits、Changes、Post-merge checks 四節
 - `schedule` 只在預設分支觸發，且本專案的 workflow 會推 `main` 或部署網站，PR 階段無法實測；驗證項目寫進 PR 內文，合併後逐項確認
 
 理由：PR 頁面留下變更總覽與驗證紀錄，面試官可直接從 GitHub 看到開發流程；分支在本機 merge 後直推，事後無法補開 PR。
