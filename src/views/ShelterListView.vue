@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import LucideIcon from '@/components/LucideIcon.vue'
 import PageHead from '@/components/PageHead.vue'
@@ -45,6 +45,10 @@ const SORTS: { id: Sort; label: string }[] = [
   { id: 'north', label: '縣市（由北到南）' },
 ]
 
+/** Cards shown before 查看更多, and how many each press adds: four rows of
+ *  the three-column grid. */
+const PAGE_SIZE = 12
+
 function one(value: unknown): string | undefined {
   const first = Array.isArray(value) ? value[0] : value
   return typeof first === 'string' && first !== '' ? first : undefined
@@ -63,6 +67,9 @@ const filters = computed(() => {
     has: has === 'dog' || has === 'cat' ? (has as Has) : undefined,
     size: SIZES.some((item) => item.id === size) ? (size as Size) : undefined,
     sort: SORTS.some((item) => item.id === sort) ? (sort as Sort) : ('all-desc' as Sort),
+    // How many are shown. In the URL so Back from a shelter page returns to
+    // the same expanded list; any other change starts from PAGE_SIZE again.
+    shown: Math.max(PAGE_SIZE, Math.floor(Number(one(route.query.shown)) || 0)),
   }
 })
 
@@ -77,6 +84,7 @@ function update(patch: Partial<Filters>) {
   if (next.size) query.size = next.size
   if (next.sort !== 'all-desc') query.sort = next.sort
   if (next.view === 'list') query.view = 'list'
+  if ('shown' in patch && next.shown > PAGE_SIZE) query.shown = String(next.shown)
   void router.replace({ query })
 }
 
@@ -118,6 +126,23 @@ function by(sort: Sort) {
 const results = computed(() =>
   shelters.value.filter((shelter) => matches(shelter, null)).sort(by(filters.value.sort)),
 )
+
+const visible = computed(() => results.value.slice(0, filters.value.shown))
+const remaining = computed(() => results.value.length - visible.value.length)
+
+/** Index of the first card added by the last 查看更多. Those cards fade in
+ *  even though they appear on screen, a few milliseconds apart. */
+const addedFrom = ref(Number.POSITIVE_INFINITY)
+
+function revealOf(index: number) {
+  if (index < addedFrom.value) return undefined
+  return { appear: true, delay: Math.min(index - addedFrom.value, 11) * 40 }
+}
+
+function showMore() {
+  addedFrom.value = visible.value.length
+  update({ shown: filters.value.shown + PAGE_SIZE })
+}
 
 const resultAnimals = computed(() =>
   results.value.reduce((total, shelter) => total + shelter.all.count, 0),
@@ -326,11 +351,16 @@ function names(list: Shelter[]): string {
         </span>
       </div>
 
-      <!-- Thirty-seven fit on one page; no pager. -->
+      <!-- Twelve at a time; 查看更多 adds twelve more. -->
       <!-- Rows: the same facts as a card, laid out left to right so a long
            list can be scanned and compared column by column. -->
       <ul v-if="results.length && filters.view === 'list'" class="rows">
-        <li v-for="shelter in results" :key="shelter.id" v-reveal class="srow">
+        <li
+          v-for="(shelter, index) in visible"
+          :key="shelter.id"
+          v-reveal="revealOf(index)"
+          class="srow"
+        >
           <div class="r-main">
             <div class="scard-top">
               <span class="county">{{ shelter.county }}</span>
@@ -375,7 +405,12 @@ function names(list: Shelter[]): string {
       </ul>
 
       <div v-else-if="results.length" class="shelters">
-        <article v-for="shelter in results" :key="shelter.id" v-reveal class="scard">
+        <article
+          v-for="(shelter, index) in visible"
+          :key="shelter.id"
+          v-reveal="revealOf(index)"
+          class="scard"
+        >
           <div class="scard-top">
             <span class="county">{{ shelter.county }}</span>
             <span class="scard-n">在所 {{ formatCount(shelter.all.count) }} 隻</span>
@@ -418,6 +453,13 @@ function names(list: Shelter[]): string {
         </article>
       </div>
       <p v-else class="empty-state">沒有符合條件的收容所，試著放寬條件。</p>
+
+      <div v-if="remaining > 0" class="more-row">
+        <button type="button" class="more-btn" @click="showMore">
+          查看更多（還有 {{ remaining }} 間）
+          <LucideIcon name="chevron-down" :size="18" />
+        </button>
+      </div>
 
       <section v-reveal class="boundary">
         <div class="boundary-head">
@@ -485,6 +527,36 @@ function names(list: Shelter[]): string {
   & span {
     color: var(--ink-secondary);
     font-size: 0.86rem;
+  }
+}
+
+/* ── 查看更多 ── */
+.more-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 2rem;
+  border: 1px solid var(--ramp-4);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ramp-4);
+  font: inherit;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    color 160ms ease;
+
+  &:hover {
+    background: var(--ramp-4);
+    color: var(--on-accent);
   }
 }
 
