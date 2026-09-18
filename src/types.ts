@@ -148,10 +148,46 @@ export interface FoundplacePayload {
   county_from_text_differs_from_shelter: number
 }
 
-/** meta.json, the field the site footer reads. The file also records the
- *  source file, row counts and the columns the cleaner dropped. */
+/** meta.json. The footer reads only snapshot_date; the data quality page
+ *  reads the rest, which is why the cleaning report is typed here in full
+ *  rather than left as the two fields the footer happened to need. */
+export interface DroppedColumn {
+  column: string
+  reason: 'all_blank' | 'zero_variance'
+  distinct_values: number
+  /** Present for zero_variance: the single value every row carries. */
+  value?: string
+}
+
 export interface MetaPayload {
   snapshot_date: string
+  generated_at_utc: string
+  source_file: string
+  rows: number
+  columns_in_source: number
+  columns_after_clean: number
+  /** Source column name to its Chinese name, from data/reference/fields.json.
+   *  One reference file rather than a label typed into each component. */
+  fields: Record<string, string>
+  /** Source columns the reference file has no name for yet. Non-empty means
+   *  the source added a column; the cleaner logs a warning for it. */
+  fields_without_label: string[]
+  dropped_columns: DroppedColumn[]
+  duplicate_columns: { dropped: string; identical_to: string }[]
+  cleaning_actions: {
+    opendate_sentinel_nulled: number
+    opendate_in_the_future: number
+    rows_without_createtime: number
+  }
+  /** Share of rows whose value is non-empty, per kept column. */
+  coverage: Record<string, number>
+  variety_groups: Record<'mixed' | 'breed' | 'unknown', number>
+  areas: number
+  shelters: number
+  /** Four codes cover two shelters each, which is why shelters are keyed on
+   *  name everywhere in this project. */
+  shelter_pkid_collisions: { pkid: string; shelter_names: string[] }[]
+  shelter_address_variants: { shelter_name: string; addresses: string[] }[]
 }
 
 export interface ShelterPoint {
@@ -182,4 +218,131 @@ export interface ShelterPointPayload {
   position: 'district_centroid'
   unplaced: string[]
   points: ShelterPoint[]
+}
+
+/** stats/quality.json. Written by scripts/build_quality.py.
+ *
+ *  Everything here measures how a county RECORDS its animals, never how it
+ *  keeps them. A low score is a gap in that county's open data and nothing
+ *  more; the page says so in its own words and the types cannot, so this
+ *  comment is the closest a reader of the code gets to the same warning. */
+export type Grade = 'good' | 'fair' | 'poor' | 'na'
+
+export interface QualityMetric {
+  key: string
+  label: string
+  description: string
+  /** Round numbers fixed by hand, not quantiles of this snapshot: a grade
+   *  that moves because other counties moved is not one anyone can act on.
+   *  They travel in the payload so the page can print the threshold it is
+   *  applying rather than restate it (DESIGN.md 12.9). */
+  thresholds: { good: number; fair: number }
+  national: number
+}
+
+export interface QualityRow {
+  rows: number
+  scores: Record<string, number>
+  /** 'na' wherever rows < min_rows_for_grade — the figure is still shown,
+   *  the grade is withheld. */
+  grades: Record<string, Grade>
+}
+
+export interface QualityCounty extends QualityRow {
+  pkid: string
+  name: string
+  shelters: number
+}
+
+export interface QualityShelter extends QualityRow {
+  /** Matches Shelter.id, so a row can link to /shelters/<id>. */
+  id: string
+  name: string
+  county: string
+}
+
+export interface SterilizationShare {
+  pkid: string
+  name: string
+  rows: number
+  /** Shares of the county's rows, not counts. N is 未知／不適用. */
+  T: number
+  F: number
+  N: number
+}
+
+export interface QualityPayload {
+  snapshot_date: string
+  generated_at_utc: string
+  rows: number
+  min_rows_for_grade: number
+  metrics: QualityMetric[]
+  counties: QualityCounty[]
+  shelters: QualityShelter[]
+  spellings: {
+    /** One thing written several ways: 混種犬 / 混種狗 / 米克斯. */
+    variety: { value: string; count: number }[]
+    sterilization_by_county: SterilizationShare[]
+  }
+}
+
+/** stats/features.json. Written by scripts/build_features.py.
+ *
+ *  Quantiles only, never means: the distribution is right-skewed by
+ *  construction and a mean would mostly report the tail. Every figure is
+ *  time already spent by an animal STILL in a shelter — never a speed of
+ *  adoption, which this dataset cannot measure at all. */
+export interface FeatureItem {
+  label: string
+  n: number
+  p25_days: number
+  median_days: number
+  p75_days: number
+  /** n below the payload's small_sample_below. Drawn, but flagged. */
+  small_sample: boolean
+}
+
+export interface FeatureGroup {
+  key: string
+  title: string
+  /** Shortest median first, so the rows follow the axis. */
+  items: FeatureItem[]
+}
+
+export interface CoatShelter {
+  id: string
+  name: string
+  county: string
+  dark_n: number
+  light_n: number
+  dark_median_days: number
+  light_median_days: number
+  /** dark − light. Negative in the shelters that run the other way, which
+   *  stay in the payload: dropping them would turn a tally into a claim. */
+  difference_days: number
+}
+
+export interface FeaturesPayload {
+  snapshot_date: string
+  generated_at_utc: string
+  /** The log axis both blocks are drawn on, so they cannot drift apart. */
+  axis: {
+    min_days: number
+    max_days: number
+    ticks: { days: number; label: string }[]
+  }
+  small_sample_below: number
+  overall: FeatureItem
+  groups: FeatureGroup[]
+  /** The same coat comparison made within each shelter. The uncontrolled
+   *  version is one of the groups above; this is the one that answers
+   *  whether the gap is the coat or the shelter holding it. */
+  dark_coat: {
+    rule: string
+    min_group: number
+    shelters_compared: number
+    shelters_dark_longer: number
+    national: { dark: FeatureItem; light: FeatureItem }
+    shelters: CoatShelter[]
+  }
 }

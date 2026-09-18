@@ -32,14 +32,30 @@ import argparse
 import csv
 import gzip
 import io
+import json
 import re
 import sys
 from datetime import date
 from pathlib import Path
 
-from common import PUBLIC_DATA, RAW_DIR, log, snapshot_paths, utc_now, write_json
+from common import (
+    PUBLIC_DATA,
+    RAW_DIR,
+    REFERENCE_DIR,
+    log,
+    relative,
+    snapshot_paths,
+    utc_now,
+    write_json,
+)
 
 OUT_DIR = PUBLIC_DATA
+
+# The source column names are English and the pages that show them are in
+# Chinese, so the two have to be joined somewhere. Here, from one reference
+# file, rather than in whichever component happens to need a label: a name
+# typed into a component is a name that disagrees with the next component.
+FIELDS_PATH = REFERENCE_DIR / "fields.json"
 
 EXPECTED_AREA_COUNT = 22
 SENTINEL_DATE = "1900-01-01"
@@ -302,6 +318,19 @@ def foundplace_stats(rows: list[dict[str, str]], counties: list[str]) -> dict:
     }
 
 
+def field_labels(columns: list[str]) -> tuple[dict[str, str], list[str]]:
+    """The Chinese name for each source column, and the ones with no name yet.
+
+    Unnamed columns are returned rather than swallowed: the source adding a
+    column is exactly the kind of change that should show up in the build log
+    on the day it happens, not months later when someone notices a blank
+    label on the page.
+    """
+    reference = json.loads(FIELDS_PATH.read_text(encoding="utf-8"))["fields"]
+    labels = {column: reference[column] for column in columns if column in reference}
+    return labels, [column for column in columns if column not in reference]
+
+
 def load_clean(snapshot_date: str | None = None) -> tuple[list[dict], dict]:
     """Return the cleaned rows and a report describing what was done to them."""
     path = resolve_snapshot(snapshot_date)
@@ -310,6 +339,7 @@ def load_clean(snapshot_date: str | None = None) -> tuple[list[dict], dict]:
     if not rows:
         raise SystemExit(f"{path.name} has no data rows")
 
+    labels, unlabelled = field_labels(columns)
     uninformative = uninformative_columns(columns, rows)
     uninformative_names = {item["column"] for item in uninformative}
     duplicates = duplicate_columns(columns, rows, exclude=uninformative_names)
@@ -371,6 +401,8 @@ def load_clean(snapshot_date: str | None = None) -> tuple[list[dict], dict]:
         "rows": len(cleaned),
         "columns_in_source": len(columns),
         "columns_after_clean": len(kept),
+        "fields": labels,
+        "fields_without_label": unlabelled,
         "dropped_columns": uninformative,
         "duplicate_columns": duplicates,
         "cleaning_actions": {
@@ -417,6 +449,11 @@ def main() -> int:
     for item in report["duplicate_columns"]:
         log(f"  dropped {item['dropped']:20s} identical to {item['identical_to']}")
     log(f"areas {report['areas']}, shelters {report['shelters']}")
+    if report["fields_without_label"]:
+        # A warning, not a failure: a new source column should not stop the
+        # daily rebuild, but it must not pass unnoticed either.
+        log(f"::warning::{relative(FIELDS_PATH)} has no Chinese name for "
+            + ", ".join(report["fields_without_label"]))
     for item in report["shelter_pkid_collisions"]:
         log(f"  shelter_pkid {item['pkid']} covers {item['shelter_names']}")
     for item in report["shelter_address_variants"]:

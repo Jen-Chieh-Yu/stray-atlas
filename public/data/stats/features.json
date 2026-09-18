@@ -1,0 +1,558 @@
+{
+ "snapshot_date": "2026-09-17",
+ "generated_at_utc": "2026-09-18T01:50:22Z",
+ "axis": {
+  "min_days": 20,
+  "max_days": 3000,
+  "ticks": [
+   {
+    "days": 30,
+    "label": "1 個月"
+   },
+   {
+    "days": 90,
+    "label": "3 個月"
+   },
+   {
+    "days": 730,
+    "label": "2 年"
+   },
+   {
+    "days": 1825,
+    "label": "5 年"
+   }
+  ]
+ },
+ "small_sample_below": 100,
+ "overall": {
+  "n": 8354,
+  "p25_days": 119,
+  "median_days": 351,
+  "p75_days": 1259,
+  "small_sample": false
+ },
+ "groups": [
+  {
+   "key": "kind",
+   "title": "物種",
+   "items": [
+    {
+     "label": "其他",
+     "n": 12,
+     "p25_days": 20,
+     "median_days": 36,
+     "p75_days": 85,
+     "small_sample": true
+    },
+    {
+     "label": "貓",
+     "n": 2406,
+     "p25_days": 87,
+     "median_days": 198,
+     "p75_days": 344,
+     "small_sample": false
+    },
+    {
+     "label": "狗",
+     "n": 5936,
+     "p25_days": 146,
+     "median_days": 578,
+     "p75_days": 1764,
+     "small_sample": false
+    }
+   ]
+  },
+  {
+   "key": "dog_variety",
+   "title": "品種（犬）",
+   "items": [
+    {
+     "label": "品種犬",
+     "n": 377,
+     "p25_days": 82,
+     "median_days": 206,
+     "p75_days": 477,
+     "small_sample": false
+    },
+    {
+     "label": "混種犬",
+     "n": 5541,
+     "p25_days": 156,
+     "median_days": 652,
+     "p75_days": 1875,
+     "small_sample": false
+    }
+   ]
+  },
+  {
+   "key": "cat_variety",
+   "title": "品種（貓）",
+   "items": [
+    {
+     "label": "品種貓",
+     "n": 36,
+     "p25_days": 9,
+     "median_days": 121,
+     "p75_days": 262,
+     "small_sample": true
+    },
+    {
+     "label": "混種貓",
+     "n": 2370,
+     "p25_days": 87,
+     "median_days": 198,
+     "p75_days": 344,
+     "small_sample": false
+    }
+   ]
+  },
+  {
+   "key": "bodytype",
+   "title": "體型",
+   "items": [
+    {
+     "label": "小型",
+     "n": 1862,
+     "p25_days": 55,
+     "median_days": 190,
+     "p75_days": 604,
+     "small_sample": false
+    },
+    {
+     "label": "大型",
+     "n": 1623,
+     "p25_days": 125,
+     "median_days": 365,
+     "p75_days": 1064,
+     "small_sample": false
+    },
+    {
+     "label": "中型",
+     "n": 4869,
+     "p25_days": 154,
+     "median_days": 455,
+     "p75_days": 1569,
+     "small_sample": false
+    }
+   ]
+  },
+  {
+   "key": "age",
+   "title": "年齡",
+   "items": [
+    {
+     "label": "幼體",
+     "n": 2196,
+     "p25_days": 63,
+     "median_days": 196,
+     "p75_days": 391,
+     "small_sample": false
+    },
+    {
+     "label": "成體",
+     "n": 5894,
+     "p25_days": 144,
+     "median_days": 435,
+     "p75_days": 1403,
+     "small_sample": false
+    }
+   ]
+  },
+  {
+   "key": "sex",
+   "title": "性別",
+   "items": [
+    {
+     "label": "母",
+     "n": 4036,
+     "p25_days": 114,
+     "median_days": 337,
+     "p75_days": 1192,
+     "small_sample": false
+    },
+    {
+     "label": "公",
+     "n": 4231,
+     "p25_days": 125,
+     "median_days": 367,
+     "p75_days": 1345,
+     "small_sample": false
+    }
+   ]
+  },
+  {
+   "key": "sterilization",
+   "title": "絕育",
+   "items": [
+    {
+     "label": "未知／不適用",
+     "n": 939,
+     "p25_days": 21,
+     "median_days": 79,
+     "p75_days": 206,
+     "small_sample": false
+    },
+    {
+     "label": "未絕育",
+     "n": 2644,
+     "p25_days": 140,
+     "median_days": 323,
+     "p75_days": 1324,
+     "small_sample": false
+    },
+    {
+     "label": "已絕育",
+     "n": 4771,
+     "p25_days": 155,
+     "median_days": 472,
+     "p75_days": 1498,
+     "small_sample": false
+    }
+   ]
+  },
+  {
+   "key": "dog_colour",
+   "title": "毛色（犬，樣本 ≥ 100）",
+   "items": [
+    {
+     "label": "白色",
+     "n": 244,
+     "p25_days": 85,
+     "median_days": 282,
+     "p75_days": 1111,
+     "small_sample": false
+    },
+    {
+     "label": "黃色",
+     "n": 1018,
+     "p25_days": 123,
+     "median_days": 412,
+     "p75_days": 1324,
+     "small_sample": false
+    },
+    {
+     "label": "棕色",
+     "n": 165,
+     "p25_days": 149,
+     "median_days": 416,
+     "p75_days": 1130,
+     "small_sample": false
+    },
+    {
+     "label": "黃白色",
+     "n": 135,
+     "p25_days": 126,
+     "median_days": 551,
+     "p75_days": 1174,
+     "small_sample": false
+    },
+    {
+     "label": "黑白色",
+     "n": 242,
+     "p25_days": 170,
+     "median_days": 631,
+     "p75_days": 1609,
+     "small_sample": false
+    },
+    {
+     "label": "黑色",
+     "n": 2799,
+     "p25_days": 161,
+     "median_days": 702,
+     "p75_days": 2120,
+     "small_sample": false
+    },
+    {
+     "label": "虎斑色",
+     "n": 470,
+     "p25_days": 205,
+     "median_days": 862,
+     "p75_days": 2022,
+     "small_sample": false
+    },
+    {
+     "label": "黑黃色",
+     "n": 313,
+     "p25_days": 151,
+     "median_days": 902,
+     "p75_days": 1962,
+     "small_sample": false
+    }
+   ]
+  }
+ ],
+ "dark_coat": {
+  "rule": "animal_colour 含「黑」",
+  "min_group": 20,
+  "shelters_compared": 25,
+  "shelters_dark_longer": 17,
+  "national": {
+   "dark": {
+    "n": 3551,
+    "p25_days": 165,
+    "median_days": 707,
+    "p75_days": 2035,
+    "small_sample": false
+   },
+   "light": {
+    "n": 2332,
+    "p25_days": 125,
+    "median_days": 473,
+    "p75_days": 1386,
+    "small_sample": false
+   }
+  },
+  "shelters": [
+   {
+    "id": "ff18cf76ba",
+    "name": "新北市八里區公立動物之家",
+    "county": "新北市",
+    "dark_n": 65,
+    "light_n": 43,
+    "dark_median_days": 2248,
+    "light_median_days": 303,
+    "difference_days": 1945
+   },
+   {
+    "id": "3578faa084",
+    "name": "南投縣公立動物收容所",
+    "county": "南投縣",
+    "dark_n": 163,
+    "light_n": 126,
+    "dark_median_days": 2215,
+    "light_median_days": 763,
+    "difference_days": 1452
+   },
+   {
+    "id": "e1942dfc8c",
+    "name": "桃園市動物保護教育園區",
+    "county": "桃園市",
+    "dark_n": 263,
+    "light_n": 130,
+    "dark_median_days": 2375,
+    "light_median_days": 1675,
+    "difference_days": 700
+   },
+   {
+    "id": "96309cff5a",
+    "name": "新北市瑞芳區公立動物之家",
+    "county": "新北市",
+    "dark_n": 40,
+    "light_n": 22,
+    "dark_median_days": 1706,
+    "light_median_days": 1112,
+    "difference_days": 594
+   },
+   {
+    "id": "dc67aab234",
+    "name": "新北市板橋區公立動物之家",
+    "county": "新北市",
+    "dark_n": 101,
+    "light_n": 54,
+    "dark_median_days": 1657,
+    "light_median_days": 1070,
+    "difference_days": 587
+   },
+   {
+    "id": "ff5aaa6763",
+    "name": "新北市中和區公立動物之家",
+    "county": "新北市",
+    "dark_n": 136,
+    "light_n": 71,
+    "dark_median_days": 2409,
+    "light_median_days": 1844,
+    "difference_days": 565
+   },
+   {
+    "id": "612844c74e",
+    "name": "新北市新店區公立動物之家",
+    "county": "新北市",
+    "dark_n": 127,
+    "light_n": 96,
+    "dark_median_days": 798,
+    "light_median_days": 279,
+    "difference_days": 519
+   },
+   {
+    "id": "84063d5e30",
+    "name": "屏東縣公立犬貓中途之家",
+    "county": "屏東縣",
+    "dark_n": 42,
+    "light_n": 29,
+    "dark_median_days": 1781,
+    "light_median_days": 1368,
+    "difference_days": 413
+   },
+   {
+    "id": "142b8109f8",
+    "name": "雲林縣流浪動物收容所",
+    "county": "雲林縣",
+    "dark_n": 267,
+    "light_n": 99,
+    "dark_median_days": 1280,
+    "light_median_days": 944,
+    "difference_days": 336
+   },
+   {
+    "id": "a97f993ff3",
+    "name": "新竹市動物保護教育園區",
+    "county": "新竹市",
+    "dark_n": 84,
+    "light_n": 46,
+    "dark_median_days": 1737,
+    "light_median_days": 1520,
+    "difference_days": 217
+   },
+   {
+    "id": "e32bd54eef",
+    "name": "臺北市動物之家",
+    "county": "臺北市",
+    "dark_n": 461,
+    "light_n": 230,
+    "dark_median_days": 1639,
+    "light_median_days": 1440,
+    "difference_days": 199
+   },
+   {
+    "id": "5a6e2744e5",
+    "name": "彰化縣流浪狗中途之家",
+    "county": "彰化縣",
+    "dark_n": 98,
+    "light_n": 39,
+    "dark_median_days": 428,
+    "light_median_days": 349,
+    "difference_days": 79
+   },
+   {
+    "id": "200d66f85d",
+    "name": "基隆市寵物銀行",
+    "county": "基隆市",
+    "dark_n": 70,
+    "light_n": 32,
+    "dark_median_days": 274,
+    "light_median_days": 208,
+    "difference_days": 66
+   },
+   {
+    "id": "c5e859af84",
+    "name": "新竹縣動物保護教育園區",
+    "county": "新竹縣",
+    "dark_n": 59,
+    "light_n": 35,
+    "dark_median_days": 1034,
+    "light_median_days": 982,
+    "difference_days": 52
+   },
+   {
+    "id": "2800f5b8cb",
+    "name": "臺南市動物之家灣裡站",
+    "county": "臺南市",
+    "dark_n": 55,
+    "light_n": 69,
+    "dark_median_days": 290,
+    "light_median_days": 253,
+    "difference_days": 37
+   },
+   {
+    "id": "e29d9cccaa",
+    "name": "高雄市壽山動物保護教育園區",
+    "county": "高雄市",
+    "dark_n": 75,
+    "light_n": 95,
+    "dark_median_days": 97,
+    "light_median_days": 72,
+    "difference_days": 25
+   },
+   {
+    "id": "ec9eec2921",
+    "name": "宜蘭縣流浪動物中途之家",
+    "county": "宜蘭縣",
+    "dark_n": 104,
+    "light_n": 83,
+    "dark_median_days": 197,
+    "light_median_days": 178,
+    "difference_days": 19
+   },
+   {
+    "id": "ad3f398c00",
+    "name": "彰化縣流浪狗中途之家臨時收容所",
+    "county": "彰化縣",
+    "dark_n": 99,
+    "light_n": 84,
+    "dark_median_days": 49,
+    "light_median_days": 50,
+    "difference_days": -1
+   },
+   {
+    "id": "f02e1227af",
+    "name": "臺南市動物之家善化站",
+    "county": "臺南市",
+    "dark_n": 178,
+    "light_n": 134,
+    "dark_median_days": 153,
+    "light_median_days": 174,
+    "difference_days": -21
+   },
+   {
+    "id": "29795a5301",
+    "name": "花蓮縣狗貓躍動園區",
+    "county": "花蓮縣",
+    "dark_n": 53,
+    "light_n": 66,
+    "dark_median_days": 280,
+    "light_median_days": 345,
+    "difference_days": -65
+   },
+   {
+    "id": "036ddab65f",
+    "name": "新北市五股區公立動物之家",
+    "county": "新北市",
+    "dark_n": 184,
+    "light_n": 152,
+    "dark_median_days": 367,
+    "light_median_days": 439,
+    "difference_days": -72
+   },
+   {
+    "id": "1b5bb4a344",
+    "name": "澎湖縣流浪動物收容中心",
+    "county": "澎湖縣",
+    "dark_n": 169,
+    "light_n": 121,
+    "dark_median_days": 915,
+    "light_median_days": 987,
+    "difference_days": -72
+   },
+   {
+    "id": "87e430aeaa",
+    "name": "苗栗縣動物保護教育園區",
+    "county": "苗栗縣",
+    "dark_n": 75,
+    "light_n": 46,
+    "dark_median_days": 177,
+    "light_median_days": 275,
+    "difference_days": -98
+   },
+   {
+    "id": "ec94558b96",
+    "name": "高雄市燕巢動物保護關愛園區",
+    "county": "高雄市",
+    "dark_n": 283,
+    "light_n": 225,
+    "dark_median_days": 77,
+    "light_median_days": 228,
+    "difference_days": -151
+   },
+   {
+    "id": "53ff346501",
+    "name": "金門縣動物收容中心",
+    "county": "金門縣",
+    "dark_n": 82,
+    "light_n": 80,
+    "dark_median_days": 891,
+    "light_median_days": 1141,
+    "difference_days": -250
+   }
+  ]
+ }
+}

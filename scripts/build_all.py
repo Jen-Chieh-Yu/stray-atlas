@@ -47,6 +47,8 @@ STEPS: tuple[tuple[str, bool], ...] = (
     ("build_shelters.py", True),  # shelters.json, animals.json
     ("build_shelter_points.py", False),  # shelter-points.json
     ("build_distribution.py", True),  # stats/distribution.json
+    ("build_features.py", True),  # stats/features.json
+    ("build_quality.py", True),  # stats/quality.json
 )
 
 # Every output that records its snapshot. areas.json and animals.json carry no
@@ -59,6 +61,8 @@ DATED_OUTPUTS = (
     PUBLIC_DATA / "shelters.json",
     PUBLIC_DATA / "shelter-points.json",
     STATS_DIR / "distribution.json",
+    STATS_DIR / "features.json",
+    STATS_DIR / "quality.json",
 )
 
 
