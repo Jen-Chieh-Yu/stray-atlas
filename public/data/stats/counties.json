@@ -1,6 +1,6 @@
 {
- "snapshot_date": "2026-09-17",
- "generated_at_utc": "2026-09-17T03:09:57Z",
+ "snapshot_date": "2026-09-18",
+ "generated_at_utc": "2026-09-18T02:57:04Z",
  "county_source": "shelter",
  "buckets": [
   {
@@ -45,19 +45,19 @@
   "其他"
  ],
  "total": {
-  "count": 8354,
-  "median_days": 351,
-  "mean_days": 855,
+  "count": 8333,
+  "median_days": 352,
+  "mean_days": 857,
   "min_days": 0,
-  "max_days": 4690,
+  "max_days": 4691,
   "histogram": [
-   846,
-   899,
-   1042,
-   1517,
-   1029,
-   1217,
-   1804
+   841,
+   905,
+   1027,
+   1489,
+   1053,
+   1216,
+   1802
   ]
  },
  "counties": [
@@ -65,50 +65,50 @@
    "pkid": "3",
    "name": "新北市",
    "shelters": 9,
-   "district_coverage": 0.7341,
+   "district_coverage": 0.7348,
    "all": {
     "count": 2738,
-    "median_days": 268,
-    "mean_days": 726,
+    "median_days": 269,
+    "mean_days": 727,
     "min_days": 0,
-    "max_days": 4690,
+    "max_days": 4691,
     "histogram": [
-     195,
-     274,
-     478,
-     870,
+     193,
+     277,
+     472,
+     875,
      238,
      194,
      489
     ]
    },
    "狗": {
-    "count": 1225,
-    "median_days": 798,
-    "mean_days": 1332,
+    "count": 1227,
+    "median_days": 799,
+    "mean_days": 1331,
     "min_days": 0,
-    "max_days": 4690,
+    "max_days": 4691,
     "histogram": [
      63,
-     77,
-     128,
-     198,
+     79,
+     125,
+     201,
      133,
      149,
      477
     ]
    },
    "貓": {
-    "count": 1513,
-    "median_days": 195,
-    "mean_days": 235,
-    "min_days": 1,
-    "max_days": 2689,
+    "count": 1511,
+    "median_days": 196,
+    "mean_days": 236,
+    "min_days": 2,
+    "max_days": 2690,
     "histogram": [
-     132,
-     197,
-     350,
-     672,
+     130,
+     198,
+     347,
+     674,
      105,
      45,
      12
@@ -135,48 +135,48 @@
    "pkid": "2",
    "name": "臺北市",
    "shelters": 1,
-   "district_coverage": 0.0133,
+   "district_coverage": 0.0132,
    "all": {
-    "count": 976,
-    "median_days": 1010,
-    "mean_days": 1352,
-    "min_days": 2,
-    "max_days": 4575,
+    "count": 982,
+    "median_days": 1001,
+    "mean_days": 1345,
+    "min_days": 0,
+    "max_days": 4576,
     "histogram": [
-     38,
-     57,
-     43,
-     103,
+     41,
+     58,
+     44,
+     104,
      159,
      208,
      368
     ]
    },
    "狗": {
-    "count": 691,
-    "median_days": 1555,
-    "mean_days": 1703,
-    "min_days": 4,
-    "max_days": 4575,
+    "count": 694,
+    "median_days": 1535,
+    "mean_days": 1697,
+    "min_days": 0,
+    "max_days": 4576,
     "histogram": [
-     15,
-     22,
+     17,
      21,
-     51,
+     22,
+     52,
      83,
      140,
      359
     ]
    },
    "貓": {
-    "count": 285,
-    "median_days": 407,
-    "mean_days": 503,
-    "min_days": 2,
-    "max_days": 2043,
+    "count": 288,
+    "median_days": 399,
+    "mean_days": 498,
+    "min_days": 1,
+    "max_days": 2044,
     "histogram": [
-     23,
-     35,
+     24,
+     37,
      22,
      52,
      76,
@@ -205,47 +205,47 @@
    "pkid": "17",
    "name": "高雄市",
    "shelters": 2,
-   "district_coverage": 0.1086,
+   "district_coverage": 0.0866,
    "all": {
-    "count": 700,
-    "median_days": 108,
-    "mean_days": 240,
-    "min_days": 1,
-    "max_days": 2320,
+    "count": 670,
+    "median_days": 113,
+    "mean_days": 246,
+    "min_days": 0,
+    "max_days": 2321,
     "histogram": [
-     189,
-     120,
-     120,
-     114,
-     103,
+     163,
+     132,
+     113,
+     83,
+     125,
      49,
      5
     ]
    },
    "狗": {
-    "count": 678,
-    "median_days": 108,
-    "mean_days": 229,
-    "min_days": 4,
-    "max_days": 2320,
+    "count": 647,
+    "median_days": 109,
+    "mean_days": 235,
+    "min_days": 1,
+    "max_days": 2321,
     "histogram": [
-     186,
-     116,
-     118,
-     113,
-     102,
+     159,
+     128,
+     111,
+     82,
+     124,
      38,
      5
     ]
    },
    "貓": {
-    "count": 21,
-    "median_days": 1053,
-    "mean_days": 628,
-    "min_days": 1,
-    "max_days": 1204,
+    "count": 22,
+    "median_days": 756,
+    "mean_days": 600,
+    "min_days": 0,
+    "max_days": 1205,
     "histogram": [
-     3,
+     4,
      3,
      2,
      1,
@@ -256,10 +256,10 @@
    },
    "其他": {
     "count": 1,
-    "median_days": 43,
-    "mean_days": 43,
-    "min_days": 43,
-    "max_days": 43,
+    "median_days": 44,
+    "mean_days": 44,
+    "min_days": 44,
+    "max_days": 44,
     "histogram": [
      0,
      1,
@@ -275,15 +275,15 @@
    "pkid": "16",
    "name": "臺南市",
    "shelters": 2,
-   "district_coverage": 0.1265,
+   "district_coverage": 0.128,
    "all": {
-    "count": 506,
-    "median_days": 156,
-    "mean_days": 470,
-    "min_days": 1,
-    "max_days": 4041,
+    "count": 500,
+    "median_days": 166,
+    "mean_days": 476,
+    "min_days": 0,
+    "max_days": 4042,
     "histogram": [
-     97,
+     91,
      78,
      87,
      70,
@@ -293,13 +293,13 @@
     ]
    },
    "狗": {
-    "count": 438,
-    "median_days": 190,
-    "mean_days": 496,
-    "min_days": 1,
-    "max_days": 4041,
+    "count": 431,
+    "median_days": 193,
+    "mean_days": 505,
+    "min_days": 0,
+    "max_days": 4042,
     "histogram": [
-     88,
+     81,
      59,
      66,
      66,
@@ -310,10 +310,10 @@
    },
    "貓": {
     "count": 66,
-    "median_days": 98,
-    "mean_days": 304,
-    "min_days": 1,
-    "max_days": 2240,
+    "median_days": 99,
+    "mean_days": 305,
+    "min_days": 2,
+    "max_days": 2241,
     "histogram": [
      8,
      19,
@@ -325,13 +325,13 @@
     ]
    },
    "其他": {
-    "count": 2,
-    "median_days": 214,
-    "mean_days": 214,
+    "count": 3,
+    "median_days": 2,
+    "mean_days": 144,
     "min_days": 1,
-    "max_days": 428,
+    "max_days": 429,
     "histogram": [
-     1,
+     2,
      0,
      0,
      0,
@@ -345,31 +345,31 @@
    "pkid": "6",
    "name": "桃園市",
    "shelters": 1,
-   "district_coverage": 0.0446,
+   "district_coverage": 0.0444,
    "all": {
-    "count": 493,
-    "median_days": 1792,
-    "mean_days": 1738,
-    "min_days": 0,
-    "max_days": 3527,
+    "count": 496,
+    "median_days": 1772,
+    "mean_days": 1727,
+    "min_days": 1,
+    "max_days": 3528,
     "histogram": [
-     18,
+     22,
      21,
      33,
      25,
      44,
-     72,
+     71,
      280
     ]
    },
    "狗": {
-    "count": 393,
-    "median_days": 2171,
-    "mean_days": 2005,
-    "min_days": 0,
-    "max_days": 3527,
+    "count": 397,
+    "median_days": 2161,
+    "mean_days": 1986,
+    "min_days": 1,
+    "max_days": 3528,
     "histogram": [
-     9,
+     13,
      8,
      15,
      13,
@@ -379,18 +379,18 @@
     ]
    },
    "貓": {
-    "count": 100,
-    "median_days": 306,
+    "count": 99,
+    "median_days": 290,
     "mean_days": 689,
-    "min_days": 0,
-    "max_days": 2633,
+    "min_days": 1,
+    "max_days": 2634,
     "histogram": [
      9,
      13,
      18,
      12,
      14,
-     15,
+     14,
      19
     ]
    },
@@ -415,15 +415,15 @@
    "pkid": "13",
    "name": "雲林縣",
    "shelters": 1,
-   "district_coverage": 0.9525,
+   "district_coverage": 0.9524,
    "all": {
-    "count": 379,
-    "median_days": 1067,
-    "mean_days": 1370,
-    "min_days": 6,
-    "max_days": 3494,
+    "count": 378,
+    "median_days": 1068,
+    "mean_days": 1375,
+    "min_days": 7,
+    "max_days": 3495,
     "histogram": [
-     15,
+     14,
      14,
      23,
      38,
@@ -433,13 +433,13 @@
     ]
    },
    "狗": {
-    "count": 366,
-    "median_days": 1203,
-    "mean_days": 1406,
-    "min_days": 6,
-    "max_days": 3494,
+    "count": 365,
+    "median_days": 1218,
+    "mean_days": 1411,
+    "min_days": 7,
+    "max_days": 3495,
     "histogram": [
-     13,
+     12,
      11,
      22,
      38,
@@ -450,10 +450,10 @@
    },
    "貓": {
     "count": 12,
-    "median_days": 392,
-    "mean_days": 386,
-    "min_days": 6,
-    "max_days": 1002,
+    "median_days": 393,
+    "mean_days": 387,
+    "min_days": 7,
+    "max_days": 1003,
     "histogram": [
      2,
      2,
@@ -466,10 +466,10 @@
    },
    "其他": {
     "count": 1,
-    "median_days": 85,
-    "mean_days": 85,
-    "min_days": 85,
-    "max_days": 85,
+    "median_days": 86,
+    "mean_days": 86,
+    "min_days": 86,
+    "max_days": 86,
     "histogram": [
      0,
      1,
@@ -485,17 +485,17 @@
    "pkid": "11",
    "name": "彰化縣",
    "shelters": 2,
-   "district_coverage": 0.0114,
+   "district_coverage": 0.0116,
    "all": {
-    "count": 351,
-    "median_days": 84,
-    "mean_days": 277,
+    "count": 345,
+    "median_days": 93,
+    "mean_days": 281,
     "min_days": 0,
-    "max_days": 1536,
+    "max_days": 1537,
     "histogram": [
-     58,
-     118,
-     34,
+     62,
+     110,
+     32,
      46,
      56,
      30,
@@ -503,15 +503,15 @@
     ]
    },
    "狗": {
-    "count": 342,
-    "median_days": 100,
-    "mean_days": 280,
+    "count": 333,
+    "median_days": 107,
+    "mean_days": 287,
     "min_days": 0,
-    "max_days": 1536,
+    "max_days": 1537,
     "histogram": [
-     53,
-     115,
-     34,
+     54,
+     107,
+     32,
      46,
      56,
      29,
@@ -519,13 +519,13 @@
     ]
    },
    "貓": {
-    "count": 9,
-    "median_days": 28,
-    "mean_days": 152,
-    "min_days": 6,
-    "max_days": 1151,
+    "count": 12,
+    "median_days": 21,
+    "mean_days": 115,
+    "min_days": 0,
+    "max_days": 1152,
     "histogram": [
-     5,
+     8,
      3,
      0,
      0,
@@ -555,45 +555,45 @@
    "pkid": "12",
    "name": "南投縣",
    "shelters": 1,
-   "district_coverage": 0.4866,
+   "district_coverage": 0.4851,
    "all": {
-    "count": 337,
-    "median_days": 889,
-    "mean_days": 1517,
-    "min_days": 1,
-    "max_days": 4271,
+    "count": 336,
+    "median_days": 888,
+    "mean_days": 1514,
+    "min_days": 0,
+    "max_days": 4272,
     "histogram": [
-     50,
-     12,
-     28,
+     53,
+     10,
+     27,
      26,
      38,
      43,
-     140
+     139
     ]
    },
    "狗": {
-    "count": 289,
+    "count": 288,
     "median_days": 1241,
-    "mean_days": 1736,
-    "min_days": 1,
-    "max_days": 4271,
+    "mean_days": 1733,
+    "min_days": 0,
+    "max_days": 4272,
     "histogram": [
-     30,
-     8,
-     17,
+     33,
+     6,
+     16,
      22,
      31,
      41,
-     140
+     139
     ]
    },
    "貓": {
     "count": 48,
-    "median_days": 102,
-    "mean_days": 198,
-    "min_days": 2,
-    "max_days": 1302,
+    "median_days": 103,
+    "mean_days": 199,
+    "min_days": 3,
+    "max_days": 1303,
     "histogram": [
      20,
      4,
@@ -628,42 +628,42 @@
    "district_coverage": 0.0195,
    "all": {
     "count": 308,
-    "median_days": 912,
-    "mean_days": 974,
-    "min_days": 7,
-    "max_days": 3556,
+    "median_days": 913,
+    "mean_days": 975,
+    "min_days": 8,
+    "max_days": 3557,
     "histogram": [
      7,
      13,
      18,
-     23,
-     58,
+     21,
+     60,
      118,
      71
     ]
    },
    "狗": {
     "count": 295,
-    "median_days": 926,
-    "mean_days": 1014,
-    "min_days": 7,
-    "max_days": 3556,
+    "median_days": 927,
+    "mean_days": 1015,
+    "min_days": 8,
+    "max_days": 3557,
     "histogram": [
      2,
      8,
      15,
-     23,
-     58,
+     21,
+     60,
      118,
      71
     ]
    },
    "貓": {
     "count": 11,
-    "median_days": 51,
-    "mean_days": 52,
-    "min_days": 19,
-    "max_days": 101,
+    "median_days": 52,
+    "mean_days": 53,
+    "min_days": 20,
+    "max_days": 102,
     "histogram": [
      4,
      5,
@@ -676,10 +676,10 @@
    },
    "其他": {
     "count": 2,
-    "median_days": 89,
+    "median_days": 90,
     "mean_days": 90,
-    "min_days": 10,
-    "max_days": 169,
+    "min_days": 11,
+    "max_days": 170,
     "histogram": [
      1,
      0,
@@ -695,15 +695,15 @@
    "pkid": "22",
    "name": "金門縣",
    "shelters": 1,
-   "district_coverage": 0.4122,
+   "district_coverage": 0.4498,
    "all": {
-    "count": 245,
-    "median_days": 890,
-    "mean_days": 923,
-    "min_days": 16,
-    "max_days": 3510,
+    "count": 249,
+    "median_days": 864,
+    "mean_days": 909,
+    "min_days": 14,
+    "max_days": 3511,
     "histogram": [
-     20,
+     24,
      21,
      17,
      16,
@@ -714,10 +714,10 @@
    },
    "狗": {
     "count": 169,
-    "median_days": 1127,
-    "mean_days": 1151,
-    "min_days": 16,
-    "max_days": 3510,
+    "median_days": 1128,
+    "mean_days": 1152,
+    "min_days": 17,
+    "max_days": 3511,
     "histogram": [
      2,
      8,
@@ -729,13 +729,13 @@
     ]
    },
    "貓": {
-    "count": 76,
-    "median_days": 157,
-    "mean_days": 414,
-    "min_days": 16,
-    "max_days": 1294,
+    "count": 80,
+    "median_days": 100,
+    "mean_days": 395,
+    "min_days": 14,
+    "max_days": 1295,
     "histogram": [
-     18,
+     22,
      13,
      9,
      4,
@@ -768,13 +768,13 @@
    "district_coverage": 0.0042,
    "all": {
     "count": 237,
-    "median_days": 184,
-    "mean_days": 294,
+    "median_days": 185,
+    "mean_days": 295,
     "min_days": 1,
-    "max_days": 2050,
+    "max_days": 2051,
     "histogram": [
-     36,
-     38,
+     35,
+     39,
      44,
      60,
      33,
@@ -783,14 +783,14 @@
     ]
    },
    "狗": {
-    "count": 187,
-    "median_days": 192,
-    "mean_days": 279,
-    "min_days": 1,
-    "max_days": 2050,
+    "count": 186,
+    "median_days": 194,
+    "mean_days": 282,
+    "min_days": 2,
+    "max_days": 2051,
     "histogram": [
-     18,
-     35,
+     16,
+     36,
      39,
      59,
      21,
@@ -799,13 +799,13 @@
     ]
    },
    "貓": {
-    "count": 49,
-    "median_days": 169,
-    "mean_days": 355,
+    "count": 50,
+    "median_days": 170,
+    "mean_days": 349,
     "min_days": 1,
-    "max_days": 1067,
+    "max_days": 1068,
     "histogram": [
-     18,
+     19,
      2,
      5,
      1,
@@ -816,10 +816,10 @@
    },
    "其他": {
     "count": 1,
-    "median_days": 36,
-    "mean_days": 36,
-    "min_days": 36,
-    "max_days": 36,
+    "median_days": 37,
+    "mean_days": 37,
+    "min_days": 37,
+    "max_days": 37,
     "histogram": [
      0,
      1,
@@ -835,34 +835,34 @@
    "pkid": "9",
    "name": "苗栗縣",
    "shelters": 2,
-   "district_coverage": 0.8177,
+   "district_coverage": 0.7947,
    "all": {
-    "count": 181,
-    "median_days": 281,
-    "mean_days": 465,
-    "min_days": 0,
-    "max_days": 1421,
+    "count": 190,
+    "median_days": 276,
+    "mean_days": 442,
+    "min_days": 1,
+    "max_days": 1422,
     "histogram": [
-     16,
+     26,
      33,
      24,
-     22,
+     21,
      37,
      49,
      0
     ]
    },
    "狗": {
-    "count": 131,
-    "median_days": 274,
-    "mean_days": 402,
-    "min_days": 0,
-    "max_days": 1408,
+    "count": 140,
+    "median_days": 244,
+    "mean_days": 375,
+    "min_days": 1,
+    "max_days": 1409,
     "histogram": [
-     15,
+     25,
      23,
      18,
-     22,
+     21,
      25,
      28,
      0
@@ -870,10 +870,10 @@
    },
    "貓": {
     "count": 50,
-    "median_days": 488,
-    "mean_days": 629,
-    "min_days": 12,
-    "max_days": 1421,
+    "median_days": 489,
+    "mean_days": 630,
+    "min_days": 13,
+    "max_days": 1422,
     "histogram": [
      1,
      10,
@@ -908,13 +908,13 @@
    "district_coverage": 0.05,
    "all": {
     "count": 160,
-    "median_days": 121,
-    "mean_days": 369,
+    "median_days": 122,
+    "mean_days": 370,
     "min_days": 1,
-    "max_days": 3009,
+    "max_days": 3010,
     "histogram": [
-     26,
-     31,
+     25,
+     32,
      32,
      29,
      18,
@@ -923,15 +923,15 @@
     ]
    },
    "狗": {
-    "count": 102,
-    "median_days": 250,
-    "mean_days": 511,
+    "count": 103,
+    "median_days": 237,
+    "mean_days": 507,
     "min_days": 1,
-    "max_days": 3009,
+    "max_days": 3010,
     "histogram": [
      15,
      14,
-     11,
+     12,
      22,
      17,
      12,
@@ -939,88 +939,18 @@
     ]
    },
    "貓": {
-    "count": 58,
-    "median_days": 93,
-    "mean_days": 120,
+    "count": 57,
+    "median_days": 94,
+    "mean_days": 121,
     "min_days": 3,
-    "max_days": 764,
+    "max_days": 765,
     "histogram": [
-     11,
-     17,
-     21,
-     7,
-     1,
-     1,
-     0
-    ]
-   },
-   "其他": {
-    "count": 0,
-    "median_days": null,
-    "mean_days": null,
-    "min_days": null,
-    "max_days": null,
-    "histogram": [
-     0,
-     0,
-     0,
-     0,
-     0,
-     0,
-     0
-    ]
-   }
-  },
-  {
-   "pkid": "19",
-   "name": "花蓮縣",
-   "shelters": 1,
-   "district_coverage": 0.0405,
-   "all": {
-    "count": 148,
-    "median_days": 259,
-    "mean_days": 465,
-    "min_days": 12,
-    "max_days": 2140,
-    "histogram": [
-     7,
+     10,
+     18,
      20,
-     27,
-     33,
-     24,
-     33,
-     4
-    ]
-   },
-   "狗": {
-    "count": 120,
-    "median_days": 288,
-    "mean_days": 515,
-    "min_days": 12,
-    "max_days": 2140,
-    "histogram": [
-     5,
-     11,
-     21,
-     29,
-     19,
-     31,
-     4
-    ]
-   },
-   "貓": {
-    "count": 28,
-    "median_days": 124,
-    "mean_days": 250,
-    "min_days": 23,
-    "max_days": 1240,
-    "histogram": [
-     2,
-     9,
-     6,
-     4,
-     5,
-     2,
+     7,
+     1,
+     1,
      0
     ]
    },
@@ -1047,14 +977,14 @@
    "shelters": 1,
    "district_coverage": 0.0,
    "all": {
-    "count": 147,
-    "median_days": 1584,
-    "mean_days": 1488,
-    "min_days": 0,
-    "max_days": 4097,
+    "count": 148,
+    "median_days": 1567,
+    "mean_days": 1478,
+    "min_days": 1,
+    "max_days": 4098,
     "histogram": [
-     12,
-     20,
+     14,
+     19,
      7,
      6,
      9,
@@ -1063,14 +993,14 @@
     ]
    },
    "狗": {
-    "count": 130,
-    "median_days": 1651,
-    "mean_days": 1667,
-    "min_days": 0,
-    "max_days": 4097,
+    "count": 131,
+    "median_days": 1645,
+    "mean_days": 1655,
+    "min_days": 1,
+    "max_days": 4098,
     "histogram": [
-     7,
-     14,
+     9,
+     13,
      5,
      4,
      7,
@@ -1080,10 +1010,10 @@
    },
    "貓": {
     "count": 13,
-    "median_days": 86,
-    "mean_days": 151,
-    "min_days": 2,
-    "max_days": 444,
+    "median_days": 87,
+    "mean_days": 152,
+    "min_days": 3,
+    "max_days": 445,
     "histogram": [
      2,
      5,
@@ -1096,13 +1026,83 @@
    },
    "其他": {
     "count": 4,
-    "median_days": 22,
-    "mean_days": 22,
-    "min_days": 13,
-    "max_days": 31,
+    "median_days": 23,
+    "mean_days": 23,
+    "min_days": 14,
+    "max_days": 32,
     "histogram": [
      3,
      1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "pkid": "19",
+   "name": "花蓮縣",
+   "shelters": 1,
+   "district_coverage": 0.0408,
+   "all": {
+    "count": 147,
+    "median_days": 266,
+    "mean_days": 469,
+    "min_days": 13,
+    "max_days": 2141,
+    "histogram": [
+     7,
+     19,
+     27,
+     33,
+     24,
+     33,
+     4
+    ]
+   },
+   "狗": {
+    "count": 119,
+    "median_days": 289,
+    "mean_days": 520,
+    "min_days": 13,
+    "max_days": 2141,
+    "histogram": [
+     5,
+     10,
+     21,
+     29,
+     19,
+     31,
+     4
+    ]
+   },
+   "貓": {
+    "count": 28,
+    "median_days": 125,
+    "mean_days": 251,
+    "min_days": 24,
+    "max_days": 1241,
+    "histogram": [
+     2,
+     9,
+     6,
+     4,
+     5,
+     2,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
      0,
      0,
      0,
@@ -1118,10 +1118,10 @@
    "district_coverage": 0.0682,
    "all": {
     "count": 132,
-    "median_days": 885,
-    "mean_days": 923,
+    "median_days": 886,
+    "mean_days": 924,
     "min_days": 1,
-    "max_days": 2592,
+    "max_days": 2593,
     "histogram": [
      23,
      6,
@@ -1133,13 +1133,13 @@
     ]
    },
    "狗": {
-    "count": 102,
-    "median_days": 1070,
-    "mean_days": 1091,
+    "count": 103,
+    "median_days": 1060,
+    "mean_days": 1082,
     "min_days": 1,
-    "max_days": 2592,
+    "max_days": 2593,
     "histogram": [
-     7,
+     8,
      4,
      2,
      2,
@@ -1149,13 +1149,13 @@
     ]
    },
    "貓": {
-    "count": 30,
-    "median_days": 27,
-    "mean_days": 351,
-    "min_days": 3,
-    "max_days": 1197,
+    "count": 29,
+    "median_days": 28,
+    "mean_days": 364,
+    "min_days": 4,
+    "max_days": 1198,
     "histogram": [
-     16,
+     15,
      2,
      0,
      1,
@@ -1182,18 +1182,158 @@
    }
   },
   {
+   "pkid": "20",
+   "name": "臺東縣",
+   "shelters": 1,
+   "district_coverage": 0.0789,
+   "all": {
+    "count": 76,
+    "median_days": 69,
+    "mean_days": 486,
+    "min_days": 0,
+    "max_days": 3103,
+    "histogram": [
+     35,
+     5,
+     2,
+     10,
+     4,
+     11,
+     9
+    ]
+   },
+   "狗": {
+    "count": 59,
+    "median_days": 32,
+    "mean_days": 515,
+    "min_days": 0,
+    "max_days": 3103,
+    "histogram": [
+     29,
+     3,
+     1,
+     10,
+     1,
+     6,
+     9
+    ]
+   },
+   "貓": {
+    "count": 17,
+    "median_days": 175,
+    "mean_days": 383,
+    "min_days": 3,
+    "max_days": 1068,
+    "histogram": [
+     6,
+     2,
+     1,
+     0,
+     3,
+     5,
+     0
+    ]
+   },
+   "其他": {
+    "count": 0,
+    "median_days": null,
+    "mean_days": null,
+    "min_days": null,
+    "max_days": null,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "pkid": "18",
+   "name": "屏東縣",
+   "shelters": 1,
+   "district_coverage": 0.2603,
+   "all": {
+    "count": 73,
+    "median_days": 1555,
+    "mean_days": 1847,
+    "min_days": 207,
+    "max_days": 2937,
+    "histogram": [
+     0,
+     0,
+     0,
+     2,
+     2,
+     29,
+     40
+    ]
+   },
+   "狗": {
+    "count": 71,
+    "median_days": 1782,
+    "mean_days": 1876,
+    "min_days": 207,
+    "max_days": 2937,
+    "histogram": [
+     0,
+     0,
+     0,
+     2,
+     1,
+     28,
+     40
+    ]
+   },
+   "貓": {
+    "count": 1,
+    "median_days": 1003,
+    "mean_days": 1003,
+    "min_days": 1003,
+    "max_days": 1003,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ]
+   },
+   "其他": {
+    "count": 1,
+    "median_days": 594,
+    "mean_days": 594,
+    "min_days": 594,
+    "max_days": 594,
+    "histogram": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0
+    ]
+   }
+  },
+  {
    "pkid": "10",
    "name": "臺中市",
    "shelters": 2,
-   "district_coverage": 0.027,
+   "district_coverage": 0.0282,
    "all": {
-    "count": 74,
-    "median_days": 419,
-    "mean_days": 470,
-    "min_days": 9,
-    "max_days": 1942,
+    "count": 71,
+    "median_days": 430,
+    "mean_days": 490,
+    "min_days": 10,
+    "max_days": 1943,
     "histogram": [
-     7,
+     4,
      14,
      5,
      8,
@@ -1203,13 +1343,13 @@
     ]
    },
    "狗": {
-    "count": 62,
-    "median_days": 419,
-    "mean_days": 461,
-    "min_days": 9,
-    "max_days": 1942,
+    "count": 59,
+    "median_days": 430,
+    "mean_days": 485,
+    "min_days": 10,
+    "max_days": 1943,
     "histogram": [
-     7,
+     4,
      11,
      3,
      7,
@@ -1220,10 +1360,10 @@
    },
    "貓": {
     "count": 12,
-    "median_days": 318,
-    "mean_days": 516,
-    "min_days": 40,
-    "max_days": 1479,
+    "median_days": 319,
+    "mean_days": 517,
+    "min_days": 41,
+    "max_days": 1480,
     "histogram": [
      0,
      3,
@@ -1252,156 +1392,16 @@
    }
   },
   {
-   "pkid": "18",
-   "name": "屏東縣",
-   "shelters": 1,
-   "district_coverage": 0.2603,
-   "all": {
-    "count": 73,
-    "median_days": 1554,
-    "mean_days": 1846,
-    "min_days": 206,
-    "max_days": 2936,
-    "histogram": [
-     0,
-     0,
-     0,
-     2,
-     2,
-     29,
-     40
-    ]
-   },
-   "狗": {
-    "count": 71,
-    "median_days": 1781,
-    "mean_days": 1875,
-    "min_days": 206,
-    "max_days": 2936,
-    "histogram": [
-     0,
-     0,
-     0,
-     2,
-     1,
-     28,
-     40
-    ]
-   },
-   "貓": {
-    "count": 1,
-    "median_days": 1002,
-    "mean_days": 1002,
-    "min_days": 1002,
-    "max_days": 1002,
-    "histogram": [
-     0,
-     0,
-     0,
-     0,
-     0,
-     1,
-     0
-    ]
-   },
-   "其他": {
-    "count": 1,
-    "median_days": 593,
-    "mean_days": 593,
-    "min_days": 593,
-    "max_days": 593,
-    "histogram": [
-     0,
-     0,
-     0,
-     0,
-     1,
-     0,
-     0
-    ]
-   }
-  },
-  {
-   "pkid": "20",
-   "name": "臺東縣",
-   "shelters": 1,
-   "district_coverage": 0.0972,
-   "all": {
-    "count": 72,
-    "median_days": 174,
-    "mean_days": 548,
-    "min_days": 1,
-    "max_days": 3102,
-    "histogram": [
-     30,
-     5,
-     2,
-     10,
-     4,
-     11,
-     10
-    ]
-   },
-   "狗": {
-    "count": 54,
-    "median_days": 182,
-    "mean_days": 611,
-    "min_days": 1,
-    "max_days": 3102,
-    "histogram": [
-     23,
-     3,
-     1,
-     10,
-     1,
-     6,
-     10
-    ]
-   },
-   "貓": {
-    "count": 18,
-    "median_days": 129,
-    "mean_days": 361,
-    "min_days": 2,
-    "max_days": 1067,
-    "histogram": [
-     7,
-     2,
-     1,
-     0,
-     3,
-     5,
-     0
-    ]
-   },
-   "其他": {
-    "count": 0,
-    "median_days": null,
-    "mean_days": null,
-    "min_days": null,
-    "max_days": null,
-    "histogram": [
-     0,
-     0,
-     0,
-     0,
-     0,
-     0,
-     0
-    ]
-   }
-  },
-  {
    "pkid": "23",
    "name": "連江縣",
    "shelters": 2,
    "district_coverage": 0.0656,
    "all": {
     "count": 61,
-    "median_days": 862,
-    "mean_days": 1231,
-    "min_days": 143,
-    "max_days": 3089,
+    "median_days": 863,
+    "mean_days": 1232,
+    "min_days": 144,
+    "max_days": 3090,
     "histogram": [
      0,
      0,
@@ -1414,10 +1414,10 @@
    },
    "狗": {
     "count": 57,
-    "median_days": 862,
-    "mean_days": 1258,
-    "min_days": 143,
-    "max_days": 3089,
+    "median_days": 863,
+    "mean_days": 1259,
+    "min_days": 144,
+    "max_days": 3090,
     "histogram": [
      0,
      0,
@@ -1430,10 +1430,10 @@
    },
    "貓": {
     "count": 4,
-    "median_days": 803,
-    "mean_days": 853,
-    "min_days": 447,
-    "max_days": 1359,
+    "median_days": 804,
+    "mean_days": 854,
+    "min_days": 448,
+    "max_days": 1360,
     "histogram": [
      0,
      0,
@@ -1468,10 +1468,10 @@
    "district_coverage": 0.0,
    "all": {
     "count": 24,
-    "median_days": 147,
-    "mean_days": 299,
-    "min_days": 21,
-    "max_days": 1116,
+    "median_days": 148,
+    "mean_days": 300,
+    "min_days": 22,
+    "max_days": 1117,
     "histogram": [
      1,
      3,
@@ -1484,10 +1484,10 @@
    },
    "狗": {
     "count": 22,
-    "median_days": 147,
-    "mean_days": 308,
-    "min_days": 21,
-    "max_days": 1116,
+    "median_days": 148,
+    "mean_days": 309,
+    "min_days": 22,
+    "max_days": 1117,
     "histogram": [
      1,
      3,
@@ -1500,10 +1500,10 @@
    },
    "貓": {
     "count": 2,
-    "median_days": 204,
-    "mean_days": 204,
-    "min_days": 125,
-    "max_days": 283,
+    "median_days": 205,
+    "mean_days": 205,
+    "min_days": 126,
+    "max_days": 284,
     "histogram": [
      0,
      0,
@@ -1538,10 +1538,10 @@
    "district_coverage": 0.0833,
    "all": {
     "count": 12,
-    "median_days": 260,
-    "mean_days": 382,
-    "min_days": 22,
-    "max_days": 1387,
+    "median_days": 261,
+    "mean_days": 384,
+    "min_days": 23,
+    "max_days": 1388,
     "histogram": [
      1,
      1,
@@ -1554,10 +1554,10 @@
    },
    "狗": {
     "count": 12,
-    "median_days": 260,
-    "mean_days": 382,
-    "min_days": 22,
-    "max_days": 1387,
+    "median_days": 261,
+    "mean_days": 384,
+    "min_days": 23,
+    "max_days": 1388,
     "histogram": [
      1,
      1,
