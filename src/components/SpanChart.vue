@@ -141,7 +141,7 @@ function width(from: number, to: number): string {
 .spanchart {
   --lab: 9rem;
   --fig: 4rem;
-  --aside: 3rem;
+  --aside: 3.6rem;
 
   &.wide {
     --lab: 12rem;

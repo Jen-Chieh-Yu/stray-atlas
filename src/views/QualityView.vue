@@ -19,7 +19,12 @@ import { RouterLink } from 'vue-router'
 import LucideIcon from '@/components/LucideIcon.vue'
 import PageHead from '@/components/PageHead.vue'
 import { fetchMeta, fetchQuality } from '@/composables/useAtlasData'
-import type { MetaPayload, QualityPayload, QualityRow } from '@/types'
+import type {
+  MetaPayload,
+  QualityPayload,
+  QualityRow,
+  SterilizationShare,
+} from '@/types'
 
 const quality = ref<QualityPayload | null>(null)
 const meta = ref<MetaPayload | null>(null)
@@ -114,6 +119,12 @@ const varietyTop = computed(() => quality.value?.spellings.variety[0]?.count ?? 
 const sterilization = computed(() => quality.value?.spellings.sterilization_by_county ?? [])
 const sterilizationTop = computed(() => sterilization.value.slice(0, 8))
 const sterilizationLowest = computed(() => sterilization.value[sterilization.value.length - 1])
+
+/** The row being pointed at or focused. The readout below the list shows it,
+ *  rather than a floating tooltip: a tooltip puts these three figures behind
+ *  a hover, and a hover is something a phone does not have. Keyboard focus
+ *  drives the same readout, so the numbers are reachable by tab as well. */
+const sterilizationActive = ref<SterilizationShare | null>(null)
 
 function grades(row: QualityRow, key: string): string {
   return row.grades[key] ?? 'na'
@@ -450,7 +461,16 @@ function grades(row: QualityRow, key: string): string {
 
         <h3 class="subhead">絕育欄位：填 N（未知或不適用）比例最高的八個縣市</h3>
         <ul class="stackrows">
-          <li v-for="item in sterilizationTop" :key="item.pkid">
+          <li
+            v-for="item in sterilizationTop"
+            :key="item.pkid"
+            tabindex="0"
+            :class="{ on: sterilizationActive?.pkid === item.pkid }"
+            @mouseenter="sterilizationActive = item"
+            @mouseleave="sterilizationActive = null"
+            @focus="sterilizationActive = item"
+            @blur="sterilizationActive = null"
+          >
             <span class="cn">{{ item.name }}</span>
             <span class="stack">
               <i class="t" :style="{ width: pct(item.T) }"></i>
@@ -460,6 +480,26 @@ function grades(row: QualityRow, key: string): string {
             <b>{{ pct(item.N) }}</b>
           </li>
         </ul>
+        <p class="readout" aria-live="polite">
+          <template v-if="sterilizationActive">
+            <b>{{ sterilizationActive.name }}</b>
+            <span class="r t">
+              T 已絕育 {{ pct(sterilizationActive.T) }}（{{ count(sterilizationActive.T_n) }} 隻）
+            </span>
+            <span class="r f">
+              F 未絕育 {{ pct(sterilizationActive.F) }}（{{ count(sterilizationActive.F_n) }} 隻）
+            </span>
+            <span class="r u">
+              N 未知／不適用 {{ pct(sterilizationActive.N) }}（{{
+                count(sterilizationActive.N_n)
+              }} 隻）
+            </span>
+            <span class="r total">共 {{ count(sterilizationActive.rows) }} 隻</span>
+          </template>
+          <template v-else>
+            <span class="hint">滑過或用鍵盤選取任一列，看該縣市三類的比例與隻數。</span>
+          </template>
+        </p>
         <div class="legend">
           <span class="k"><i class="sw-t"></i>T 已絕育</span>
           <span class="k"><i class="sw-f"></i>F 未絕育</span>
@@ -1032,8 +1072,19 @@ td.num {
     display: flex;
     align-items: center;
     gap: 0.8rem;
-    padding: 0.28rem 0;
+    padding: 0.28rem 0.4rem;
+    border-radius: var(--radius-sm);
     font-size: 0.86rem;
+    cursor: default;
+
+    &.on {
+      background: var(--surface-sunk);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--ramp-4);
+      outline-offset: 1px;
+    }
   }
 
   & .cn {
@@ -1067,6 +1118,60 @@ td.num {
   & .u {
     background: var(--no-data);
     box-shadow: inset 0 0 0 1px var(--hairline);
+  }
+}
+
+
+/* The readout sits in the flow with a fixed height, so pointing at a row
+   moves nothing on the page. */
+.readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1.1rem;
+  min-height: 2.4rem;
+  margin: 0.5rem 0 0;
+  padding: 0.5rem 0.4rem;
+  border-top: 1px solid var(--hairline);
+  color: var(--ink-secondary);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+
+  & b {
+    font-weight: 500;
+  }
+
+  & .r {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    &::before {
+      content: '';
+      width: 12px;
+      height: 8px;
+      border-radius: 2px;
+    }
+  }
+
+  & .t::before {
+    background: var(--ramp-2);
+  }
+
+  & .f::before {
+    background: var(--ramp-5);
+  }
+
+  & .u::before {
+    background: var(--no-data);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+  }
+
+  & .total::before {
+    display: none;
+  }
+
+  & .hint {
+    color: var(--ink-muted);
   }
 }
 

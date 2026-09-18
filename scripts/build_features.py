@@ -88,11 +88,20 @@ def quantile(values: list[int], fraction: float) -> int | None:
 
 def summarise(rows: list[dict]) -> dict:
     days = [row["days_in_shelter"] for row in rows if row["days_in_shelter"] is not None]
+    p25 = quantile(days, 0.25)
+    p75 = quantile(days, 0.75)
     return {
         "n": len(rows),
-        "p25_days": quantile(days, 0.25),
+        "p25_days": p25,
         "median_days": quantile(days, 0.50),
-        "p75_days": quantile(days, 0.75),
+        "p75_days": p75,
+        # Spread as P75/P25 rather than P75-P25. On a log axis the length of
+        # a quartile range already IS the ratio, so the difference in days
+        # would contradict the picture: it makes any group with a large
+        # median look more spread out whether or not it is. The ratio is
+        # also the comparable one across groups whose medians differ by an
+        # order of magnitude, which here they do.
+        "iqr_ratio": round(p75 / p25, 2) if p25 else None,
         "small_sample": len(rows) < SMALL_GROUP,
     }
 
@@ -258,8 +267,10 @@ def main() -> int:
         print(f"\n{group['title']}")
         for item in group["items"]:
             flag = " (small)" if item["small_sample"] else ""
+            ratio = "—" if item["iqr_ratio"] is None else f"{item['iqr_ratio']:.1f}x"
             print(f"  {item['label']:<14}{item['n']:>6}  "
-                  f"{item['p25_days']:>6}–{item['median_days']:>6}–{item['p75_days']:>6}{flag}")
+                  f"{item['p25_days']:>6}–{item['median_days']:>6}–{item['p75_days']:>6}"
+                  f"{ratio:>8}{flag}")
 
     coat = payload["dark_coat"]
     print(f"\ndark coat: {coat['shelters_dark_longer']}/{coat['shelters_compared']} shelters, "

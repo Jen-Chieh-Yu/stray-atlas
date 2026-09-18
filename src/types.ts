@@ -265,10 +265,15 @@ export interface SterilizationShare {
   pkid: string
   name: string
   rows: number
-  /** Shares of the county's rows, not counts. N is 未知／不適用. */
+  /** Shares of the county's rows. N is 未知／不適用. */
   T: number
   F: number
   N: number
+  /** The same three as counts, read out when a row is pointed at: a share
+   *  alone cannot say whether it rests on 900 animals or 12. */
+  T_n: number
+  F_n: number
+  N_n: number
 }
 
 export interface QualityPayload {
@@ -298,6 +303,10 @@ export interface FeatureItem {
   p25_days: number
   median_days: number
   p75_days: number
+  /** P75 / P25. Spread as a ratio, because on the log axis the drawn length
+   *  of the quartile range is that ratio — a difference in days would
+   *  contradict the picture. null when P25 is 0. */
+  iqr_ratio: number | null
   /** n below the payload's small_sample_below. Drawn, but flagged. */
   small_sample: boolean
 }

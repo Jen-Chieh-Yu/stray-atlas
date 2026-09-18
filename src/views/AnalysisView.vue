@@ -81,7 +81,13 @@ const featureGroups = computed(() =>
         label: item.label,
         // Small groups are drawn, not hidden, but the reader is told which
         // ones move when a single animal leaves.
-        flag: item.small_sample ? `${formatCount(item.n)} 隻` : undefined,
+        flag: item.small_sample ? '樣本少' : undefined,
+        // The legend already says the line runs P25 to P75, so the numbers
+        // go under the label without repeating the labels themselves —
+        // spelling them out here wraps the column onto a second line.
+        sub: `${formatCount(item.n)} 隻 · ${formatCount(item.p25_days)}–${formatCount(
+          item.p75_days,
+        )} 天`,
         start: item.p25_days,
         end: item.p75_days,
         dots: [
@@ -92,7 +98,7 @@ const featureGroups = computed(() =>
           },
         ],
         figure: formatCount(item.median_days),
-        aside: item.small_sample ? '' : formatCount(item.n),
+        aside: item.iqr_ratio === null ? '—' : `${item.iqr_ratio.toFixed(1)} 倍`,
       }),
     ),
   })),
@@ -130,6 +136,22 @@ const coatGroups = computed(() => {
       ),
     },
   ]
+})
+
+/** The two ends of the coat grouping and how spread each one is. Used by the
+ *  note to make the point that the coat difference is a shift in level rather
+ *  than in spread — computed, so it cannot become untrue at the next
+ *  snapshot, and it names whichever colours the data puts at the ends. */
+const colourSpread = computed(() => {
+  const group = features.value?.groups.find((item) => item.key === 'dog_colour')
+  const items = (group?.items ?? []).filter((item) => item.iqr_ratio !== null)
+  if (items.length < 2) return null
+  const shortest = items[0]
+  const longest = items[items.length - 1]
+  return {
+    shortest: { label: shortest.label, ratio: (shortest.iqr_ratio as number).toFixed(1) },
+    longest: { label: longest.label, ratio: (longest.iqr_ratio as number).toFixed(1) },
+  }
 })
 
 /** The overall median, drawn across every track in the group chart. Not in
@@ -196,6 +218,22 @@ const bandwidth = computed(() => {
   const value = block.value?.kde[smoothing.value].bandwidth ?? 0
   return scale.value === 'log' ? `${value.toFixed(3)} log₁₀ 天` : `${formatCount(Math.round(value))} 天`
 })
+
+/** All three, not only the one in force. The multipliers are stated in the
+ *  note below the chart; without the values beside them a reader has to
+ *  click through three settings to find out what they mean in days. */
+const bandwidths = computed(() =>
+  SMOOTHINGS.map((option) => {
+    const value = block.value?.kde[option.id].bandwidth ?? 0
+    return {
+      id: option.id,
+      label: option.label,
+      value: scale.value === 'log' ? value.toFixed(3) : formatCount(Math.round(value)),
+    }
+  }),
+)
+
+const bandwidthUnit = computed(() => (scale.value === 'log' ? 'log₁₀ 天' : '天'))
 
 const ecdfSeries = computed(() => {
   if (!data.value) return []
@@ -349,6 +387,15 @@ const shelterRange = computed(() => {
           已套用：<b>{{ labelOf(SCOPES, scope) }} {{ formatCount(current.count) }} 隻</b>
           · {{ scale === 'log' ? '對數軸' : '線性軸' }} · 平滑度
           {{ labelOf(SMOOTHINGS, smoothing) }}（頻寬 <b>{{ bandwidth }}</b>）
+          <!-- All three, in the order of the buttons above, so the reader can
+               see the size of the choice without clicking through it. Here
+               rather than under the pills: every control group is one label
+               and one row of buttons, and an extra line under one of them
+               breaks that rhythm. -->
+          <span class="bwall">
+            三段頻寬（依上方順序）{{ bandwidths.map((item) => item.value).join('／') }}
+            {{ bandwidthUnit }}
+          </span>
         </p>
       </section>
 
@@ -486,7 +533,7 @@ const shelterRange = computed(() => {
           <span class="k dot-solid">實心點：中位數</span>
           <span class="k range">橫線：P25 到 P75</span>
           <span class="k rule">直線：全體中位數</span>
-          <span class="k plain">右欄為中位數（天）與樣本數</span>
+          <span class="k plain">右欄為中位數（天）與 P75／P25 倍數</span>
         </div>
         <div class="note">
           <h3>分組比較的判讀邊界</h3>
@@ -500,9 +547,21 @@ const shelterRange = computed(() => {
             <strong>絕育那一組要反著讀。</strong
             >「已絕育」的中位數比「未絕育」長，最可能的原因是<strong>因果方向相反</strong>——待得越久，越可能在所內完成絕育。它留在圖上是因為刪掉會讓讀者自己在別處算出同一個數字，卻沒有這段提醒。
           </p>
-          <p v-if="features.groups.length">
+          <p>
+            右欄的倍數是 <strong>P75 ÷ P25</strong>，不是兩者相差幾天。<strong
+              >在對數軸上，橫線的長度本來就是這個倍數</strong
+            >——改用天數差會讓中位數大的分組自動看起來比較離散，和圖上看到的相反。<template
+              v-if="colourSpread"
+            >
+              毛色那一組正好可以拿來對照：{{ colourSpread.shortest.label }}是
+              {{ colourSpread.shortest.ratio }} 倍、{{ colourSpread.longest.label }}是
+              {{ colourSpread.longest.ratio }}
+              倍，兩組的離散程度幾乎一樣——毛色的差別是整體往右平移，不是變得更分散。</template
+            >
+          </p>
+          <p>
             樣本不足 {{ formatCount(features.small_sample_below) }}
-            隻的分組會標出隻數：它們照畫，但一隻動物離所就能讓中位數移動好幾週。
+            隻的分組標為「樣本少」：它們照畫，但一隻動物離所就能讓中位數移動好幾週。
           </p>
         </div>
       </section>
@@ -806,6 +865,12 @@ const shelterRange = computed(() => {
     color: var(--accent-text);
     font-weight: 500;
   }
+}
+
+.bwall {
+  display: block;
+  color: var(--ink-muted);
+  font-size: 0.78rem;
 }
 
 .lead {

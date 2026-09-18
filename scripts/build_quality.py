@@ -192,6 +192,9 @@ def build(snapshot_date: str | None) -> dict:
         subset = [row for row in rows if row["animal_area_pkid"] == pkid]
         counts = Counter(row["animal_sterilization"] for row in subset)
         total = len(subset) or 1
+        # Shares to draw with, counts to read out. A share alone cannot say
+        # whether it rests on 900 animals or 12, and the page shows both the
+        # moment a reader points at a row.
         sterilization.append(
             {
                 "pkid": pkid,
@@ -200,6 +203,9 @@ def build(snapshot_date: str | None) -> dict:
                 "T": round(counts.get("T", 0) / total, 4),
                 "F": round(counts.get("F", 0) / total, 4),
                 "N": round(counts.get("N", 0) / total, 4),
+                "T_n": counts.get("T", 0),
+                "F_n": counts.get("F", 0),
+                "N_n": counts.get("N", 0),
             }
         )
     sterilization.sort(key=lambda item: -item["N"])

@@ -1,6 +1,6 @@
 {
  "snapshot_date": "2026-09-17",
- "generated_at_utc": "2026-09-18T01:50:22Z",
+ "generated_at_utc": "2026-09-18T03:03:45Z",
  "axis": {
   "min_days": 20,
   "max_days": 3000,
@@ -29,6 +29,7 @@
   "p25_days": 119,
   "median_days": 351,
   "p75_days": 1259,
+  "iqr_ratio": 10.58,
   "small_sample": false
  },
  "groups": [
@@ -42,6 +43,7 @@
      "p25_days": 20,
      "median_days": 36,
      "p75_days": 85,
+     "iqr_ratio": 4.25,
      "small_sample": true
     },
     {
@@ -50,6 +52,7 @@
      "p25_days": 87,
      "median_days": 198,
      "p75_days": 344,
+     "iqr_ratio": 3.95,
      "small_sample": false
     },
     {
@@ -58,6 +61,7 @@
      "p25_days": 146,
      "median_days": 578,
      "p75_days": 1764,
+     "iqr_ratio": 12.08,
      "small_sample": false
     }
    ]
@@ -72,6 +76,7 @@
      "p25_days": 82,
      "median_days": 206,
      "p75_days": 477,
+     "iqr_ratio": 5.82,
      "small_sample": false
     },
     {
@@ -80,6 +85,7 @@
      "p25_days": 156,
      "median_days": 652,
      "p75_days": 1875,
+     "iqr_ratio": 12.02,
      "small_sample": false
     }
    ]
@@ -94,6 +100,7 @@
      "p25_days": 9,
      "median_days": 121,
      "p75_days": 262,
+     "iqr_ratio": 29.11,
      "small_sample": true
     },
     {
@@ -102,6 +109,7 @@
      "p25_days": 87,
      "median_days": 198,
      "p75_days": 344,
+     "iqr_ratio": 3.95,
      "small_sample": false
     }
    ]
@@ -116,6 +124,7 @@
      "p25_days": 55,
      "median_days": 190,
      "p75_days": 604,
+     "iqr_ratio": 10.98,
      "small_sample": false
     },
     {
@@ -124,6 +133,7 @@
      "p25_days": 125,
      "median_days": 365,
      "p75_days": 1064,
+     "iqr_ratio": 8.51,
      "small_sample": false
     },
     {
@@ -132,6 +142,7 @@
      "p25_days": 154,
      "median_days": 455,
      "p75_days": 1569,
+     "iqr_ratio": 10.19,
      "small_sample": false
     }
    ]
@@ -146,6 +157,7 @@
      "p25_days": 63,
      "median_days": 196,
      "p75_days": 391,
+     "iqr_ratio": 6.21,
      "small_sample": false
     },
     {
@@ -154,6 +166,7 @@
      "p25_days": 144,
      "median_days": 435,
      "p75_days": 1403,
+     "iqr_ratio": 9.74,
      "small_sample": false
     }
    ]
@@ -168,6 +181,7 @@
      "p25_days": 114,
      "median_days": 337,
      "p75_days": 1192,
+     "iqr_ratio": 10.46,
      "small_sample": false
     },
     {
@@ -176,6 +190,7 @@
      "p25_days": 125,
      "median_days": 367,
      "p75_days": 1345,
+     "iqr_ratio": 10.76,
      "small_sample": false
     }
    ]
@@ -190,6 +205,7 @@
      "p25_days": 21,
      "median_days": 79,
      "p75_days": 206,
+     "iqr_ratio": 9.81,
      "small_sample": false
     },
     {
@@ -198,6 +214,7 @@
      "p25_days": 140,
      "median_days": 323,
      "p75_days": 1324,
+     "iqr_ratio": 9.46,
      "small_sample": false
     },
     {
@@ -206,6 +223,7 @@
      "p25_days": 155,
      "median_days": 472,
      "p75_days": 1498,
+     "iqr_ratio": 9.66,
      "small_sample": false
     }
    ]
@@ -220,6 +238,7 @@
      "p25_days": 85,
      "median_days": 282,
      "p75_days": 1111,
+     "iqr_ratio": 13.07,
      "small_sample": false
     },
     {
@@ -228,6 +247,7 @@
      "p25_days": 123,
      "median_days": 412,
      "p75_days": 1324,
+     "iqr_ratio": 10.76,
      "small_sample": false
     },
     {
@@ -236,6 +256,7 @@
      "p25_days": 149,
      "median_days": 416,
      "p75_days": 1130,
+     "iqr_ratio": 7.58,
      "small_sample": false
     },
     {
@@ -244,6 +265,7 @@
      "p25_days": 126,
      "median_days": 551,
      "p75_days": 1174,
+     "iqr_ratio": 9.32,
      "small_sample": false
     },
     {
@@ -252,6 +274,7 @@
      "p25_days": 170,
      "median_days": 631,
      "p75_days": 1609,
+     "iqr_ratio": 9.46,
      "small_sample": false
     },
     {
@@ -260,6 +283,7 @@
      "p25_days": 161,
      "median_days": 702,
      "p75_days": 2120,
+     "iqr_ratio": 13.17,
      "small_sample": false
     },
     {
@@ -268,6 +292,7 @@
      "p25_days": 205,
      "median_days": 862,
      "p75_days": 2022,
+     "iqr_ratio": 9.86,
      "small_sample": false
     },
     {
@@ -276,6 +301,7 @@
      "p25_days": 151,
      "median_days": 902,
      "p75_days": 1962,
+     "iqr_ratio": 12.99,
      "small_sample": false
     }
    ]
@@ -292,6 +318,7 @@
     "p25_days": 165,
     "median_days": 707,
     "p75_days": 2035,
+    "iqr_ratio": 12.33,
     "small_sample": false
    },
    "light": {
@@ -299,6 +326,7 @@
     "p25_days": 125,
     "median_days": 473,
     "p75_days": 1386,
+    "iqr_ratio": 11.09,
     "small_sample": false
    }
   },
