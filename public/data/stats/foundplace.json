@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-09-17",
-  "generated_at_utc": "2026-09-18T01:50:18Z",
-  "rows": 8354,
+  "snapshot_date": "2026-09-18",
+  "generated_at_utc": "2026-09-18T05:51:34Z",
+  "rows": 8333,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5108,
-    "blank": 1015,
-    "district": 1204,
-    "landmark": 911,
+    "landmark": 920,
+    "address": 5093,
+    "blank": 1001,
+    "district": 1203,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1822,
-      "share": 0.2181
+      "rows": 1818,
+      "share": 0.2182
     },
     "low": {
-      "rows": 5394,
-      "share": 0.6457
+      "rows": 5391,
+      "share": 0.6469
     },
     "none": {
-      "rows": 1131,
-      "share": 0.1354
+      "rows": 1117,
+      "share": 0.134
     }
   },
   "county_source": {
-    "text": 192,
-    "shelter": 7031,
-    "none": 1131
+    "text": 191,
+    "shelter": 7025,
+    "none": 1117
   },
   "county_from_text_differs_from_shelter": 11,
   "district": {
-    "extracted": 3029,
-    "verified_against_reference": 3026,
+    "extracted": 3024,
+    "verified_against_reference": 3021,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
-      "樹林區東華街1號4樓之2",
-      "麥寮鄉仁德路",
-      "二崙鄉中山路一段",
-      "鶯歌區二甲路219號",
-      "板橋區文化路"
+      "五股區民義路二段48巷1號",
+      "板橋區板城路465-1號",
+      "三峽區紫微路103號旁",
+      "三芝區中興街",
+      "麥寮鄉仁德路"
     ],
     "low": [
-      "仁德街",
-      "銅鑼鄉樟樹村",
-      "省府路",
-      "中山路",
-      "福北路477巷5弄附近"
+      "溪洲河濱公園",
+      "立賢路",
+      "中社路一段",
+      "德崙路925巷80弄216號",
+      "山腳路一段137號"
     ],
     "none": [
       "民眾不擬續養",
