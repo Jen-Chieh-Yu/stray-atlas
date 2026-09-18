@@ -4,8 +4,10 @@ import type {
   CountyCollection,
   CountyPayload,
   DistributionPayload,
+  FeaturesPayload,
   FoundplacePayload,
   MetaPayload,
+  QualityPayload,
   ShelterPayload,
   ShelterPointPayload,
 } from '@/types'
@@ -84,6 +86,8 @@ let distributionOnce: Promise<DistributionPayload> | null = null
 let pointsOnce: Promise<ShelterPointPayload> | null = null
 let foundplaceOnce: Promise<FoundplacePayload> | null = null
 let metaOnce: Promise<MetaPayload> | null = null
+let qualityOnce: Promise<QualityPayload> | null = null
+let featuresOnce: Promise<FeaturesPayload> | null = null
 
 /** Both files are fetched at most once per visit and shared by every view.
  *  animals.json is 272 KB gzipped for all 8,265 records — more than a single
@@ -146,6 +150,28 @@ export function fetchMeta(): Promise<MetaPayload> {
     return response.json() as Promise<MetaPayload>
   })
   return metaOnce
+}
+
+/** Per-county and per-shelter recording completeness, with the thresholds
+ *  that grade it. The data quality page reads this alongside meta.json: the
+ *  cleaning report is already in meta, so this file carries only what has to
+ *  be computed per county and per shelter. */
+export function fetchQuality(): Promise<QualityPayload> {
+  qualityOnce ??= fetch(dataUrl('stats/quality.json')).then((response) => {
+    if (!response.ok) throw new Error(`quality.json ${response.status}`)
+    return response.json() as Promise<QualityPayload>
+  })
+  return qualityOnce
+}
+
+/** Days in shelter by group, and the coat comparison repeated within each
+ *  shelter. Quantiles only — see scripts/build_features.py for why. */
+export function fetchFeatures(): Promise<FeaturesPayload> {
+  featuresOnce ??= fetch(dataUrl('stats/features.json')).then((response) => {
+    if (!response.ok) throw new Error(`features.json ${response.status}`)
+    return response.json() as Promise<FeaturesPayload>
+  })
+  return featuresOnce
 }
 
 /** Days in the shelter, measured against the snapshot rather than today. */

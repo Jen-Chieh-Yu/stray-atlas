@@ -27,6 +27,9 @@ const NAV: NavItem[] = [
   { to: '/animals', label: '找動物', names: ['animals'] },
   { to: '/shelters', label: '收容所', names: ['shelters', 'shelter'] },
   { to: '/map', label: '縣市地圖', names: ['map'] },
+  // Before 資料分析, not after: the quality page states what the data can
+  // carry, and the analysis page spends it. The order is the argument.
+  { to: '/quality', label: '資料品質', names: ['quality'] },
   { to: '/analysis', label: '資料分析', names: ['analysis'] },
   { to: '/about', label: '關於本站', names: ['about'] },
 ]

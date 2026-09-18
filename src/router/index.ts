@@ -31,6 +31,7 @@ export const router = createRouter({
     { path: '/shelters', name: 'shelters', component: () => import('@/views/ShelterListView.vue') },
     { path: '/shelters/:id', name: 'shelter', component: () => import('@/views/ShelterView.vue') },
     { path: '/map', name: 'map', component: () => import('@/views/MapView.vue') },
+    { path: '/quality', name: 'quality', component: () => import('@/views/QualityView.vue') },
     { path: '/analysis', name: 'analysis', component: () => import('@/views/AnalysisView.vue') },
     { path: '/about', name: 'about', component: () => import('@/views/AboutView.vue') },
     { path: '/:pathMatch(.*)*', redirect: '/' },

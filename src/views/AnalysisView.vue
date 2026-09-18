@@ -8,16 +8,24 @@
  *  quotable figures come from a curve with no bandwidth in it.
  */
 import { computed, onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import DistributionChart from '@/components/DistributionChart.vue'
 import EcdfChart from '@/components/EcdfChart.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
 import PageHead from '@/components/PageHead.vue'
-import { fetchDistribution, fetchFoundplace, useAtlasData } from '@/composables/useAtlasData'
+import SpanChart from '@/components/SpanChart.vue'
+import type { SpanRow } from '@/components/SpanChart.vue'
+import {
+  fetchDistribution,
+  fetchFeatures,
+  fetchFoundplace,
+  useAtlasData,
+} from '@/composables/useAtlasData'
 import { formatCount } from '@/lib/animals'
 import { vReveal } from '@/lib/reveal'
 import type {
   DistributionPayload,
+  FeaturesPayload,
   FoundplacePayload,
   Scale,
   Scope,
@@ -30,6 +38,7 @@ const { stats } = useAtlasData()
 
 const data = ref<DistributionPayload | null>(null)
 const foundplace = ref<FoundplacePayload | null>(null)
+const features = ref<FeaturesPayload | null>(null)
 const error = ref<string | null>(null)
 
 onMounted(async () => {
@@ -39,12 +48,101 @@ onMounted(async () => {
     error.value = cause instanceof Error ? cause.message : String(cause)
   }
   try {
+    features.value = await fetchFeatures()
+  } catch {
+    // The two comparison blocks are left out rather than failing the page:
+    // the distribution above them stands on its own.
+    features.value = null
+  }
+  try {
     foundplace.value = await fetchFoundplace()
   } catch {
     // Only one sentence in the county note reads this; without it the
     // sentence is left out rather than the page failing.
     foundplace.value = null
   }
+})
+
+/* ── The two comparison blocks ────────────────────────────────────────────
+ *
+ * Both are drawn by SpanChart on the axis that ships inside features.json,
+ * so the group ranges and the shelter gaps can be read against each other.
+ * Nothing is computed here beyond reshaping: every number below was decided
+ * in scripts/build_features.py, where the reasoning sits next to it.
+ */
+
+/** One row per group: the quartile range, with the median on it. */
+const featureGroups = computed(() =>
+  (features.value?.groups ?? []).map((group) => ({
+    title: group.title,
+    rows: group.items.map(
+      (item): SpanRow => ({
+        key: `${group.key}-${item.label}`,
+        label: item.label,
+        // Small groups are drawn, not hidden, but the reader is told which
+        // ones move when a single animal leaves.
+        flag: item.small_sample ? `${formatCount(item.n)} 隻` : undefined,
+        start: item.p25_days,
+        end: item.p75_days,
+        dots: [
+          {
+            days: item.median_days,
+            variant: 'solid',
+            title: `${item.label} 中位數 ${formatCount(item.median_days)} 天`,
+          },
+        ],
+        figure: formatCount(item.median_days),
+        aside: item.small_sample ? '' : formatCount(item.n),
+      }),
+    ),
+  })),
+)
+
+/** One row per shelter: the two medians, and the gap between them. */
+const coatGroups = computed(() => {
+  const shelters = features.value?.dark_coat.shelters ?? []
+  if (shelters.length === 0) return []
+  return [
+    {
+      rows: shelters.map(
+        (shelter): SpanRow => ({
+          key: shelter.id,
+          label: shelter.name,
+          sub: `黑 ${formatCount(shelter.dark_n)} · 非黑 ${formatCount(shelter.light_n)}`,
+          start: Math.min(shelter.light_median_days, shelter.dark_median_days),
+          end: Math.max(shelter.light_median_days, shelter.dark_median_days),
+          tone: shelter.difference_days > 0 ? 'up' : 'down',
+          dots: [
+            {
+              days: shelter.light_median_days,
+              variant: 'open',
+              title: `不含黑 中位數 ${formatCount(shelter.light_median_days)} 天`,
+            },
+            {
+              days: shelter.dark_median_days,
+              variant: 'dark',
+              title: `含黑 中位數 ${formatCount(shelter.dark_median_days)} 天`,
+            },
+          ],
+          figure: `${shelter.difference_days > 0 ? '+' : ''}${formatCount(shelter.difference_days)}`,
+          aside: '天',
+        }),
+      ),
+    },
+  ]
+})
+
+/** The overall median, drawn across every track in the group chart. Not in
+ *  the coat chart: there the comparison is within each row, and a national
+ *  line would invite reading rows against the country instead. */
+const featureMarker = computed(() =>
+  features.value ? { days: features.value.overall.median_days, label: '全體中位數' } : null,
+)
+
+const coatAgainst = computed(() => {
+  const coat = features.value?.dark_coat
+  if (!coat) return null
+  return coat.shelters_compared - coat.shelters_dark_longer
 })
 
 /* ── Settings live in the URL, as on the other pages ──────────────────────
@@ -364,6 +462,117 @@ const shelterRange = computed(() => {
         </div>
       </section>
 
+      <section v-if="features" v-reveal class="acard" aria-labelledby="a-groups">
+        <div class="an-head">
+          <h2 id="a-groups">哪些特徵和在所天數有關</h2>
+          <span class="sub">
+            中位數與四分位距 · 全部 {{ formatCount(features.overall.n) }} 隻
+          </span>
+        </div>
+        <p class="lead">
+          每一列是一個分組：實心點是該組的<strong>在所天數中位數</strong>，橫線是 P25 到 P75
+          的範圍。橫軸為對數刻度，因為各組的中位數橫跨兩個數量級，線性軸會把左半邊全部擠在一起。深色直線是全體中位數
+          {{ formatCount(features.overall.median_days) }} 天，用來看哪一組偏向哪一邊。
+        </p>
+        <SpanChart
+          :min-days="features.axis.min_days"
+          :max-days="features.axis.max_days"
+          :ticks="features.axis.ticks"
+          :groups="featureGroups"
+          :marker="featureMarker"
+          caption="各分組的在所天數中位數與四分位距"
+        />
+        <div class="chart-legend">
+          <span class="k dot-solid">實心點：中位數</span>
+          <span class="k range">橫線：P25 到 P75</span>
+          <span class="k rule">直線：全體中位數</span>
+          <span class="k plain">右欄為中位數（天）與樣本數</span>
+        </div>
+        <div class="note">
+          <h3>分組比較的判讀邊界</h3>
+          <p>
+            這裡的每一個數字都是「<strong>目前仍在所</strong>的動物已經待了多久」，不是「這一組要多久才會被認養」。存量快照會系統性地留下待得久的個體，所以所有的值都偏高，而且偏高的幅度各組不同。
+          </p>
+          <p>
+            各組之間<strong>沒有互相控制</strong>：品種犬多為小型、幼體多為近期入所，兩者都會把「品種」的差距灌水。要看控制後的結果，見下一張圖。
+          </p>
+          <p>
+            <strong>絕育那一組要反著讀。</strong
+            >「已絕育」的中位數比「未絕育」長，最可能的原因是<strong>因果方向相反</strong>——待得越久，越可能在所內完成絕育。它留在圖上是因為刪掉會讓讀者自己在別處算出同一個數字，卻沒有這段提醒。
+          </p>
+          <p v-if="features.groups.length">
+            樣本不足 {{ formatCount(features.small_sample_below) }}
+            隻的分組會標出隻數：它們照畫，但一隻動物離所就能讓中位數移動好幾週。
+          </p>
+        </div>
+      </section>
+
+      <section
+        v-if="features && features.dark_coat.shelters.length"
+        v-reveal
+        class="acard"
+        aria-labelledby="a-coat"
+      >
+        <div class="an-head">
+          <h2 id="a-coat">控制收容所之後，深色犬還是待得比較久嗎</h2>
+          <span class="sub">
+            {{ features.dark_coat.shelters_compared }} 間收容所 ·
+            {{ features.dark_coat.rule }}
+          </span>
+        </div>
+        <p class="lead">
+          上一張圖的毛色差距有一個明顯的替代解釋：<strong>深色犬可能只是集中在原本就滯留較久的收容所</strong>。要排除它，就不能比較全國，而要在<strong>同一間收容所之內</strong>比。下圖每一列是一間收容所，空心點是不含黑的犬隻、實心點是含黑的犬隻，兩點之間的線是差距。
+        </p>
+        <div class="tally">
+          <div>
+            <b>{{ features.dark_coat.shelters_dark_longer }} / {{ features.dark_coat.shelters_compared }}</b>
+            <span>間收容所的深色犬中位數較長</span>
+          </div>
+          <div>
+            <b>{{ formatCount(features.dark_coat.national.dark.median_days) }} 天</b>
+            <span>全國含黑（{{ formatCount(features.dark_coat.national.dark.n) }} 隻）</span>
+          </div>
+          <div>
+            <b>{{ formatCount(features.dark_coat.national.light.median_days) }} 天</b>
+            <span>全國不含黑（{{ formatCount(features.dark_coat.national.light.n) }} 隻）</span>
+          </div>
+        </div>
+        <SpanChart
+          :min-days="features.axis.min_days"
+          :max-days="features.axis.max_days"
+          :ticks="features.axis.ticks"
+          :groups="coatGroups"
+          wide
+          caption="各收容所內，含黑與不含黑犬隻的在所天數中位數"
+        />
+        <div class="chart-legend">
+          <span class="k dot-open">空心點：不含黑</span>
+          <span class="k dot-dark">實心點：含黑</span>
+          <span class="k up">深色較久</span>
+          <span class="k down">深色較短（{{ coatAgainst }} 間）</span>
+          <span class="k plain">右欄為兩者中位數之差（天）</span>
+        </div>
+        <div class="note">
+          <h3>控制後仍成立，但成立的是哪一句話</h3>
+          <p>
+            方向一致並不等於「黑狗比較難被認養」。這份資料<strong>沒有任何一筆記錄了離所</strong>，所以只能說「目前仍在所的深色犬待得比較久」。兩者的差別不是措辭謹慎，是這份資料真的答不了後者。
+          </p>
+          <p>
+            只納入含黑與不含黑<strong>各至少
+            {{ features.dark_coat.min_group }} 隻</strong>的收容所，共
+            {{ features.dark_coat.shelters_compared }}
+            間；其餘樣本太少，一兩隻長住犬就能翻轉中位數。門檻寫在這裡，換一個門檻就會換一組結果。方向相反的
+            {{ coatAgainst }} 間也留在圖上——把它們拿掉，一個計數就變成一個主張。
+          </p>
+          <p>
+            毛色取自自由文字欄位，「含黑」是字串比對（黑色、黑白色、黑黃色…）。這個分法把「黑白色」也算進深色，是刻意從寬——從嚴只取「黑色」會讓樣本掉到不足以分收容所比較。欄位的完整度見<RouterLink
+              to="/quality"
+              >資料品質</RouterLink
+            >。
+          </p>
+        </div>
+      </section>
+
       <section v-if="countyRows.length" v-reveal class="acard" aria-labelledby="a-county">
         <div class="an-head">
           <h2 id="a-county">各縣市</h2>
@@ -599,6 +808,40 @@ const shelterRange = computed(() => {
   }
 }
 
+.lead {
+  margin: 0 0 1.2rem;
+  max-width: 76ch;
+  color: var(--ink-secondary);
+  font-size: 0.92rem;
+}
+
+/* Three figures that carry the coat block's headline, so a reader who only
+   looks at the chart still gets the tally in words. */
+.tally {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin: 0 0 1.2rem;
+
+  & div {
+    flex: 0 0 auto;
+  }
+
+  & b {
+    display: block;
+    color: var(--accent-text);
+    font-size: 1.5rem;
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+  }
+
+  & span {
+    color: var(--ink-secondary);
+    font-size: 0.84rem;
+  }
+}
+
 /* ── Chart legends and notes ── */
 .chart-legend {
   display: flex;
@@ -790,6 +1033,56 @@ const shelterRange = computed(() => {
 
   .field {
     width: 100%;
+  }
+}
+
+/* Swatches for the comparison blocks. .chart-legend gives every .k a bar
+   before it; these keys replace that bar with the mark they describe. */
+.chart-legend {
+  & .dot-solid::before,
+  & .dot-open::before,
+  & .dot-dark::before {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+  }
+
+  & .dot-solid::before {
+    background: var(--ramp-4);
+  }
+
+  & .dot-open::before {
+    background: var(--surface);
+    border: 2px solid var(--ramp-2);
+  }
+
+  & .dot-dark::before {
+    background: var(--ramp-5);
+  }
+
+  & .range::before {
+    background: var(--ramp-1);
+  }
+
+  & .up::before {
+    background: var(--ramp-3);
+  }
+
+  & .down::before {
+    background: var(--ink-muted);
+    opacity: 0.45;
+  }
+
+  & .rule::before {
+    width: 1px;
+    height: 14px;
+    border-radius: 0;
+    background: var(--ink);
+    opacity: 0.28;
+  }
+
+  & .plain::before {
+    display: none;
   }
 }
 </style>
