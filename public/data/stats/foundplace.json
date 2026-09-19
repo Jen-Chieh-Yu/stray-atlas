@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-09-18",
-  "generated_at_utc": "2026-09-18T05:51:34Z",
-  "rows": 8333,
+  "snapshot_date": "2026-09-19",
+  "generated_at_utc": "2026-09-19T02:55:01Z",
+  "rows": 8397,
   "district_reference": "loaded",
   "place_kinds": {
-    "landmark": 920,
-    "address": 5093,
-    "blank": 1001,
-    "district": 1203,
+    "address": 5112,
+    "blank": 1040,
+    "landmark": 923,
+    "district": 1206,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1818,
-      "share": 0.2182
+      "rows": 1822,
+      "share": 0.217
     },
     "low": {
-      "rows": 5391,
-      "share": 0.6469
+      "rows": 5412,
+      "share": 0.6445
     },
     "none": {
-      "rows": 1117,
-      "share": 0.134
+      "rows": 1156,
+      "share": 0.1377
     }
   },
   "county_source": {
     "text": 191,
-    "shelter": 7025,
-    "none": 1117
+    "shelter": 7050,
+    "none": 1156
   },
   "county_from_text_differs_from_shelter": 11,
   "district": {
-    "extracted": 3024,
-    "verified_against_reference": 3021,
+    "extracted": 3031,
+    "verified_against_reference": 3028,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
-      "五股區民義路二段48巷1號",
-      "板橋區板城路465-1號",
-      "三峽區紫微路103號旁",
-      "三芝區中興街",
-      "麥寮鄉仁德路"
+      "二崙鄉中山路一段",
+      "麥寮鄉仁德路",
+      "汐止區仁愛路329號",
+      "樹林區太平路212-3號",
+      "新店區安和路三段100號"
     ],
     "low": [
-      "溪洲河濱公園",
-      "立賢路",
-      "中社路一段",
-      "德崙路925巷80弄216號",
-      "山腳路一段137號"
+      "喜東里萬皇路638號",
+      "西園路一段１２５巷",
+      "新安路",
+      "黎明里凱達格蘭大道",
+      "紗帽路141巷"
     ],
     "none": [
       "民眾不擬續養",

@@ -1,6 +1,6 @@
 {
- "snapshot_date": "2026-09-18",
- "generated_at_utc": "2026-09-18T05:51:38Z",
+ "snapshot_date": "2026-09-19",
+ "generated_at_utc": "2026-09-19T02:55:06Z",
  "axis": {
   "min_days": 20,
   "max_days": 3000,
@@ -25,11 +25,11 @@
  },
  "small_sample_below": 100,
  "overall": {
-  "n": 8333,
-  "p25_days": 120,
-  "median_days": 352,
-  "p75_days": 1260,
-  "iqr_ratio": 10.5,
+  "n": 8397,
+  "p25_days": 114,
+  "median_days": 348,
+  "p75_days": 1243,
+  "iqr_ratio": 10.9,
   "small_sample": false
  },
  "groups": [
@@ -40,28 +40,28 @@
     {
      "label": "其他",
      "n": 13,
-     "p25_days": 14,
-     "median_days": 32,
-     "p75_days": 86,
-     "iqr_ratio": 6.14,
+     "p25_days": 15,
+     "median_days": 33,
+     "p75_days": 87,
+     "iqr_ratio": 5.8,
      "small_sample": true
     },
     {
      "label": "貓",
-     "n": 2412,
+     "n": 2426,
      "p25_days": 87,
-     "median_days": 198,
-     "p75_days": 345,
-     "iqr_ratio": 3.97,
+     "median_days": 197,
+     "p75_days": 346,
+     "iqr_ratio": 3.98,
      "small_sample": false
     },
     {
      "label": "狗",
-     "n": 5908,
-     "p25_days": 148,
-     "median_days": 582,
-     "p75_days": 1778,
-     "iqr_ratio": 12.01,
+     "n": 5958,
+     "p25_days": 143,
+     "median_days": 574,
+     "p75_days": 1760,
+     "iqr_ratio": 12.31,
      "small_sample": false
     }
    ]
@@ -72,20 +72,20 @@
    "items": [
     {
      "label": "品種犬",
-     "n": 389,
-     "p25_days": 78,
-     "median_days": 192,
-     "p75_days": 470,
-     "iqr_ratio": 6.03,
+     "n": 393,
+     "p25_days": 79,
+     "median_days": 197,
+     "p75_days": 475,
+     "iqr_ratio": 6.01,
      "small_sample": false
     },
     {
      "label": "混種犬",
-     "n": 5501,
-     "p25_days": 162,
-     "median_days": 667,
-     "p75_days": 1886,
-     "iqr_ratio": 11.64,
+     "n": 5547,
+     "p25_days": 155,
+     "median_days": 646,
+     "p75_days": 1874,
+     "iqr_ratio": 12.09,
      "small_sample": false
     }
    ]
@@ -97,19 +97,19 @@
     {
      "label": "品種貓",
      "n": 37,
-     "p25_days": 9,
-     "median_days": 122,
-     "p75_days": 263,
-     "iqr_ratio": 29.22,
+     "p25_days": 10,
+     "median_days": 123,
+     "p75_days": 264,
+     "iqr_ratio": 26.4,
      "small_sample": true
     },
     {
      "label": "混種貓",
-     "n": 2375,
+     "n": 2389,
      "p25_days": 88,
-     "median_days": 199,
-     "p75_days": 345,
-     "iqr_ratio": 3.92,
+     "median_days": 197,
+     "p75_days": 346,
+     "iqr_ratio": 3.93,
      "small_sample": false
     }
    ]
@@ -120,29 +120,29 @@
    "items": [
     {
      "label": "小型",
-     "n": 1863,
-     "p25_days": 56,
-     "median_days": 191,
-     "p75_days": 603,
+     "n": 1880,
+     "p25_days": 53,
+     "median_days": 190,
+     "p75_days": 571,
      "iqr_ratio": 10.77,
      "small_sample": false
     },
     {
      "label": "大型",
-     "n": 1605,
-     "p25_days": 127,
-     "median_days": 366,
-     "p75_days": 1068,
-     "iqr_ratio": 8.41,
+     "n": 1633,
+     "p25_days": 121,
+     "median_days": 361,
+     "p75_days": 1066,
+     "iqr_ratio": 8.81,
      "small_sample": false
     },
     {
      "label": "中型",
-     "n": 4865,
-     "p25_days": 155,
-     "median_days": 456,
-     "p75_days": 1560,
-     "iqr_ratio": 10.06,
+     "n": 4884,
+     "p25_days": 154,
+     "median_days": 455,
+     "p75_days": 1556,
+     "iqr_ratio": 10.1,
      "small_sample": false
     }
    ]
@@ -153,20 +153,20 @@
    "items": [
     {
      "label": "幼體",
-     "n": 2193,
-     "p25_days": 63,
-     "median_days": 196,
-     "p75_days": 392,
-     "iqr_ratio": 6.22,
+     "n": 2208,
+     "p25_days": 60,
+     "median_days": 197,
+     "p75_days": 391,
+     "iqr_ratio": 6.52,
      "small_sample": false
     },
     {
      "label": "成體",
-     "n": 5876,
-     "p25_days": 145,
-     "median_days": 438,
-     "p75_days": 1407,
-     "iqr_ratio": 9.7,
+     "n": 5925,
+     "p25_days": 141,
+     "median_days": 431,
+     "p75_days": 1394,
+     "iqr_ratio": 9.89,
      "small_sample": false
     }
    ]
@@ -177,20 +177,20 @@
    "items": [
     {
      "label": "母",
-     "n": 4023,
-     "p25_days": 116,
-     "median_days": 339,
-     "p75_days": 1194,
-     "iqr_ratio": 10.29,
+     "n": 4049,
+     "p25_days": 113,
+     "median_days": 336,
+     "p75_days": 1192,
+     "iqr_ratio": 10.55,
      "small_sample": false
     },
     {
      "label": "公",
-     "n": 4221,
-     "p25_days": 126,
-     "median_days": 368,
-     "p75_days": 1348,
-     "iqr_ratio": 10.7,
+     "n": 4254,
+     "p25_days": 122,
+     "median_days": 367,
+     "p75_days": 1344,
+     "iqr_ratio": 11.02,
      "small_sample": false
     }
    ]
@@ -201,29 +201,29 @@
    "items": [
     {
      "label": "未知／不適用",
-     "n": 924,
-     "p25_days": 23,
-     "median_days": 81,
-     "p75_days": 207,
-     "iqr_ratio": 9.0,
+     "n": 958,
+     "p25_days": 19,
+     "median_days": 78,
+     "p75_days": 208,
+     "iqr_ratio": 10.95,
      "small_sample": false
     },
     {
      "label": "未絕育",
-     "n": 2659,
-     "p25_days": 135,
+     "n": 2664,
+     "p25_days": 136,
      "median_days": 321,
-     "p75_days": 1323,
-     "iqr_ratio": 9.8,
+     "p75_days": 1307,
+     "iqr_ratio": 9.61,
      "small_sample": false
     },
     {
      "label": "已絕育",
-     "n": 4750,
-     "p25_days": 158,
-     "median_days": 478,
-     "p75_days": 1505,
-     "iqr_ratio": 9.53,
+     "n": 4775,
+     "p25_days": 156,
+     "median_days": 471,
+     "p75_days": 1485,
+     "iqr_ratio": 9.52,
      "small_sample": false
     }
    ]
@@ -234,74 +234,74 @@
    "items": [
     {
      "label": "白色",
-     "n": 245,
-     "p25_days": 83,
-     "median_days": 270,
-     "p75_days": 1112,
-     "iqr_ratio": 13.4,
+     "n": 252,
+     "p25_days": 78,
+     "median_days": 260,
+     "p75_days": 1061,
+     "iqr_ratio": 13.6,
      "small_sample": false
     },
     {
      "label": "黃色",
-     "n": 1013,
-     "p25_days": 124,
+     "n": 1023,
+     "p25_days": 117,
      "median_days": 414,
-     "p75_days": 1326,
-     "iqr_ratio": 10.69,
+     "p75_days": 1325,
+     "iqr_ratio": 11.32,
      "small_sample": false
     },
     {
      "label": "棕色",
-     "n": 164,
-     "p25_days": 150,
-     "median_days": 417,
-     "p75_days": 1131,
-     "iqr_ratio": 7.54,
+     "n": 166,
+     "p25_days": 151,
+     "median_days": 418,
+     "p75_days": 1149,
+     "iqr_ratio": 7.61,
      "small_sample": false
     },
     {
      "label": "黃白色",
-     "n": 135,
-     "p25_days": 127,
-     "median_days": 552,
-     "p75_days": 1175,
-     "iqr_ratio": 9.25,
+     "n": 133,
+     "p25_days": 135,
+     "median_days": 558,
+     "p75_days": 1218,
+     "iqr_ratio": 9.02,
      "small_sample": false
     },
     {
      "label": "黑白色",
-     "n": 243,
-     "p25_days": 171,
-     "median_days": 632,
-     "p75_days": 1610,
-     "iqr_ratio": 9.42,
+     "n": 244,
+     "p25_days": 172,
+     "median_days": 633,
+     "p75_days": 1605,
+     "iqr_ratio": 9.33,
      "small_sample": false
     },
     {
      "label": "黑色",
-     "n": 2781,
-     "p25_days": 169,
-     "median_days": 714,
-     "p75_days": 2121,
-     "iqr_ratio": 12.55,
-     "small_sample": false
-    },
-    {
-     "label": "虎斑色",
-     "n": 466,
-     "p25_days": 219,
-     "median_days": 884,
-     "p75_days": 2025,
-     "iqr_ratio": 9.25,
+     "n": 2799,
+     "p25_days": 163,
+     "median_days": 704,
+     "p75_days": 2118,
+     "iqr_ratio": 12.99,
      "small_sample": false
     },
     {
      "label": "黑黃色",
-     "n": 315,
-     "p25_days": 150,
-     "median_days": 900,
-     "p75_days": 1963,
-     "iqr_ratio": 13.09,
+     "n": 322,
+     "p25_days": 131,
+     "median_days": 830,
+     "p75_days": 1954,
+     "iqr_ratio": 14.92,
+     "small_sample": false
+    },
+    {
+     "label": "虎斑色",
+     "n": 468,
+     "p25_days": 207,
+     "median_days": 884,
+     "p75_days": 2012,
+     "iqr_ratio": 9.72,
      "small_sample": false
     }
    ]
@@ -314,19 +314,19 @@
   "shelters_dark_longer": 17,
   "national": {
    "dark": {
-    "n": 3535,
-    "p25_days": 170,
-    "median_days": 719,
-    "p75_days": 2039,
-    "iqr_ratio": 11.99,
+    "n": 3562,
+    "p25_days": 163,
+    "median_days": 704,
+    "p75_days": 2031,
+    "iqr_ratio": 12.46,
     "small_sample": false
    },
    "light": {
-    "n": 2319,
-    "p25_days": 126,
-    "median_days": 481,
+    "n": 2342,
+    "p25_days": 121,
+    "median_days": 474,
     "p75_days": 1388,
-    "iqr_ratio": 11.02,
+    "iqr_ratio": 11.47,
     "small_sample": false
    }
   },
@@ -337,18 +337,18 @@
     "county": "新北市",
     "dark_n": 65,
     "light_n": 43,
-    "dark_median_days": 2249,
-    "light_median_days": 304,
+    "dark_median_days": 2250,
+    "light_median_days": 305,
     "difference_days": 1945
    },
    {
     "id": "3578faa084",
     "name": "南投縣公立動物收容所",
     "county": "南投縣",
-    "dark_n": 159,
+    "dark_n": 158,
     "light_n": 129,
-    "dark_median_days": 2386,
-    "light_median_days": 752,
+    "dark_median_days": 2387,
+    "light_median_days": 753,
     "difference_days": 1634
    },
    {
@@ -357,8 +357,8 @@
     "county": "桃園市",
     "dark_n": 263,
     "light_n": 134,
-    "dark_median_days": 2376,
-    "light_median_days": 1470,
+    "dark_median_days": 2377,
+    "light_median_days": 1471,
     "difference_days": 906
    },
    {
@@ -367,8 +367,8 @@
     "county": "新北市",
     "dark_n": 40,
     "light_n": 22,
-    "dark_median_days": 1707,
-    "light_median_days": 1113,
+    "dark_median_days": 1708,
+    "light_median_days": 1114,
     "difference_days": 594
    },
    {
@@ -377,8 +377,8 @@
     "county": "新北市",
     "dark_n": 101,
     "light_n": 55,
-    "dark_median_days": 1658,
-    "light_median_days": 1071,
+    "dark_median_days": 1659,
+    "light_median_days": 1072,
     "difference_days": 587
    },
    {
@@ -386,9 +386,9 @@
     "name": "新北市中和區公立動物之家",
     "county": "新北市",
     "dark_n": 136,
-    "light_n": 71,
-    "dark_median_days": 2410,
-    "light_median_days": 1845,
+    "light_n": 72,
+    "dark_median_days": 2411,
+    "light_median_days": 1846,
     "difference_days": 565
    },
    {
@@ -397,8 +397,8 @@
     "county": "新北市",
     "dark_n": 127,
     "light_n": 96,
-    "dark_median_days": 799,
-    "light_median_days": 280,
+    "dark_median_days": 800,
+    "light_median_days": 281,
     "difference_days": 519
    },
    {
@@ -407,8 +407,8 @@
     "county": "屏東縣",
     "dark_n": 42,
     "light_n": 29,
-    "dark_median_days": 1782,
-    "light_median_days": 1369,
+    "dark_median_days": 1783,
+    "light_median_days": 1370,
     "difference_days": 413
    },
    {
@@ -417,18 +417,18 @@
     "county": "雲林縣",
     "dark_n": 267,
     "light_n": 98,
-    "dark_median_days": 1281,
-    "light_median_days": 945,
+    "dark_median_days": 1282,
+    "light_median_days": 946,
     "difference_days": 336
    },
    {
     "id": "e32bd54eef",
     "name": "臺北市動物之家",
     "county": "臺北市",
-    "dark_n": 463,
+    "dark_n": 462,
     "light_n": 231,
-    "dark_median_days": 1637,
-    "light_median_days": 1441,
+    "dark_median_days": 1638,
+    "light_median_days": 1442,
     "difference_days": 196
    },
    {
@@ -437,19 +437,9 @@
     "county": "基隆市",
     "dark_n": 70,
     "light_n": 33,
-    "dark_median_days": 275,
-    "light_median_days": 130,
+    "dark_median_days": 276,
+    "light_median_days": 131,
     "difference_days": 145
-   },
-   {
-    "id": "a97f993ff3",
-    "name": "新竹市動物保護教育園區",
-    "county": "新竹市",
-    "dark_n": 86,
-    "light_n": 45,
-    "dark_median_days": 1660,
-    "light_median_days": 1534,
-    "difference_days": 126
    },
    {
     "id": "5a6e2744e5",
@@ -457,29 +447,39 @@
     "county": "彰化縣",
     "dark_n": 98,
     "light_n": 39,
-    "dark_median_days": 429,
-    "light_median_days": 350,
+    "dark_median_days": 430,
+    "light_median_days": 351,
     "difference_days": 79
    },
    {
-    "id": "c5e859af84",
-    "name": "新竹縣動物保護教育園區",
-    "county": "新竹縣",
-    "dark_n": 60,
-    "light_n": 35,
-    "dark_median_days": 1035,
-    "light_median_days": 983,
-    "difference_days": 52
+    "id": "a97f993ff3",
+    "name": "新竹市動物保護教育園區",
+    "county": "新竹市",
+    "dark_n": 86,
+    "light_n": 44,
+    "dark_median_days": 1661,
+    "light_median_days": 1598,
+    "difference_days": 63
    },
    {
     "id": "2800f5b8cb",
     "name": "臺南市動物之家灣裡站",
     "county": "臺南市",
     "dark_n": 55,
-    "light_n": 72,
-    "dark_median_days": 291,
-    "light_median_days": 254,
-    "difference_days": 37
+    "light_n": 70,
+    "dark_median_days": 292,
+    "light_median_days": 236,
+    "difference_days": 56
+   },
+   {
+    "id": "c5e859af84",
+    "name": "新竹縣動物保護教育園區",
+    "county": "新竹縣",
+    "dark_n": 60,
+    "light_n": 36,
+    "dark_median_days": 1036,
+    "light_median_days": 984,
+    "difference_days": 52
    },
    {
     "id": "e29d9cccaa",
@@ -487,8 +487,8 @@
     "county": "高雄市",
     "dark_n": 73,
     "light_n": 94,
-    "dark_median_days": 95,
-    "light_median_days": 73,
+    "dark_median_days": 96,
+    "light_median_days": 74,
     "difference_days": 22
    },
    {
@@ -497,29 +497,29 @@
     "county": "宜蘭縣",
     "dark_n": 103,
     "light_n": 83,
-    "dark_median_days": 198,
-    "light_median_days": 179,
+    "dark_median_days": 199,
+    "light_median_days": 180,
     "difference_days": 19
    },
    {
     "id": "ad3f398c00",
     "name": "彰化縣流浪狗中途之家臨時收容所",
     "county": "彰化縣",
-    "dark_n": 97,
-    "light_n": 77,
-    "dark_median_days": 50,
-    "light_median_days": 51,
-    "difference_days": -1
+    "dark_n": 112,
+    "light_n": 84,
+    "dark_median_days": 44,
+    "light_median_days": 50,
+    "difference_days": -6
    },
    {
     "id": "f02e1227af",
     "name": "臺南市動物之家善化站",
     "county": "臺南市",
-    "dark_n": 174,
-    "light_n": 128,
-    "dark_median_days": 157,
-    "light_median_days": 192,
-    "difference_days": -35
+    "dark_n": 179,
+    "light_n": 133,
+    "dark_median_days": 155,
+    "light_median_days": 186,
+    "difference_days": -31
    },
    {
     "id": "29795a5301",
@@ -527,19 +527,29 @@
     "county": "花蓮縣",
     "dark_n": 52,
     "light_n": 66,
-    "dark_median_days": 283,
-    "light_median_days": 346,
+    "dark_median_days": 284,
+    "light_median_days": 347,
     "difference_days": -63
    },
    {
     "id": "036ddab65f",
     "name": "新北市五股區公立動物之家",
     "county": "新北市",
-    "dark_n": 184,
+    "dark_n": 185,
     "light_n": 153,
-    "dark_median_days": 368,
-    "light_median_days": 435,
+    "dark_median_days": 369,
+    "light_median_days": 436,
     "difference_days": -67
+   },
+   {
+    "id": "87e430aeaa",
+    "name": "苗栗縣動物保護教育園區",
+    "county": "苗栗縣",
+    "dark_n": 80,
+    "light_n": 50,
+    "dark_median_days": 171,
+    "light_median_days": 242,
+    "difference_days": -71
    },
    {
     "id": "1b5bb4a344",
@@ -547,29 +557,19 @@
     "county": "澎湖縣",
     "dark_n": 169,
     "light_n": 121,
-    "dark_median_days": 916,
-    "light_median_days": 988,
+    "dark_median_days": 917,
+    "light_median_days": 989,
     "difference_days": -72
-   },
-   {
-    "id": "87e430aeaa",
-    "name": "苗栗縣動物保護教育園區",
-    "county": "苗栗縣",
-    "dark_n": 81,
-    "light_n": 49,
-    "dark_median_days": 170,
-    "light_median_days": 276,
-    "difference_days": -106
    },
    {
     "id": "ec94558b96",
     "name": "高雄市燕巢動物保護關愛園區",
     "county": "高雄市",
-    "dark_n": 268,
-    "light_n": 212,
-    "dark_median_days": 79,
-    "light_median_days": 231,
-    "difference_days": -152
+    "dark_n": 277,
+    "light_n": 225,
+    "dark_median_days": 77,
+    "light_median_days": 230,
+    "difference_days": -153
    },
    {
     "id": "53ff346501",
@@ -577,8 +577,8 @@
     "county": "金門縣",
     "dark_n": 82,
     "light_n": 80,
-    "dark_median_days": 892,
-    "light_median_days": 1142,
+    "dark_median_days": 893,
+    "light_median_days": 1143,
     "difference_days": -250
    }
   ]
