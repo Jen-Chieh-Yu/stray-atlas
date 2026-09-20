@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-09-19",
-  "generated_at_utc": "2026-09-19T02:55:01Z",
-  "rows": 8397,
+  "snapshot_date": "2026-09-20",
+  "generated_at_utc": "2026-09-20T03:07:41Z",
+  "rows": 8386,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5112,
-    "blank": 1040,
+    "blank": 1034,
+    "address": 5109,
     "landmark": 923,
-    "district": 1206,
+    "district": 1204,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1822,
-      "share": 0.217
+      "rows": 1829,
+      "share": 0.2181
     },
     "low": {
-      "rows": 5412,
-      "share": 0.6445
+      "rows": 5400,
+      "share": 0.6439
     },
     "none": {
-      "rows": 1156,
-      "share": 0.1377
+      "rows": 1150,
+      "share": 0.1371
     }
   },
   "county_source": {
-    "text": 191,
-    "shelter": 7050,
-    "none": 1156
+    "text": 192,
+    "shelter": 7044,
+    "none": 1150
   },
-  "county_from_text_differs_from_shelter": 11,
+  "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3031,
-    "verified_against_reference": 3028,
+    "extracted": 3036,
+    "verified_against_reference": 3033,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
-      "二崙鄉中山路一段",
-      "麥寮鄉仁德路",
-      "汐止區仁愛路329號",
-      "樹林區太平路212-3號",
-      "新店區安和路三段100號"
+      "五股區五股區中興路三段2-2號",
+      "三重區五華街",
+      "林口區林口中山路以文化北路口",
+      "三重區三重力行路一段40號",
+      "新店區安興路87號"
     ],
     "low": [
-      "喜東里萬皇路638號",
-      "西園路一段１２５巷",
-      "新安路",
-      "黎明里凱達格蘭大道",
-      "紗帽路141巷"
+      "林口街 (拾獲地為文山區老泉里)",
+      "彰濱產業園區服務中心",
+      "安美街(原拾獲地:彰化)",
+      "南華路70號",
+      "改良場"
     ],
     "none": [
       "民眾不擬續養",
