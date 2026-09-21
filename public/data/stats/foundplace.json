@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-09-20",
-  "generated_at_utc": "2026-09-20T03:07:41Z",
-  "rows": 8386,
+  "snapshot_date": "2026-09-21",
+  "generated_at_utc": "2026-09-21T03:04:23Z",
+  "rows": 8379,
   "district_reference": "loaded",
   "place_kinds": {
-    "blank": 1034,
-    "address": 5109,
-    "landmark": 923,
-    "district": 1204,
+    "address": 5107,
+    "landmark": 922,
+    "blank": 1031,
+    "district": 1203,
     "non_place": 116
   },
   "confidence": {
@@ -16,22 +16,22 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1829,
-      "share": 0.2181
+      "rows": 1830,
+      "share": 0.2184
     },
     "low": {
-      "rows": 5400,
+      "rows": 5395,
       "share": 0.6439
     },
     "none": {
-      "rows": 1150,
-      "share": 0.1371
+      "rows": 1147,
+      "share": 0.1369
     }
   },
   "county_source": {
     "text": 192,
-    "shelter": 7044,
-    "none": 1150
+    "shelter": 7040,
+    "none": 1147
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
-      "五股區五股區中興路三段2-2號",
-      "三重區五華街",
-      "林口區林口中山路以文化北路口",
-      "三重區三重力行路一段40號",
-      "新店區安興路87號"
+      "五股區外寮路",
+      "永和區中正路",
+      "中和區員山路30號",
+      "土城區裕生路",
+      "中和區員山路"
     ],
     "low": [
-      "林口街 (拾獲地為文山區老泉里)",
-      "彰濱產業園區服務中心",
-      "安美街(原拾獲地:彰化)",
-      "南華路70號",
-      "改良場"
+      "新樓街51號",
+      "復國二路126號",
+      "復華十街11巷3號",
+      "七股里3-18號",
+      "三德路"
     ],
     "none": [
       "民眾不擬續養",
