@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-09-21",
-  "generated_at_utc": "2026-09-21T03:04:23Z",
-  "rows": 8379,
+  "snapshot_date": "2026-09-22",
+  "generated_at_utc": "2026-09-22T03:03:50Z",
+  "rows": 8432,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5107,
-    "landmark": 922,
-    "blank": 1031,
-    "district": 1203,
+    "address": 5156,
+    "blank": 1037,
+    "landmark": 927,
+    "district": 1196,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1830,
-      "share": 0.2184
+      "rows": 1831,
+      "share": 0.2171
     },
     "low": {
-      "rows": 5395,
-      "share": 0.6439
+      "rows": 5441,
+      "share": 0.6453
     },
     "none": {
-      "rows": 1147,
-      "share": 0.1369
+      "rows": 1153,
+      "share": 0.1367
     }
   },
   "county_source": {
     "text": 192,
-    "shelter": 7040,
-    "none": 1147
+    "shelter": 7087,
+    "none": 1153
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3036,
-    "verified_against_reference": 3033,
+    "extracted": 3030,
+    "verified_against_reference": 3027,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
-      "五股區外寮路",
-      "永和區中正路",
-      "中和區員山路30號",
-      "土城區裕生路",
-      "中和區員山路"
+      "三芝區中興街",
+      "五股區台64線五股往新店13.1K處 (五權路)",
+      "蘆竹區興隆街４０巷",
+      "三重區三重區秀江街186號",
+      "五股區五股淩雲路133巷27號"
     ],
     "low": [
-      "新樓街51號",
-      "復國二路126號",
-      "復華十街11巷3號",
-      "七股里3-18號",
-      "三德路"
+      "光遠路",
+      "民族路",
+      "學城路",
+      "河堤三路",
+      "先鋒路"
     ],
     "none": [
       "民眾不擬續養",
