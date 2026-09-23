@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-09-22",
-  "generated_at_utc": "2026-09-22T03:03:50Z",
-  "rows": 8432,
+  "snapshot_date": "2026-09-23",
+  "generated_at_utc": "2026-09-23T03:03:51Z",
+  "rows": 8431,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5156,
-    "blank": 1037,
-    "landmark": 927,
-    "district": 1196,
+    "blank": 1032,
+    "address": 5152,
+    "district": 1201,
+    "landmark": 930,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1831,
-      "share": 0.2171
+      "rows": 1839,
+      "share": 0.2181
     },
     "low": {
-      "rows": 5441,
-      "share": 0.6453
+      "rows": 5437,
+      "share": 0.6449
     },
     "none": {
-      "rows": 1153,
-      "share": 0.1367
+      "rows": 1148,
+      "share": 0.1362
     }
   },
   "county_source": {
-    "text": 192,
-    "shelter": 7087,
-    "none": 1153
+    "text": 191,
+    "shelter": 7092,
+    "none": 1148
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3030,
-    "verified_against_reference": 3027,
+    "extracted": 3043,
+    "verified_against_reference": 3040,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
-      "三芝區中興街",
-      "五股區台64線五股往新店13.1K處 (五權路)",
-      "蘆竹區興隆街４０巷",
-      "三重區三重區秀江街186號",
-      "五股區五股淩雲路133巷27號"
+      "虎尾鎮新生路",
+      "板橋區貴興街119巷1弄13號",
+      "瑞芳區祈堂路",
+      "貢寮區德心街",
+      "新店區北宜路二段581巷"
     ],
     "low": [
-      "光遠路",
-      "民族路",
-      "學城路",
-      "河堤三路",
-      "先鋒路"
+      "安平里南京東路五段２５１巷２４弄",
+      "延平北路七段１０６巷",
+      "中行里中坡南路",
+      "板橋區大遠百",
+      "宮口街"
     ],
     "none": [
       "民眾不擬續養",
