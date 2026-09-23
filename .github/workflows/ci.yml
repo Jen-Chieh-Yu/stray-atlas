@@ -1,0 +1,127 @@
+# Checks for pull requests. See CLAUDE.md section 6.6.
+name: CI
+
+# Pull requests only, plus a manual button.
+#
+# Every branch reaches main through a PR (CLAUDE.md 6.6), so a PR run covers
+# every change a human makes. The one thing that lands on main directly is the
+# daily bot's snapshot commit, and that job already rebuilds public/data and
+# fails loudly on its own; running these checks again on its push would spend
+# minutes to re-lint a data file.
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# A second push to the same PR makes the first run pointless.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      # Kept in step with deploy-pages.yml by hand until .nvmrc lands.
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npm run type-check
+
+      - name: Unit tests
+        run: npm test
+
+      # Last, and not merely for speed: a type error or a failed test is a
+      # clearer message than whatever the bundler says once it trips over the
+      # same problem.
+      - name: Build
+        run: npm run build
+
+  pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      # Same version as daily-snapshot.yml, which is what runs these scripts
+      # for real every morning.
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      # The scripts are standard library only; pytest is a dependency of the
+      # tests, not of the pipeline. Nothing else is installed here, which is
+      # itself the check: if a script ever grows an import, this job fails.
+      - name: Install pytest
+        run: pip install "pytest>=9,<10"
+
+      - name: Pipeline tests
+        run: python -m pytest -q
+
+      # The tests use synthetic rows, so this is the only step that touches a
+      # real snapshot: it proves the archive in the repository still rebuilds
+      # into the JSON the site ships, and that every output carries the same
+      # date.
+      - name: Rebuild from the newest snapshot
+        run: python scripts/build_all.py
+
+      # Every rebuild rewrites generated_at / generated_at_utc, so those keys
+      # are the only difference allowed. Anything else means public/data was
+      # not rebuilt after a build script changed -- the state that ships a page
+      # whose figures no longer match the code that claims to produce them.
+      #
+      # Compared as JSON, not as text: shelter-points.json and
+      # stats/distribution.json are written on a single line, so a line filter
+      # on "generated_at" would drop each whole file from the check.
+      - name: Check the rebuild matches the committed site data
+        run: |
+          python - <<'PY'
+          import json, subprocess, sys
+          from pathlib import Path
+
+          def git(*args):
+              return subprocess.run(["git", *args], capture_output=True,
+                                    text=True, check=True).stdout
+
+          def strip(o):
+              if isinstance(o, dict):
+                  return {k: strip(v) for k, v in o.items()
+                          if not k.startswith("generated_at")}
+              if isinstance(o, list):
+                  return [strip(v) for v in o]
+              return o
+
+          changed = git("diff", "--name-only", "--", "public/data").split()
+          new = git("ls-files", "--others", "--exclude-standard",
+                    "--", "public/data").split()
+          drift = [f"{name} (not committed)" for name in new]
+          for name in changed:
+              before = json.loads(git("show", f"HEAD:{name}"))
+              after = json.loads(Path(name).read_text(encoding="utf-8"))
+              if strip(before) != strip(after):
+                  drift.append(name)
+
+          if drift:
+              print("::error::public/data does not match a rebuild from data/raw/")
+              print("\n".join(drift))
+              sys.exit(1)
+          print(f"{len(changed)} file(s) differ only in generated_at")
+          PY
