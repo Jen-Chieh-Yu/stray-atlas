@@ -11,6 +11,7 @@ import { computed, onMounted, ref } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import DistributionChart from '@/components/DistributionChart.vue'
 import EcdfChart from '@/components/EcdfChart.vue'
+import LoadingSkeleton from '@/components/LoadingSkeleton.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
 import PageHead from '@/components/PageHead.vue'
 import SpanChart from '@/components/SpanChart.vue'
@@ -333,7 +334,7 @@ const shelterRange = computed(() => {
     </section>
 
     <p v-if="error" class="state">分布資料載入失敗：{{ error }}</p>
-    <p v-else-if="!data || !current || !block" class="state">載入中…</p>
+    <LoadingSkeleton v-else-if="!data || !current || !block" variant="block" />
 
     <template v-else>
       <section v-reveal class="acard controls" aria-label="圖表設定">

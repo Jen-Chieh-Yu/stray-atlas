@@ -16,6 +16,7 @@
  */
 import { computed, ref } from 'vue'
 import { RouterLink } from 'vue-router'
+import LoadingSkeleton from '@/components/LoadingSkeleton.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
 import PageHead from '@/components/PageHead.vue'
 import { fetchMeta, fetchQuality } from '@/composables/useAtlasData'
@@ -176,7 +177,7 @@ function grades(row: QualityRow, key: string): string {
     </section>
 
     <p v-if="error" class="state">資料品質資料載入失敗：{{ error }}</p>
-    <p v-else-if="!quality || !meta" class="state">載入中…</p>
+    <LoadingSkeleton v-else-if="!quality || !meta" variant="block" />
 
     <template v-else>
       <section v-reveal class="acard" aria-labelledby="q-dropped">

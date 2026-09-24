@@ -4,6 +4,7 @@ import { RouterLink, useRoute, useRouter } from 'vue-router'
 import AnimalCard from '@/components/AnimalCard.vue'
 import AnimalDialog from '@/components/AnimalDialog.vue'
 import HeroCarousel from '@/components/HeroCarousel.vue'
+import LoadingSkeleton from '@/components/LoadingSkeleton.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
 import { useRoster } from '@/composables/useRoster'
 import { closeAnimalDialog } from '@/lib/dialogRoute'
@@ -330,7 +331,13 @@ const FLOW = [
       </div>
     </div>
 
-    <p v-if="loading" class="wrap state">載入中…（全國動物資料約 272 KB）</p>
+    <LoadingSkeleton
+      v-if="loading"
+      class="wrap"
+      variant="cards"
+      :count="4"
+      hint="全國動物資料約 272 KB"
+    />
     <p v-else-if="error" class="wrap state">資料載入失敗（{{ error }}）。</p>
 
     <template v-else>

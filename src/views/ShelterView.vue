@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import AnimalCard from '@/components/AnimalCard.vue'
 import AnimalDialog from '@/components/AnimalDialog.vue'
+import LoadingSkeleton from '@/components/LoadingSkeleton.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
 import ShelterSpark from '@/components/ShelterSpark.vue'
 import { useRoster } from '@/composables/useRoster'
@@ -95,7 +96,7 @@ function close() {
       <LucideIcon name="chevron-left" :size="16" /> 收容所列表
     </RouterLink>
 
-    <p v-if="loading" class="state">載入中…</p>
+    <LoadingSkeleton v-if="loading" variant="block" />
     <p v-else-if="error" class="state">收容所資料載入失敗（{{ error }}）。</p>
     <p v-else-if="!shelter" class="state">
       找不到這間收容所，它可能已不在最新的資料裡。<RouterLink to="/shelters">回收容所列表</RouterLink>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
+import LoadingSkeleton from '@/components/LoadingSkeleton.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
 import PageHead from '@/components/PageHead.vue'
 import ShelterSpark from '@/components/ShelterSpark.vue'
@@ -214,7 +215,7 @@ function names(list: Shelter[]): string {
       }}。每張卡片先回答三件事：現在有多少動物、狗貓各佔多少、這裡的動物已經在所多久。決定要去哪一間之前，先在這裡看清楚。
     </PageHead>
 
-    <p v-if="loading" class="state">載入中…</p>
+    <LoadingSkeleton v-if="loading" variant="rows" :count="6" />
     <p v-else-if="error" class="state">收容所資料載入失敗（{{ error }}）。</p>
 
     <template v-else>
