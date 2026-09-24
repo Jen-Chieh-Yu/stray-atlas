@@ -131,7 +131,8 @@ Project site 掛在 `/stray-atlas/` 子路徑下。以下三處只要漏一個�
       §9.1 第 2 項（黑狗症候群）的**收容所內**控制，兩者都在 `/analysis`
   - 方向相反的收容所留在圖上；門檻（各 ≥ 20 隻）寫在說明裡
 - [ ] 其餘分析模組。依訊號強度排序執行，見 `PROJECT_BRIEF.md` §9.1
-  - 4（收容所量能四象限）、3（存量殘存曲線，需新增外部資料源，先問）
+  - 3（存量殘存曲線）——需新增外部資料源（農業部年度統計表），動手前先問
+  - 4（收容所量能四象限）——不做，見 `PROJECT_BRIEF.md` §9.1 第 4 項
 
 ### 階段 3（加分項，非主體）
 
@@ -321,8 +322,11 @@ git push -u origin feature/YYYYMMDD-topic
 - 機器人每天推 `main`，所以開分支前先 `git switch main`、`git pull --ff-only`；PR 合併後本機再 pull 一次
 - AI 協作者交付 commit message 時，一併提供 PR 標題（沿用 commit 標題）與英文 PR 內文，寫入 `.git/prNN.md`；內文含 Summary、Commits、Changes、Post-merge checks 四節
 - `schedule` 只在預設分支觸發，且本專案的 workflow 會推 `main` 或部署網站，PR 階段無法實測；驗證項目寫進 PR 內文，合併後逐項確認
+- `main` 上有名為 `main-protection` 的 ruleset（2026-09-24 起），只含兩條規則：禁止刪除分支、禁止 force push。**刻意不加「必要狀態檢查」**
 
 理由：PR 頁面留下變更總覽與驗證紀錄，面試官可直接從 GitHub 看到開發流程；分支在本機 merge 後直推，事後無法補開 PR。
+
+ruleset 不加必要狀態檢查的理由（2026-09-24 實測）：該規則會連同直接 push 一起擋下，而每日排程機器人以 `GITHUB_TOKEN` 直接推 `main`。個人 repo 的 bypass 清單只有 Deploy keys 與 Repository admin／Maintain／Write 三個角色，沒有 GitHub Actions；實測把 Write 加入 bypass 後，機器人仍在 Commit and push 失敗。快照漏一天永久補不回來（§3 階段 0），紅燈合併則隨時可以修，因此選擇資料完整性。CI 仍在每個 PR 上執行，只是不強制。
 
 ---
 
