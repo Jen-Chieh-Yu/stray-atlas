@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import AnimalCard from '@/components/AnimalCard.vue'
 import AnimalDialog from '@/components/AnimalDialog.vue'
+import LoadingSkeleton from '@/components/LoadingSkeleton.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
 import PageHead from '@/components/PageHead.vue'
 import { useRoster } from '@/composables/useRoster'
@@ -318,7 +319,12 @@ function onSort(event: Event) {
       }}動物，狗、貓與其他動物在同一個清單裡，用下面的條件收斂。
     </PageHead>
 
-    <p v-if="loading" class="state">載入中…（全國動物資料約 272 KB）</p>
+    <LoadingSkeleton
+      v-if="loading"
+      variant="cards"
+      :count="4"
+      hint="全國動物資料約 272 KB"
+    />
     <p v-else-if="error" class="state">資料載入失敗（{{ error }}）。</p>
 
     <template v-else>

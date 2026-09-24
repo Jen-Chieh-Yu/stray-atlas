@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import CountyChoropleth from '@/components/CountyChoropleth.vue'
+import LoadingSkeleton from '@/components/LoadingSkeleton.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
 import PageHead from '@/components/PageHead.vue'
 import { fetchShelterPoints, useAtlasData } from '@/composables/useAtlasData'
@@ -259,7 +260,7 @@ const hint = computed(() => {
       先讀一件事：這張圖畫的是<strong>收容所的所在地</strong>，不是動物被撿到的地方——底下有說明。
     </PageHead>
 
-    <p v-if="loading" class="state">載入中…</p>
+    <LoadingSkeleton v-if="loading" variant="block" />
 
     <p v-else-if="error" class="state">
       資料載入失敗（{{ error }}）。
