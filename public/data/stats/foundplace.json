@@ -1,12 +1,12 @@
 {
   "snapshot_date": "2026-09-24",
-  "generated_at_utc": "2026-09-24T05:54:53Z",
-  "rows": 8457,
+  "generated_at_utc": "2026-09-24T06:37:09Z",
+  "rows": 8452,
   "district_reference": "loaded",
   "place_kinds": {
-    "landmark": 934,
-    "address": 5167,
-    "blank": 1035,
+    "address": 5168,
+    "blank": 1031,
+    "landmark": 932,
     "district": 1205,
     "non_place": 116
   },
@@ -17,21 +17,21 @@
     },
     "medium": {
       "rows": 1840,
-      "share": 0.2176
+      "share": 0.2177
     },
     "low": {
-      "rows": 5459,
-      "share": 0.6455
+      "rows": 5458,
+      "share": 0.6458
     },
     "none": {
-      "rows": 1151,
-      "share": 0.1361
+      "rows": 1147,
+      "share": 0.1357
     }
   },
   "county_source": {
     "text": 191,
-    "shelter": 7115,
-    "none": 1151
+    "shelter": 7114,
+    "none": 1147
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
@@ -55,11 +55,11 @@
       "三峽區中正路一段443號"
     ],
     "low": [
-      "曾文市政願景園區",
-      "123-5號",
-      "新生北路",
-      "龍國街240巷6號",
-      "中山南路119巷11弄"
+      "頂埔路一段",
+      "豐德路",
+      "古結路",
+      "義德一路",
+      "123-5號"
     ],
     "none": [
       "民眾不擬續養",
