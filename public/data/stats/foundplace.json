@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-09-23",
-  "generated_at_utc": "2026-09-23T03:03:51Z",
-  "rows": 8431,
+  "snapshot_date": "2026-09-24",
+  "generated_at_utc": "2026-09-24T02:55:14Z",
+  "rows": 8477,
   "district_reference": "loaded",
   "place_kinds": {
-    "blank": 1032,
-    "address": 5152,
-    "district": 1201,
-    "landmark": 930,
+    "address": 5162,
+    "landmark": 931,
+    "district": 1205,
+    "blank": 1063,
     "non_place": 116
   },
   "confidence": {
@@ -17,26 +17,26 @@
     },
     "medium": {
       "rows": 1839,
-      "share": 0.2181
+      "share": 0.2169
     },
     "low": {
-      "rows": 5437,
-      "share": 0.6449
+      "rows": 5452,
+      "share": 0.6432
     },
     "none": {
-      "rows": 1148,
-      "share": 0.1362
+      "rows": 1179,
+      "share": 0.1391
     }
   },
   "county_source": {
     "text": 191,
-    "shelter": 7092,
-    "none": 1148
+    "shelter": 7107,
+    "none": 1179
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3043,
-    "verified_against_reference": 3040,
+    "extracted": 3047,
+    "verified_against_reference": 3044,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
-      "虎尾鎮新生路",
-      "板橋區貴興街119巷1弄13號",
-      "瑞芳區祈堂路",
-      "貢寮區德心街",
-      "新店區北宜路二段581巷"
+      "金城鎮東門里環島西路一段",
+      "金城鎮北門里民生路（金信大樓）",
+      "板橋區文化路",
+      "三峽區中正路一段443號",
+      "三峽區中正路一段19巷8號"
     ],
     "low": [
-      "安平里南京東路五段２５１巷２４弄",
-      "延平北路七段１０６巷",
-      "中行里中坡南路",
-      "板橋區大遠百",
-      "宮口街"
+      "元培街",
+      "笨港里湧泉路１８９巷",
+      "大湖路366號",
+      "延平路二段",
+      "76號"
     ],
     "none": [
       "民眾不擬續養",
