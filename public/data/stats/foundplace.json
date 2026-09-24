@@ -1,13 +1,13 @@
 {
   "snapshot_date": "2026-09-24",
-  "generated_at_utc": "2026-09-24T02:55:14Z",
-  "rows": 8477,
+  "generated_at_utc": "2026-09-24T05:54:53Z",
+  "rows": 8457,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5162,
-    "landmark": 931,
+    "landmark": 934,
+    "address": 5167,
+    "blank": 1035,
     "district": 1205,
-    "blank": 1063,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1839,
-      "share": 0.2169
+      "rows": 1840,
+      "share": 0.2176
     },
     "low": {
-      "rows": 5452,
-      "share": 0.6432
+      "rows": 5459,
+      "share": 0.6455
     },
     "none": {
-      "rows": 1179,
-      "share": 0.1391
+      "rows": 1151,
+      "share": 0.1361
     }
   },
   "county_source": {
     "text": 191,
-    "shelter": 7107,
-    "none": 1179
+    "shelter": 7115,
+    "none": 1151
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3047,
-    "verified_against_reference": 3044,
+    "extracted": 3048,
+    "verified_against_reference": 3045,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
+      "新莊區自強街",
       "金城鎮東門里環島西路一段",
       "金城鎮北門里民生路（金信大樓）",
       "板橋區文化路",
-      "三峽區中正路一段443號",
-      "三峽區中正路一段19巷8號"
+      "三峽區中正路一段443號"
     ],
     "low": [
-      "元培街",
-      "笨港里湧泉路１８９巷",
-      "大湖路366號",
-      "延平路二段",
-      "76號"
+      "曾文市政願景園區",
+      "123-5號",
+      "新生北路",
+      "龍國街240巷6號",
+      "中山南路119巷11弄"
     ],
     "none": [
       "民眾不擬續養",
