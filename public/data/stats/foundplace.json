@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-09-24",
-  "generated_at_utc": "2026-09-24T06:37:09Z",
-  "rows": 8452,
+  "snapshot_date": "2026-09-25",
+  "generated_at_utc": "2026-09-25T03:11:46Z",
+  "rows": 8462,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5168,
-    "blank": 1031,
+    "address": 5175,
+    "district": 1203,
+    "blank": 1036,
     "landmark": 932,
-    "district": 1205,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1840,
-      "share": 0.2177
+      "rows": 1837,
+      "share": 0.2171
     },
     "low": {
-      "rows": 5458,
-      "share": 0.6458
+      "rows": 5466,
+      "share": 0.6459
     },
     "none": {
-      "rows": 1147,
-      "share": 0.1357
+      "rows": 1152,
+      "share": 0.1361
     }
   },
   "county_source": {
     "text": 191,
-    "shelter": 7114,
-    "none": 1147
+    "shelter": 7119,
+    "none": 1152
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3048,
-    "verified_against_reference": 3045,
+    "extracted": 3043,
+    "verified_against_reference": 3040,
     "not_in_that_county": 3
   },
   "samples": {
@@ -55,11 +55,11 @@
       "三峽區中正路一段443號"
     ],
     "low": [
-      "頂埔路一段",
-      "豐德路",
-      "古結路",
-      "義德一路",
-      "123-5號"
+      "敦化北路",
+      "青山里環河南路二段",
+      "延平北路七段１０６巷",
+      "新店區",
+      "151-50號"
     ],
     "none": [
       "民眾不擬續養",
