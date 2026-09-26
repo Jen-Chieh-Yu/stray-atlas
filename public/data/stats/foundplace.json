@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-09-25",
-  "generated_at_utc": "2026-09-25T03:11:46Z",
-  "rows": 8462,
+  "snapshot_date": "2026-09-26",
+  "generated_at_utc": "2026-09-26T03:15:36Z",
+  "rows": 8477,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5175,
-    "district": 1203,
+    "address": 5185,
+    "landmark": 935,
+    "district": 1205,
     "blank": 1036,
-    "landmark": 932,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1837,
-      "share": 0.2171
+      "rows": 1843,
+      "share": 0.2174
     },
     "low": {
-      "rows": 5466,
+      "rows": 5475,
       "share": 0.6459
     },
     "none": {
       "rows": 1152,
-      "share": 0.1361
+      "share": 0.1359
     }
   },
   "county_source": {
     "text": 191,
-    "shelter": 7119,
+    "shelter": 7134,
     "none": 1152
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3043,
-    "verified_against_reference": 3040,
+    "extracted": 3051,
+    "verified_against_reference": 3048,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
-      "新莊區自強街",
-      "金城鎮東門里環島西路一段",
-      "金城鎮北門里民生路（金信大樓）",
-      "板橋區文化路",
-      "三峽區中正路一段443號"
+      "五股區五股區登林路77巷45號",
+      "新店區安祥路110巷23號13F",
+      "高雄市路竹區復興路",
+      "坪林區坪碇路6號",
+      "新店區建業路66號"
     ],
     "low": [
+      "南港里南港路一段１１７巷",
+      "東華里立農街二段",
+      "石潭里新明路",
       "敦化北路",
-      "青山里環河南路二段",
-      "延平北路七段１０６巷",
-      "新店區",
-      "151-50號"
+      "延平北路七段１０６巷"
     ],
     "none": [
       "民眾不擬續養",
