@@ -1,14 +1,14 @@
 {
-  "snapshot_date": "2026-09-26",
-  "generated_at_utc": "2026-09-26T03:15:36Z",
-  "rows": 8477,
+  "snapshot_date": "2026-09-27",
+  "generated_at_utc": "2026-09-27T03:23:52Z",
+  "rows": 8468,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5185,
+    "blank": 1035,
+    "address": 5177,
+    "non_place": 116,
     "landmark": 935,
-    "district": 1205,
-    "blank": 1036,
-    "non_place": 116
+    "district": 1205
   },
   "confidence": {
     "high": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1843,
-      "share": 0.2174
+      "rows": 1840,
+      "share": 0.2173
     },
     "low": {
-      "rows": 5475,
-      "share": 0.6459
+      "rows": 5470,
+      "share": 0.646
     },
     "none": {
-      "rows": 1152,
+      "rows": 1151,
       "share": 0.1359
     }
   },
   "county_source": {
-    "text": 191,
-    "shelter": 7134,
-    "none": 1152
+    "text": 190,
+    "shelter": 7127,
+    "none": 1151
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3051,
-    "verified_against_reference": 3048,
+    "extracted": 3048,
+    "verified_against_reference": 3045,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
-      "五股區五股區登林路77巷45號",
-      "新店區安祥路110巷23號13F",
-      "高雄市路竹區復興路",
-      "坪林區坪碇路6號",
-      "新店區建業路66號"
+      "外縣市桃園市八德區公園路",
+      "三峽區中正路一段19巷8號",
+      "新莊區中正路",
+      "樹林區文化街9號",
+      "五股區五股區登林路77巷45號"
     ],
     "low": [
-      "南港里南港路一段１１７巷",
-      "東華里立農街二段",
-      "石潭里新明路",
-      "敦化北路",
-      "延平北路七段１０６巷"
+      "復興三路",
+      "湖田里竹子湖路",
+      "廟口",
+      "新店區碧潭",
+      "板橋區大遠百"
     ],
     "none": [
       "民眾不擬續養",
