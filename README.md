@@ -82,6 +82,12 @@ npm run preview     # 預覽 dist/
 cp .env.example .env.local   # 選用：填入 Google Maps Embed 金鑰，收容所介紹頁才會顯示內嵌地圖
 ```
 
+全檔重排的 commit 登記在 `.git-blame-ignore-revs`，GitHub 的 blame 會自動略過。本機的 `git blame` 要略過，clone 後設定一次：
+
+```bash
+git config blame.ignoreRevsFile .git-blame-ignore-revs
+```
+
 跑建置腳本的測試（pytest 只有測試需要，腳本本身維持標準函式庫）：
 
 ```bash
@@ -150,6 +156,7 @@ stray-atlas/
 ├── tests/                   建置腳本的 pytest 測試（src/lib 的 vitest 測試在 src/lib/__tests__/）
 ├── index.html、vite.config.ts、vitest.config.ts、tsconfig*.json、env.d.ts
 ├── eslint.config.js、.prettierrc、.prettierignore、.editorconfig   靜態檢查與格式設定
+├── .git-blame-ignore-revs   只改排版的 commit，blame 時略過
 ├── .env.example             Google Maps Embed 金鑰範本（複製成 .env.local）
 ├── CLAUDE.md                AI 協作工作規則
 ├── PROJECT_BRIEF.md         資料剖析結論與已驗證數字

@@ -1,0 +1,12 @@
+# Commits that only reformat code. `git blame` skips them and credits each
+# line to the change before, so a whole-file reformat does not bury who
+# actually wrote a line and why.
+#
+# GitHub reads this file automatically. Locally, run once per clone:
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+#
+# Full hashes only, one per line, each with the commit subject above it.
+# Add a commit here only if it changes nothing but layout.
+
+# chore(style): format with prettier (PR #11)
+008c0e89c674a3dd64511965ad465dd9eb0b1791
