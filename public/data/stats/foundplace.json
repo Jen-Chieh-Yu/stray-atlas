@@ -1,14 +1,14 @@
 {
-  "snapshot_date": "2026-09-24",
-  "generated_at_utc": "2026-09-24T06:37:09Z",
-  "rows": 8452,
+  "snapshot_date": "2026-09-28",
+  "generated_at_utc": "2026-09-28T03:20:56Z",
+  "rows": 8467,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5168,
-    "blank": 1031,
-    "landmark": 932,
-    "district": 1205,
-    "non_place": 116
+    "address": 5175,
+    "blank": 1036,
+    "non_place": 116,
+    "landmark": 935,
+    "district": 1205
   },
   "confidence": {
     "high": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1840,
-      "share": 0.2177
+      "rows": 1841,
+      "share": 0.2174
     },
     "low": {
-      "rows": 5458,
-      "share": 0.6458
+      "rows": 5467,
+      "share": 0.6457
     },
     "none": {
-      "rows": 1147,
-      "share": 0.1357
+      "rows": 1152,
+      "share": 0.1361
     }
   },
   "county_source": {
-    "text": 191,
-    "shelter": 7114,
-    "none": 1147
+    "text": 190,
+    "shelter": 7125,
+    "none": 1152
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3048,
-    "verified_against_reference": 3045,
+    "extracted": 3049,
+    "verified_against_reference": 3046,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
-      "新莊區自強街",
-      "金城鎮東門里環島西路一段",
-      "金城鎮北門里民生路（金信大樓）",
-      "板橋區文化路",
-      "三峽區中正路一段443號"
+      "蘆洲區蘆洲區民族路422巷15弄12號",
+      "新莊區龍安路",
+      "外縣市桃園市八德區公園路",
+      "三峽區中正路一段19巷8號",
+      "新莊區中正路"
     ],
     "low": [
-      "頂埔路一段",
-      "豐德路",
-      "古結路",
-      "義德一路",
-      "123-5號"
+      "永崙路2號",
+      "木柵路1段17巷",
+      "通安里信義路四段",
+      "敦化北路",
+      "萬美里和平東路四段66巷"
     ],
     "none": [
       "民眾不擬續養",
