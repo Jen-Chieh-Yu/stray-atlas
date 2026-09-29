@@ -1,14 +1,14 @@
 {
-  "snapshot_date": "2026-09-28",
-  "generated_at_utc": "2026-09-28T03:20:56Z",
-  "rows": 8467,
+  "snapshot_date": "2026-09-29",
+  "generated_at_utc": "2026-09-29T03:58:01Z",
+  "rows": 8461,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5175,
-    "blank": 1036,
-    "non_place": 116,
-    "landmark": 935,
-    "district": 1205
+    "address": 5166,
+    "district": 1210,
+    "blank": 1033,
+    "landmark": 936,
+    "non_place": 116
   },
   "confidence": {
     "high": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1841,
-      "share": 0.2174
+      "rows": 1842,
+      "share": 0.2177
     },
     "low": {
-      "rows": 5467,
+      "rows": 5463,
       "share": 0.6457
     },
     "none": {
-      "rows": 1152,
-      "share": 0.1361
+      "rows": 1149,
+      "share": 0.1358
     }
   },
   "county_source": {
     "text": 190,
-    "shelter": 7125,
-    "none": 1152
+    "shelter": 7122,
+    "none": 1149
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3049,
-    "verified_against_reference": 3046,
+    "extracted": 3055,
+    "verified_against_reference": 3052,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,25 +48,25 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
+      "新莊區豐年街",
       "蘆洲區蘆洲區民族路422巷15弄12號",
       "新莊區龍安路",
       "外縣市桃園市八德區公園路",
-      "三峽區中正路一段19巷8號",
-      "新莊區中正路"
+      "三峽區中正路一段19巷8號"
     ],
     "low": [
-      "永崙路2號",
-      "木柵路1段17巷",
-      "通安里信義路四段",
-      "敦化北路",
-      "萬美里和平東路四段66巷"
+      "世賢路四段450之1號",
+      "中正西路20號",
+      "上海路134號",
+      "菁山里菁山路９９巷",
+      "銅鑼鄉盛隆村"
     ],
     "none": [
+      "臺北市動物之家",
       "民眾不擬續養",
       "動物之家",
       "所內生產，媽媽1110241",
-      "所內出生",
-      "所內生產"
+      "所內出生"
     ]
   }
 }
