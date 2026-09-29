@@ -6,6 +6,7 @@ import AnimalDialog from '@/components/AnimalDialog.vue'
 import HeroCarousel from '@/components/HeroCarousel.vue'
 import LoadingSkeleton from '@/components/LoadingSkeleton.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
+import MissingAnimalDialog from '@/components/MissingAnimalDialog.vue'
 import { useRoster } from '@/composables/useRoster'
 import { closeAnimalDialog } from '@/lib/dialogRoute'
 import { vReveal } from '@/lib/reveal'
@@ -16,7 +17,9 @@ import {
   animalsLink,
   formatCount,
   inBand,
+  isNewerId,
   median,
+  searchLink,
   tally,
 } from '@/lib/animals'
 import type { Animal, Kind } from '@/types'
@@ -35,7 +38,6 @@ const {
   countyOf,
   daysOf,
   knownDays,
-  percentileOf,
   byLongest,
 } = useRoster()
 
@@ -107,7 +109,7 @@ const quickChips = computed(() => {
 })
 
 function submitSearch() {
-  void router.push(animalsLink({ kind: species.value, q: search.value.trim() }))
+  void router.push(searchLink(search.value, { kind: species.value }, animals.value))
 }
 
 /* ── Browse bands ──────────────────────────────────────────────────────── */
@@ -237,6 +239,13 @@ const openAnimal = computed<Animal | null>(() => {
   return animals.value.find((animal) => animal.id === id) ?? null
 })
 
+/** A link to an animal no longer in the roster, once the roster is here. */
+const missingId = computed(() => {
+  const id = route.query.animal
+  if (typeof id !== 'string' || animals.value.length === 0 || openAnimal.value) return null
+  return id
+})
+
 function open(animal: Animal) {
   void router.push({ query: { ...route.query, animal: animal.id } })
 }
@@ -247,7 +256,13 @@ function close() {
 
 /** Rewritten from the Taipei animal protection office's published steps. */
 const FLOW = [
-  { title: '找到動物，記下編號', text: '收容編號是收容所辨識這隻動物的唯一依據。', site: true },
+  // Not "the unique key": the 2026-09-29 snapshot has six 收容編號 shared by
+  // two animals each, so the step says what the number is for and no more.
+  {
+    title: '找到動物，記下收容編號',
+    text: '卡片上的收容編號，是向收容所詢問這隻動物時要報的號碼。',
+    site: true,
+  },
   { title: '電話聯繫收容所', text: '確認動物仍在所，並預約到現場看動物的時間。', site: false },
   {
     title: '完成飼主責任教育',
@@ -310,7 +325,7 @@ const FLOW = [
               <input
                 v-model="search"
                 type="search"
-                placeholder="以縣市、收容所、品種搜尋"
+                placeholder="以縣市、收容所、品種或收容編號搜尋"
                 aria-label="搜尋"
               />
             </label>
@@ -375,12 +390,10 @@ const FLOW = [
             <LucideIcon name="chevron-left" :size="20" />
           </button>
           <div ref="strip" class="longest" @scroll.passive="syncStrip">
-            <div v-for="(animal, index) in longest" :key="animal.id" class="lcard">
+            <div v-for="animal in longest" :key="animal.id" class="lcard">
               <AnimalCard
                 :animal="animal"
                 :days="daysOf(animal)"
-                :percentile="percentileOf(animal)"
-                :longest="index === 0"
                 :place="placeOf(animal)"
                 @open="open"
               />
@@ -418,7 +431,6 @@ const FLOW = [
             :key="animal.id"
             :animal="animal"
             :days="daysOf(animal)"
-            :percentile="percentileOf(animal)"
             :place="placeOf(animal)"
             @open="open"
           />
@@ -574,7 +586,16 @@ const FLOW = [
       :animal="openAnimal"
       :snapshot-date="snapshotDate"
       :shelter="shelterById.get(openAnimal.shelter)"
+      :roster="animals"
       @close="close"
+      @open="open"
+    />
+    <MissingAnimalDialog
+      v-else-if="missingId"
+      :id="missingId"
+      :newer="isNewerId(missingId, animals)"
+      @close="close"
+      @browse="router.replace('/animals')"
     />
   </div>
 </template>

@@ -7,7 +7,8 @@ import type { IconName } from '@/lib/icons'
  *
  *  Used by: App.vue, HomeView.vue, AnimalsView.vue, ShelterListView.vue,
  *  ShelterView.vue, MapView.vue, AnalysisView.vue, AnimalCard.vue,
- *  CountyChoropleth.vue and HeroCarousel.vue. */
+ *  AnimalDialog.vue, MissingAnimalDialog.vue, CountyChoropleth.vue and
+ *  HeroCarousel.vue. */
 const props = withDefaults(defineProps<{ name: IconName; size?: number; label?: string }>(), {
   size: 18,
   label: undefined,
@@ -32,6 +33,7 @@ const props = withDefaults(defineProps<{ name: IconName; size?: number; label?: 
     <template v-for="(shape, index) in ICONS[props.name]" :key="index">
       <path v-if="'d' in shape" :d="shape.d" />
       <circle v-else-if="'cx' in shape" :cx="shape.cx" :cy="shape.cy" :r="shape.r" />
+      <line v-else-if="'x1' in shape" :x1="shape.x1" :y1="shape.y1" :x2="shape.x2" :y2="shape.y2" />
       <rect v-else :x="shape.x" :y="shape.y" :width="shape.width" :height="shape.height" :rx="shape.rx" />
     </template>
   </svg>

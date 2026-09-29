@@ -1,5 +1,5 @@
 import type { LocationQuery } from 'vue-router'
-import type { Kind } from '@/types'
+import type { Animal, Kind } from '@/types'
 
 /* Animal helpers shared across pages.
  *
@@ -7,7 +7,10 @@ import type { Kind } from '@/types'
  *  query contract, counting helpers), ShelterListView.vue, ShelterView.vue
  *  and MapView.vue (link builder, formatCount, median), and AnalysisView.vue,
  *  AboutView.vue, AnimalCard.vue and ShelterSpark.vue (formatCount; SEX_LABEL
- *  on the card).
+ *  on the card). The search-by-number helpers are used by HomeView.vue,
+ *  AnimalsView.vue and ShelterView.vue, pickSiblings by AnimalDialog.vue, and
+ *  OFFICIAL_ADOPTION_URL by AboutView.vue, AnimalsView.vue and
+ *  MissingAnimalDialog.vue.
  */
 
 /** Display labels for the coded columns. One copy, shared by every page. */
@@ -104,6 +107,78 @@ export function animalsLink(query: AnimalQuery) {
     out[key] = key === 'kind' ? KIND_PARAM[value as Kind] : String(value)
   }
   return { path: '/animals', query: out }
+}
+
+/** The ministry's adoption listing, built on the same feed. Where to send
+ *  someone whose animal this site no longer lists. */
+export const OFFICIAL_ADOPTION_URL = 'https://www.pet.gov.tw/AnimalApp/AnnounceMent.aspx?PageType=Adopt'
+
+/* ── Search by number ──────────────────────────────────────────────────────
+ * Someone who saw an animal at the shelter or on pet.gov.tw has its 收容編號
+ * and nothing else. The formats differ by shelter (AAAHG1141003002,
+ * W150910-14, 107-E015D), so "looks like a number" is the only rule that
+ * covers them: a digit, no Han character, no space. */
+
+const HAN = /\p{Script=Han}/u
+
+export function isIdQuery(text: string | undefined): boolean {
+  return !!text && /\d/.test(text) && !HAN.test(text) && !/\s/.test(text)
+}
+
+/** Whole-value match on 收容編號 or 流水號, ignoring case. Never a substring:
+ *  a fragment such as 1141003 hits hundreds of animals, which helps nobody
+ *  looking for one. */
+export function matchesId(animal: Pick<Animal, 'id' | 'subid'>, text: string): boolean {
+  const needle = text.toUpperCase()
+  return animal.subid.toUpperCase() === needle || animal.id === needle
+}
+
+/** Where a submitted search goes. A number clears every other filter, since
+ *  whoever typed it wants that one animal and a leftover 狗 or county would
+ *  only turn it into a misleading "not found"; a single hit opens its dialog
+ *  straight away. Any other text keeps the filters it was typed under. */
+export function searchLink(
+  text: string,
+  keep: AnimalQuery,
+  animals: Pick<Animal, 'id' | 'subid'>[],
+) {
+  const q = text.trim()
+  if (!isIdQuery(q)) return animalsLink({ ...keep, q: q || undefined })
+  const link = animalsLink({ q })
+  const hits = animals.filter((animal) => matchesId(animal, q))
+  if (hits.length === 1) link.query.animal = hits[0].id
+  return link
+}
+
+/** True when a 流水號 is larger than every one in the roster, i.e. the animal
+ *  was probably registered after this snapshot. Only 流水號 are sequential;
+ *  收容編號 follow each shelter's own scheme and say nothing about age. */
+export function isNewerId(id: string, animals: Pick<Animal, 'id'>[]): boolean {
+  if (!/^\d+$/.test(id)) return false
+  let largest = -1
+  for (const animal of animals) {
+    const value = Number(animal.id)
+    if (value > largest) largest = value
+  }
+  return largest >= 0 && Number(id) > largest
+}
+
+/** Up to `count` animals in random order, those with a photo first: a strip
+ *  of grey circles would defeat its purpose. The ones without a photo are
+ *  only used to fill up, and remain in the full list one link away. */
+export function pickSiblings<T extends Pick<Animal, 'photo'>>(
+  pool: T[],
+  count: number,
+  random: () => number = Math.random,
+): T[] {
+  const shuffled = [...pool]
+  for (let index = shuffled.length - 1; index > 0; index--) {
+    const other = Math.floor(random() * (index + 1))
+    ;[shuffled[index], shuffled[other]] = [shuffled[other], shuffled[index]]
+  }
+  const withPhoto = shuffled.filter((animal) => animal.photo)
+  const without = shuffled.filter((animal) => !animal.photo)
+  return [...withPhoto, ...without].slice(0, count)
 }
 
 export function median(values: number[]): number | null {
