@@ -232,9 +232,7 @@ const topCounties = computed(() => {
 
 /** 縣市: its shelters, most animals first. */
 const countyShelters = computed(() =>
-  points.value
-    .filter((point) => point.county === selected.value)
-    .sort((a, b) => b.count - a.count),
+  points.value.filter((point) => point.county === selected.value).sort((a, b) => b.count - a.count),
 )
 
 const shelterAddresses = computed(() =>
@@ -359,8 +357,12 @@ const hint = computed(() => {
               <i class="cat" :style="{ width: widthOf(split.cats) }" />
             </div>
             <div class="rail-splitlab">
-              <span class="k dog">狗 <em>{{ formatCount(split.dogs) }}</em></span>
-              <span class="k cat">貓 <em>{{ formatCount(split.cats) }}</em></span>
+              <span class="k dog"
+                >狗 <em>{{ formatCount(split.dogs) }}</em></span
+              >
+              <span class="k cat"
+                >貓 <em>{{ formatCount(split.cats) }}</em></span
+              >
             </div>
           </div>
 
@@ -446,7 +448,9 @@ const hint = computed(() => {
              高雄–屏東 coast. -->
         <div class="maplegend">
           <div class="lg-main">
-            <span class="cap">{{ metric === 'count' ? '在所動物數（隻）' : '在所天數中位數' }}</span>
+            <span class="cap">{{
+              metric === 'count' ? '在所動物數（隻）' : '在所天數中位數'
+            }}</span>
             <div class="lg-row">
               <span v-for="(label, index) in legend" :key="label" class="lg-step">
                 <i :style="{ background: `var(--ramp-${index + 1})` }" />
@@ -474,10 +478,13 @@ const hint = computed(() => {
         </div>
         <ul>
           <li>
-            <strong>這是收容所的地圖，不是流浪動物的地圖。</strong>顏色來自「動物現在在哪一間收容所」，不是牠被撿到的地方。尋獲地欄位只有
-            2.4% 自己寫出縣市，其中又有 6% 與收容縣市不同，有些登錄者直接寫「外縣市」。
+            <strong>這是收容所的地圖，不是流浪動物的地圖。</strong
+            >顏色來自「動物現在在哪一間收容所」，不是牠被撿到的地方。尋獲地欄位只有 2.4%
+            自己寫出縣市，其中又有 6% 與收容縣市不同，有些登錄者直接寫「外縣市」。
           </li>
-          <li>顏色同時混著「動物量」和「幾間收容所」兩件事。跨縣市比較之前，先看面板裡的收容所數。</li>
+          <li>
+            顏色同時混著「動物量」和「幾間收容所」兩件事。跨縣市比較之前，先看面板裡的收容所數。
+          </li>
           <li>
             只算得出<strong>目前仍在所</strong>的動物，所以看不出一間收容所的認養速度。待得越久的動物越可能留在快照裡：全臺滯留中位數
             {{ days(stats.total.median_days) }}，平均卻是
@@ -487,7 +494,8 @@ const hint = computed(() => {
             在所數是存量，不是流量。在所數高可能是空間充裕、長期安置；在所數低也可能是已經滿載而嚴格控管入所，不能單憑顏色推論地方主管機關的作為。
           </li>
           <li>
-            圖釘的位置是<strong>行政區形心，不是門牌</strong>{{
+            圖釘的位置是<strong>行政區形心，不是門牌</strong
+            >{{
               manualCount ? `，其中 ${manualCount} 處的行政區由地址人工判定` : ''
             }}。出發前請照面板上的地址與電話再確認一次。
           </li>

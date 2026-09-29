@@ -44,10 +44,7 @@ export function cleanAddress(raw: string): CleanAddress {
  *  a pasted URL) should count as one address; two different places (瑞芳)
  *  should not. The key folds exactly those differences and nothing else. */
 function sameKey(text: string): string {
-  return text
-    .normalize('NFKC')
-    .replace(/[~～]/g, '-')
-    .replace(/\s+/g, '')
+  return text.normalize('NFKC').replace(/[~～]/g, '-').replace(/\s+/g, '')
 }
 
 /** Every distinct address, cleaned, in source order. */

@@ -111,7 +111,11 @@ async function copyLink() {
 </script>
 
 <template>
-  <DialogShell :label="`${animal.variety || '未填品種'} 的詳細資料`" :reset-key="animal.id" @close="emit('close')">
+  <DialogShell
+    :label="`${animal.variety || '未填品種'} 的詳細資料`"
+    :reset-key="animal.id"
+    @close="emit('close')"
+  >
     <template #bar>
       <span class="id">收容編號 #{{ animal.subid }}</span>
       <span class="tag">公立收容所資料快照</span>
@@ -179,7 +183,9 @@ async function copyLink() {
                     referrerpolicy="no-referrer"
                     @error="brokenSiblings = new Set(brokenSiblings).add(other.id)"
                   />
-                  <span v-else class="thumb-empty">{{ other.photo ? '照片無法載入' : '無照片' }}</span>
+                  <span v-else class="thumb-empty">{{
+                    other.photo ? '照片無法載入' : '無照片'
+                  }}</span>
                 </span>
                 <span class="mini-days">{{ siblingDays(other) }}</span>
                 <span class="mini-name">
@@ -197,7 +203,10 @@ async function copyLink() {
             <RouterLink v-if="shelter && !hideShelterLink" :to="`/shelters/${shelter.id}`">
               收容所介紹 →
             </RouterLink>
-            <RouterLink :to="animalsLink({ shelter: animal.shelter, kind: animal.kind })" class="all">
+            <RouterLink
+              :to="animalsLink({ shelter: animal.shelter, kind: animal.kind })"
+              class="all"
+            >
               看這裡的全部 {{ formatCount(sameKind.length + 1) }} 隻{{ KIND_WORD[animal.kind] }} →
             </RouterLink>
           </div>
@@ -205,7 +214,8 @@ async function copyLink() {
       </template>
 
       <p class="note">
-        ※ 欄位內容依各收容所登錄實務而異，未填不代表該項目不存在或未施作。實際健康與個性務必以現場互動評估為準。
+        ※
+        欄位內容依各收容所登錄實務而異，未填不代表該項目不存在或未施作。實際健康與個性務必以現場互動評估為準。
       </p>
 
       <footer class="actions">

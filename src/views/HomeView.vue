@@ -129,8 +129,20 @@ function varietyCard(kind: '狗' | '貓', limit: number) {
 }
 
 const kindCards = computed(() => [
-  { kind: '狗' as const, icon: 'dog' as const, title: '狗狗', data: varietyCard('狗', 10), more: '查看更多犬種' },
-  { kind: '貓' as const, icon: 'cat' as const, title: '貓咪', data: varietyCard('貓', 8), more: '查看更多貓種' },
+  {
+    kind: '狗' as const,
+    icon: 'dog' as const,
+    title: '狗狗',
+    data: varietyCard('狗', 10),
+    more: '查看更多犬種',
+  },
+  {
+    kind: '貓' as const,
+    icon: 'cat' as const,
+    title: '貓咪',
+    data: varietyCard('貓', 8),
+    more: '查看更多貓種',
+  },
 ])
 
 const mixedShare = computed(() => {
@@ -293,13 +305,20 @@ const FLOW = [
         <div class="hero-plate">
           <h1>牠們一直都在等待被看見</h1>
           <p class="lede">
-            全臺{{ shelters.length ? ` ${shelters.length} 間` : '' }}公立收容所目前仍開放認養的動物。
+            全臺{{
+              shelters.length ? ` ${shelters.length} 間` : ''
+            }}公立收容所目前仍開放認養的動物。
           </p>
         </div>
       </div>
 
       <div class="wrap">
-        <form class="filterbox" :data-species="species" role="search" @submit.prevent="submitSearch">
+        <form
+          class="filterbox"
+          :data-species="species"
+          role="search"
+          @submit.prevent="submitSearch"
+        >
           <div class="fb-tabs" role="tablist" aria-label="動物類型">
             <span class="fb-thumb" aria-hidden="true" />
             <button
@@ -360,10 +379,12 @@ const FLOW = [
       <section v-reveal class="wrap">
         <div class="stats">
           <div class="stat">
-            <b>{{ formatCount(animals.length) }}</b><span>隻動物目前仍在所</span>
+            <b>{{ formatCount(animals.length) }}</b
+            ><span>隻動物目前仍在所</span>
           </div>
           <div class="stat">
-            <b>{{ shelters.length }}</b><span>間公立收容所，涵蓋 {{ countyCount }} 縣市</span>
+            <b>{{ shelters.length }}</b
+            ><span>間公立收容所，涵蓋 {{ countyCount }} 縣市</span>
           </div>
           <div class="stat">
             <b>{{ overallMedian === null ? '—' : formatCount(overallMedian) }}</b>
@@ -488,7 +509,9 @@ const FLOW = [
             <div v-for="card in kindCards" :key="card.kind" class="kind-card">
               <h3 class="kind-head">
                 <LucideIcon :name="card.icon" :size="20" /> {{ card.title }}
-                <span class="n">{{ card.data.kinds }} 種 · {{ formatCount(card.data.total) }} 隻</span>
+                <span class="n"
+                  >{{ card.data.kinds }} 種 · {{ formatCount(card.data.total) }} 隻</span
+                >
               </h3>
               <div class="kind-chips">
                 <RouterLink
@@ -551,13 +574,23 @@ const FLOW = [
               </h3>
               <span class="kind-sub">體型</span>
               <div class="kind-chips">
-                <RouterLink v-for="item in bodyChips" :key="item.label" :to="item.to" class="kind-chip">
+                <RouterLink
+                  v-for="item in bodyChips"
+                  :key="item.label"
+                  :to="item.to"
+                  class="kind-chip"
+                >
                   {{ item.label }} <span class="count">{{ formatCount(item.count) }}</span>
                 </RouterLink>
               </div>
               <span class="kind-sub">年齡</span>
               <div class="kind-chips">
-                <RouterLink v-for="item in ageChips" :key="item.label" :to="item.to" class="kind-chip">
+                <RouterLink
+                  v-for="item in ageChips"
+                  :key="item.label"
+                  :to="item.to"
+                  class="kind-chip"
+                >
                   {{ item.label }} <span class="count">{{ formatCount(item.count) }}</span>
                 </RouterLink>
               </div>
@@ -571,7 +604,12 @@ const FLOW = [
                 </span>
               </h3>
               <div class="kind-chips">
-                <RouterLink v-for="item in bandChips" :key="item.label" :to="item.to" class="kind-chip">
+                <RouterLink
+                  v-for="item in bandChips"
+                  :key="item.label"
+                  :to="item.to"
+                  class="kind-chip"
+                >
                   {{ item.label }} <span class="count">{{ formatCount(item.count) }}</span>
                 </RouterLink>
               </div>

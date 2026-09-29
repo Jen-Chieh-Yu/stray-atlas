@@ -44,7 +44,14 @@ watch(
 <template>
   <Teleport to="body">
     <div class="backdrop" @click.self="emit('close')">
-      <div ref="panel" class="dialog" role="dialog" aria-modal="true" :aria-label="label" tabindex="-1">
+      <div
+        ref="panel"
+        class="dialog"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="label"
+        tabindex="-1"
+      >
         <header class="bar">
           <slot name="bar" />
           <button type="button" class="close" aria-label="關閉" @click="emit('close')">×</button>

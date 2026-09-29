@@ -45,7 +45,8 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
   {
     topic: '來源快照',
     choice: 'GitHub Actions 每日排程',
-    reason: '來源不保留歷史，沒存下的那一天補不回來；人工執行遲早會斷。存完快照接著重建網站資料並部署。',
+    reason:
+      '來源不保留歷史，沒存下的那一天補不回來；人工執行遲早會斷。存完快照接著重建網站資料並部署。',
   },
   {
     topic: '原始檔存檔',
@@ -91,7 +92,10 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
     <section v-reveal aria-labelledby="ab-purpose">
       <h2 id="ab-purpose">服務目的</h2>
       <p>
-        農業部的寵物登記管理網站（<a :href="PET_SITE_URL" target="_blank" rel="noreferrer">pet.gov.tw</a>）上，已經有<a :href="OFFICIAL_URL" target="_blank" rel="noreferrer">動物認領養公告頁</a>提供全國收容動物的查詢，本站用的是同一份開放資料，差別在於讀法：<strong>找動物</strong>用地區、種類、性別、體型與已在所時間收斂清單；<strong>收容所</strong>看每一間現在收了多少、狗貓各佔多少；<strong>縣市地圖</strong>看全臺的分布；<strong>資料分析</strong>看在所天數的整體樣貌。
+        農業部的寵物登記管理網站（<a :href="PET_SITE_URL" target="_blank" rel="noreferrer"
+          >pet.gov.tw</a
+        >）上，已經有<a :href="OFFICIAL_URL" target="_blank" rel="noreferrer">動物認領養公告頁</a
+        >提供全國收容動物的查詢，本站用的是同一份開放資料，差別在於讀法：<strong>找動物</strong>用地區、種類、性別、體型與已在所時間收斂清單；<strong>收容所</strong>看每一間現在收了多少、狗貓各佔多少；<strong>縣市地圖</strong>看全臺的分布；<strong>資料分析</strong>看在所天數的整體樣貌。
       </p>
       <p>
         這個站把「已在所多久」直接算出來，放到和照片一樣顯眼的位置，也能跨收容所比較。<template
@@ -100,7 +104,8 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
         >
       </p>
       <p>
-        <strong>本站不辦理認養，也不代為保留或媒合動物。</strong>實際認養請直接與該收容所聯絡，每一張動物卡片與收容所頁面上都附有地址與電話。
+        <strong>本站不辦理認養，也不代為保留或媒合動物。</strong
+        >實際認養請直接與該收容所聯絡，每一張動物卡片與收容所頁面上都附有地址與電話。
       </p>
     </section>
 
@@ -260,7 +265,9 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
             所有內容均取自前述公開資料。本站不修改資料內容，若與來源或收容所現場公告有出入，<strong>一律以原始資料與收容所公告為準</strong>。
           </li>
           <li>
-            名單上的動物可能已被認養、被原飼主領回或轉出。<strong>前往收容所前，請務必先以電話確認該動物仍在所內。</strong>
+            名單上的動物可能已被認養、被原飼主領回或轉出。<strong
+              >前往收容所前，請務必先以電話確認該動物仍在所內。</strong
+            >
           </li>
           <li>
             地圖上的收容所圖釘標示的是<strong>行政區位置，不是門牌地址</strong>，僅供辨識方位；實際地址請以頁面上的文字為準。

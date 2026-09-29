@@ -41,13 +41,10 @@ function go(to: number) {
 const running = computed(() => playing.value && !hovered.value && !focused.value && !hidden.value)
 
 let timer: number | undefined
-watch(
-  running,
-  (on) => {
-    window.clearInterval(timer)
-    timer = on ? window.setInterval(() => go(index.value + 1), INTERVAL_MS) : undefined
-  },
-)
+watch(running, (on) => {
+  window.clearInterval(timer)
+  timer = on ? window.setInterval(() => go(index.value + 1), INTERVAL_MS) : undefined
+})
 
 function onVisibility() {
   hidden.value = document.visibilityState === 'hidden'

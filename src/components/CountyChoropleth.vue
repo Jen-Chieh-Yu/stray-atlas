@@ -25,18 +25,38 @@ const emit = defineEmits<{
 }>()
 
 const WIDTH = 560
-const HEIGHT = 588  // the height the framed bbox actually needs at this width
+const HEIGHT = 588 // the height the framed bbox actually needs at this width
 
 /** 金門 sits 180 km west of Taiwan and 連江 100 km north of that. Fitting one
  *  projection to all of them shrinks the main island to a third of the frame
  *  and fills the rest with empty sea, so both are drawn as insets — the
  *  convention on every printed map of Taiwan. */
-const INSETS: { counties: string[]; label: string; box: [[number, number], [number, number]] }[] =
-  [
-    { counties: ['連江縣'], label: '連江縣', box: [[10, 10], [104, 104]] },
-    { counties: ['金門縣'], label: '金門縣', box: [[10, 112], [104, 206]] },
-    { counties: ['澎湖縣'], label: '澎湖縣', box: [[10, 214], [104, 308]] },
-  ]
+const INSETS: { counties: string[]; label: string; box: [[number, number], [number, number]] }[] = [
+  {
+    counties: ['連江縣'],
+    label: '連江縣',
+    box: [
+      [10, 10],
+      [104, 104],
+    ],
+  },
+  {
+    counties: ['金門縣'],
+    label: '金門縣',
+    box: [
+      [10, 112],
+      [104, 206],
+    ],
+  },
+  {
+    counties: ['澎湖縣'],
+    label: '澎湖縣',
+    box: [
+      [10, 214],
+      [104, 308],
+    ],
+  },
+]
 const INSET_COUNTIES = new Set(INSETS.flatMap((inset) => inset.counties))
 
 /* The insets own a strip down the left edge, and the main map is clipped out
@@ -314,7 +334,7 @@ function focusCounty(county: string | null) {
   const [[x0, y0], [x1, y1]] = geoPath(mainProjection.value).bounds(
     feature as unknown as GeoPermissibleObjects,
   )
-  const k = Math.min(MAX_SCALE, (0.8 * Math.min(WIDTH / (x1 - x0), HEIGHT / (y1 - y0))) || 1)
+  const k = Math.min(MAX_SCALE, 0.8 * Math.min(WIDTH / (x1 - x0), HEIGHT / (y1 - y0)) || 1)
   setView({
     k,
     x: WIDTH / 2 - ((x0 + x1) / 2) * k,
@@ -374,16 +394,18 @@ function pinPath(r: number): string {
 
 const mainPins = computed(() => {
   if (!props.showPoints) return []
-  return (props.points ?? [])
-    .filter((p) => !INSET_COUNTIES.has(p.county))
-    .map((p) => ({ ...p, base: mainProjection.value([p.lon, p.lat]) as [number, number] | null }))
-    // Painter's order: southern pins drawn last so an overlap hides the pin
-    // behind rather than a random one. The picked pin goes on top of all.
-    .sort(
-      (a, b) =>
-        Number(a.id === props.pickedShelter) - Number(b.id === props.pickedShelter) ||
-        (a.base?.[1] ?? 0) - (b.base?.[1] ?? 0),
-    )
+  return (
+    (props.points ?? [])
+      .filter((p) => !INSET_COUNTIES.has(p.county))
+      .map((p) => ({ ...p, base: mainProjection.value([p.lon, p.lat]) as [number, number] | null }))
+      // Painter's order: southern pins drawn last so an overlap hides the pin
+      // behind rather than a random one. The picked pin goes on top of all.
+      .sort(
+        (a, b) =>
+          Number(a.id === props.pickedShelter) - Number(b.id === props.pickedShelter) ||
+          (a.base?.[1] ?? 0) - (b.base?.[1] ?? 0),
+      )
+  )
 })
 
 /** Names once the camera is close, and then only for the pins that fit.
@@ -408,7 +430,8 @@ const labelled = computed(() => {
     const { x, y } = at(pin.base)
     const half = Math.max(28, pin.name.replace(pin.county, '').length * 4.6)
     const box: [number, number, number, number] = [x - half, y + 6, x + half, y + 18]
-    if (placed.some((b) => box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1])) continue
+    if (placed.some((b) => box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1]))
+      continue
     placed.push(box)
     keep.add(pin.id)
   }
@@ -489,27 +512,27 @@ function openShelter(id: string) {
            carries the camera. -->
       <g :clip-path="`url(#${CLIP_ID})`">
         <g :transform="`translate(${view.x},${view.y}) scale(${view.k})`">
-        <path
-          v-for="shape in mainPaths"
-          :key="shape.county"
-          :d="shape.d"
-          :fill="fillFor(shape.county)"
-          :class="{
-            county: true,
-            muted: showPoints,
-            dimmed: isDimmed(shape.county),
-            active: selected === shape.county,
-          }"
-          vector-effect="non-scaling-stroke"
-          tabindex="0"
-          role="button"
-          :aria-label="shape.county"
-          @mouseenter="enter(shape.county)"
-          @focus="enter(shape.county)"
-          @blur="leave"
-          @click="toggle(shape.county)"
-          @dblclick.prevent="frameCounty(shape.county)"
-          @keydown.enter.prevent="toggle(shape.county)"
+          <path
+            v-for="shape in mainPaths"
+            :key="shape.county"
+            :d="shape.d"
+            :fill="fillFor(shape.county)"
+            :class="{
+              county: true,
+              muted: showPoints,
+              dimmed: isDimmed(shape.county),
+              active: selected === shape.county,
+            }"
+            vector-effect="non-scaling-stroke"
+            tabindex="0"
+            role="button"
+            :aria-label="shape.county"
+            @mouseenter="enter(shape.county)"
+            @focus="enter(shape.county)"
+            @blur="leave"
+            @click="toggle(shape.county)"
+            @dblclick.prevent="frameCounty(shape.county)"
+            @keydown.enter.prevent="toggle(shape.county)"
           />
         </g>
       </g>
@@ -614,12 +637,7 @@ function openShelter(id: string) {
          about the frame's centre, so pressing − repeatedly lands back on the
          whole country: that is the way out, and it needs no separate reset. -->
     <div class="zoom-controls">
-      <button
-        type="button"
-        class="zoom-button"
-        aria-label="放大"
-        @click="zoomBy(1.6)"
-      >
+      <button type="button" class="zoom-button" aria-label="放大" @click="zoomBy(1.6)">
         <LucideIcon name="plus" :size="16" />
       </button>
       <button

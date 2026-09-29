@@ -33,17 +33,8 @@ import type { Animal, Kind } from '@/types'
 const route = useRoute()
 const router = useRouter()
 
-const {
-  animals,
-  shelters,
-  snapshotDate,
-  loading,
-  error,
-  shelterById,
-  placeOf,
-  countyOf,
-  daysOf,
-} = useRoster()
+const { animals, shelters, snapshotDate, loading, error, shelterById, placeOf, countyOf, daysOf } =
+  useRoster()
 
 /** Sixteen a page on a fixed four-column grid (two below 820px), so every
  *  full page ends on a complete row (decided 2026-09-15). */
@@ -81,7 +72,17 @@ function update(patch: Partial<AnimalQuery>) {
   const next: AnimalQuery = { ...filters.value, ...patch }
   const query: Record<string, string> = {}
   if (next.kind) query.kind = KIND_PARAM[next.kind]
-  for (const key of ['county', 'shelter', 'variety', 'sex', 'body', 'age', 'days', 'daysFrom', 'q'] as const) {
+  for (const key of [
+    'county',
+    'shelter',
+    'variety',
+    'sex',
+    'body',
+    'age',
+    'days',
+    'daysFrom',
+    'q',
+  ] as const) {
     const value = next[key]
     if (value) query[key] = value
   }
@@ -144,7 +145,9 @@ watch(
 )
 
 function submitSearch() {
-  void router.replace(searchLink(searchText.value, { ...filters.value, q: undefined }, animals.value))
+  void router.replace(
+    searchLink(searchText.value, { ...filters.value, q: undefined }, animals.value),
+  )
 }
 
 /** All filters except `skip`. Each control counts against this, so its
@@ -214,7 +217,9 @@ const bodyCounts = computed(() => countBy('body', (animal) => animal.body))
 
 const bandCounts = computed(() => {
   const list = matching('days')
-  return DAY_BANDS.map((band) => list.filter((animal) => inBand(daysOf(animal), band.min, band.max)).length)
+  return DAY_BANDS.map(
+    (band) => list.filter((animal) => inBand(daysOf(animal), band.min, band.max)).length,
+  )
 })
 
 function bandOn(key: DayBandKey): boolean {
@@ -231,9 +236,13 @@ const applied = computed(() => {
   const query = filters.value
   const tags: { label: string; clear: Partial<AnimalQuery> }[] = []
   if (query.q) {
-    tags.push({ label: `${isIdQuery(query.q) ? '編號' : '搜尋'}「${query.q}」`, clear: { q: undefined } })
+    tags.push({
+      label: `${isIdQuery(query.q) ? '編號' : '搜尋'}「${query.q}」`,
+      clear: { q: undefined },
+    })
   }
-  if (query.county) tags.push({ label: query.county, clear: { county: undefined, shelter: undefined } })
+  if (query.county)
+    tags.push({ label: query.county, clear: { county: undefined, shelter: undefined } })
   if (query.shelter) {
     tags.push({
       label: shelterById.value.get(query.shelter)?.name ?? '指定收容所',
@@ -251,7 +260,10 @@ const applied = computed(() => {
     tags.push({ label: `已在所 ${band.label}`, clear: { days: undefined } })
   } else if (query.daysFrom) {
     const band = DAY_BANDS.find((item) => item.key === query.daysFrom)!
-    tags.push({ label: `已在所 ${formatCount(Math.ceil((band.min - 1) / 365))} 年以上`, clear: { daysFrom: undefined } })
+    tags.push({
+      label: `已在所 ${formatCount(Math.ceil((band.min - 1) / 365))} 年以上`,
+      clear: { daysFrom: undefined },
+    })
   }
   return tags
 })
@@ -272,7 +284,9 @@ const visible = computed(() =>
   results.value.slice((page.value - 1) * PER_PAGE, page.value * PER_PAGE),
 )
 
-const firstIndex = computed(() => (results.value.length === 0 ? 0 : (page.value - 1) * PER_PAGE + 1))
+const firstIndex = computed(() =>
+  results.value.length === 0 ? 0 : (page.value - 1) * PER_PAGE + 1,
+)
 const lastIndex = computed(() => Math.min(page.value * PER_PAGE, results.value.length))
 
 /** Up to a few hundred pages, so: both ends, a window round the current page,
@@ -283,7 +297,8 @@ const pageItems = computed<(number | 'gap')[]>(() => {
   if (total <= 7) return Array.from({ length: total }, (_, index) => index + 1)
   const shown = new Set([1, total, current - 1, current, current + 1])
   if (current <= 4) [2, 3, 4, 5].forEach((n) => shown.add(n))
-  if (current >= total - 3) [total - 4, total - 3, total - 2, total - 1].forEach((n) => shown.add(n))
+  if (current >= total - 3)
+    [total - 4, total - 3, total - 2, total - 1].forEach((n) => shown.add(n))
   const pages = [...shown].filter((n) => n >= 1 && n <= total).sort((a, b) => a - b)
   const items: (number | 'gap')[] = []
   let previous = 0
@@ -362,12 +377,7 @@ function onSort(event: Event) {
       }}動物，狗、貓與其他動物在同一個清單裡，用下面的條件收斂。
     </PageHead>
 
-    <LoadingSkeleton
-      v-if="loading"
-      variant="cards"
-      :count="4"
-      hint="全國動物資料約 272 KB"
-    />
+    <LoadingSkeleton v-if="loading" variant="cards" :count="4" hint="全國動物資料約 272 KB" />
     <p v-else-if="error" class="state">資料載入失敗（{{ error }}）。</p>
 
     <template v-else>
@@ -393,7 +403,11 @@ function onSort(event: Event) {
           <div class="field">
             <label for="f-county">縣市</label>
             <div class="select">
-              <select id="f-county" :value="filters.county ?? ''" @change="onSelect('county', $event)">
+              <select
+                id="f-county"
+                :value="filters.county ?? ''"
+                @change="onSelect('county', $event)"
+              >
                 <option value="">全部（{{ formatCount(countyTotal) }} 隻）</option>
                 <option v-for="option in countyOptions" :key="option.name" :value="option.name">
                   {{ option.name }}（{{ formatCount(option.count) }}）
@@ -405,7 +419,11 @@ function onSort(event: Event) {
           <div class="field">
             <label for="f-shelter">收容所</label>
             <div class="select">
-              <select id="f-shelter" :value="filters.shelter ?? ''" @change="onSelect('shelter', $event)">
+              <select
+                id="f-shelter"
+                :value="filters.shelter ?? ''"
+                @change="onSelect('shelter', $event)"
+              >
                 <option value="">全部（{{ shelterOptions.length }} 間）</option>
                 <option v-for="option in shelterOptions" :key="option.id" :value="option.id">
                   {{ option.name }}（{{ formatCount(option.count) }}）
@@ -444,7 +462,11 @@ function onSort(event: Event) {
           <div class="field">
             <label for="f-variety">品種</label>
             <div class="select">
-              <select id="f-variety" :value="filters.variety ?? ''" @change="onSelect('variety', $event)">
+              <select
+                id="f-variety"
+                :value="filters.variety ?? ''"
+                @change="onSelect('variety', $event)"
+              >
                 <option value="">全部（{{ varietyOptions.length }} 種）</option>
                 <option v-for="[name, count] in varietyOptions" :key="name" :value="name">
                   {{ name }}（{{ formatCount(count) }}）
@@ -457,7 +479,12 @@ function onSort(event: Event) {
           <div class="field" role="group" aria-labelledby="l-sex">
             <span id="l-sex" class="label">性別</span>
             <div class="pills">
-              <button type="button" class="pill-btn" :aria-pressed="!filters.sex" @click="update({ sex: undefined })">
+              <button
+                type="button"
+                class="pill-btn"
+                :aria-pressed="!filters.sex"
+                @click="update({ sex: undefined })"
+              >
                 不限
               </button>
               <button
@@ -524,7 +551,9 @@ function onSort(event: Event) {
       </div>
 
       <div id="results" class="resultbar">
-        <span class="count" aria-live="polite">符合條件 <b>{{ formatCount(results.length) }}</b> 隻</span>
+        <span class="count" aria-live="polite"
+          >符合條件 <b>{{ formatCount(results.length) }}</b> 隻</span
+        >
         <span class="sortwrap">
           <LucideIcon name="arrow-up-down" :size="15" />
           <label for="f-sort">排序</label>
@@ -550,16 +579,21 @@ function onSort(event: Event) {
       </div>
 
       <p v-if="idSearch && idHits.length > 1" class="idnote">
-        這個編號在資料裡對到 {{ idHits.length }} 隻動物。同一個編號登錄給不同動物，是收容所登錄資料的問題。
+        這個編號在資料裡對到
+        {{ idHits.length }} 隻動物。同一個編號登錄給不同動物，是收容所登錄資料的問題。
       </p>
 
       <div v-if="idSearch && idHits.length === 0" class="idmiss">
         <span class="icon"><LucideIcon name="search-x" :size="18" /></span>
         <div>
-          <p><b>目前開放認養的名單裡沒有編號「{{ idSearch }}」。</b></p>
+          <p>
+            <b>目前開放認養的名單裡沒有編號「{{ idSearch }}」。</b>
+          </p>
           <p class="more">
             請確認編號是否正確。若編號無誤，牠可能已被認養、轉到其他收容所或暫停開放認養；本站無法分辨是哪一種。想確認請致電收容所，或到
-            <a :href="OFFICIAL_ADOPTION_URL" target="_blank" rel="noreferrer">農業部動物認領養公告頁（pet.gov.tw）</a>
+            <a :href="OFFICIAL_ADOPTION_URL" target="_blank" rel="noreferrer"
+              >農業部動物認領養公告頁（pet.gov.tw）</a
+            >
             查詢。
           </p>
         </div>
@@ -595,7 +629,12 @@ function onSort(event: Event) {
               {{ item }}
             </RouterLink>
           </template>
-          <button type="button" class="page-nav" :disabled="page >= pageCount" @click="goTo(page + 1)">
+          <button
+            type="button"
+            class="page-nav"
+            :disabled="page >= pageCount"
+            @click="goTo(page + 1)"
+          >
             下一頁 <LucideIcon name="chevron-right" :size="16" />
           </button>
         </nav>
@@ -616,7 +655,8 @@ function onSort(event: Event) {
           <div>
             <h3>刊登照片不代表動物現況</h3>
             <p>
-              照片多為入所建檔時拍攝，全國有 {{ noPhotoShare }}% 的資料沒有照片。實際的健康與個性必須以現場互動評估為準。
+              照片多為入所建檔時拍攝，全國有 {{ noPhotoShare }}%
+              的資料沒有照片。實際的健康與個性必須以現場互動評估為準。
             </p>
           </div>
           <div>

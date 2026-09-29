@@ -44,7 +44,9 @@ onBeforeUnmount(() => clearTimeout(timer))
 
 <template>
   <div v-if="shown" class="loading">
-    <p class="say" role="status">載入中…<template v-if="hint">（{{ hint }}）</template></p>
+    <p class="say" role="status">
+      載入中…<template v-if="hint">（{{ hint }}）</template>
+    </p>
 
     <div v-if="variant === 'cards'" class="cards" aria-hidden="true">
       <div v-for="index in count" :key="index" class="card">

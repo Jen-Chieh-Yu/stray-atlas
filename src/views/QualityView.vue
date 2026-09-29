@@ -20,12 +20,7 @@ import LoadingSkeleton from '@/components/LoadingSkeleton.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
 import PageHead from '@/components/PageHead.vue'
 import { fetchMeta, fetchQuality } from '@/composables/useAtlasData'
-import type {
-  MetaPayload,
-  QualityPayload,
-  QualityRow,
-  SterilizationShare,
-} from '@/types'
+import type { MetaPayload, QualityPayload, QualityRow, SterilizationShare } from '@/types'
 
 const quality = ref<QualityPayload | null>(null)
 const meta = ref<MetaPayload | null>(null)
@@ -208,7 +203,9 @@ function grades(row: QualityRow, key: string): string {
                   </td>
                   <td>
                     <template v-if="item.reason === 'all_blank'">整欄空白</template>
-                    <template v-else>零變異，全部都是 <code>{{ item.value }}</code></template>
+                    <template v-else
+                      >零變異，全部都是 <code>{{ item.value }}</code></template
+                    >
                   </td>
                 </tr>
               </tbody>
@@ -225,7 +222,9 @@ function grades(row: QualityRow, key: string): string {
                       <em v-if="fieldLabel(item.dropped)">（{{ fieldLabel(item.dropped) }}）</em>
                     </span>
                   </td>
-                  <td>與 <code>{{ item.identical_to }}</code> 逐列相同</td>
+                  <td>
+                    與 <code>{{ item.identical_to }}</code> 逐列相同
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -262,7 +261,9 @@ function grades(row: QualityRow, key: string): string {
             備註欄只有 {{ pct(meta.coverage.animal_remark ?? 0) }}
             有值，且多為行政或醫療註記；尋獲地雖有
             {{ pct(meta.coverage.animal_foundplace ?? 0) }}
-            非空，但下一段會看到其中真正定得出位置的不到四成。<strong>欄位有填，不等於欄位可用。</strong>
+            非空，但下一段會看到其中真正定得出位置的不到四成。<strong
+              >欄位有填，不等於欄位可用。</strong
+            >
           </p>
         </div>
       </section>
@@ -329,11 +330,7 @@ function grades(row: QualityRow, key: string): string {
                   <th scope="row">{{ county.name }}</th>
                   <td class="n">{{ county.shelters }}</td>
                   <td class="n">{{ count(county.rows) }}</td>
-                  <td
-                    v-for="metric in quality.metrics"
-                    :key="metric.key"
-                    class="num g-na"
-                  >
+                  <td v-for="metric in quality.metrics" :key="metric.key" class="num g-na">
                     <span class="v">{{ pct(county.scores[metric.key]) }}</span>
                     <span class="g">—</span>
                     <span class="bar">
@@ -354,11 +351,13 @@ function grades(row: QualityRow, key: string): string {
         </div>
         <div class="mn-grid">
           <div v-for="metric in quality.metrics" :key="metric.key" class="mn">
-            <h3>{{ metric.label }}<em>{{ metric.key }}</em></h3>
+            <h3>
+              {{ metric.label }}<em>{{ metric.key }}</em>
+            </h3>
             <p>{{ metric.description }}</p>
             <span class="th">
-              優 ≥ {{ pct(metric.thresholds.good) }} · 中 ≥ {{ pct(metric.thresholds.fair) }} ·
-              全國 {{ pct(metric.national) }}
+              優 ≥ {{ pct(metric.thresholds.good) }} · 中 ≥ {{ pct(metric.thresholds.fair) }} · 全國
+              {{ pct(metric.national) }}
             </span>
           </div>
         </div>
@@ -385,8 +384,9 @@ function grades(row: QualityRow, key: string): string {
             {{ pct(largestCounty.share) }} 的在所動物，照片覆蓋率
             {{ pct(largestCounty.scores.photo) }}</template
           ><template v-if="worstPhotoConcentration">
-            ；最低的 {{ worstPhotoConcentration.of }} 間裡有
-            {{ worstPhotoConcentration.n }} 間在{{ worstPhotoConcentration.county }}</template
+            ；最低的 {{ worstPhotoConcentration.of }} 間裡有 {{ worstPhotoConcentration.n }} 間在{{
+              worstPhotoConcentration.county
+            }}</template
           >。沒有照片的動物，在任何認養平臺上都很難被看見——這是四個指標裡唯一直接影響動物的登錄缺口。
         </p>
         <div class="scroller">
@@ -491,9 +491,8 @@ function grades(row: QualityRow, key: string): string {
               F 未絕育 {{ pct(sterilizationActive.F) }}（{{ count(sterilizationActive.F_n) }} 隻）
             </span>
             <span class="r u">
-              N 未知／不適用 {{ pct(sterilizationActive.N) }}（{{
-                count(sterilizationActive.N_n)
-              }} 隻）
+              N 未知／不適用 {{ pct(sterilizationActive.N) }}（{{ count(sterilizationActive.N_n) }}
+              隻）
             </span>
             <span class="r total">共 {{ count(sterilizationActive.rows) }} 隻</span>
           </template>
@@ -525,9 +524,12 @@ function grades(row: QualityRow, key: string): string {
           <li>
             不能拿來比較各縣市的收容壓力或認養成效，那是
             <RouterLink to="/map">縣市地圖</RouterLink>與
-            <RouterLink to="/analysis">資料分析</RouterLink>的事，而且這份快照也答不了「多快被認養」。
+            <RouterLink to="/analysis">資料分析</RouterLink
+            >的事，而且這份快照也答不了「多快被認養」。
           </li>
-          <li>優／中／待補的門檻是本站自訂，非官方評鑑；換一組門檻就會換一組級別，門檻都寫在上面。</li>
+          <li>
+            優／中／待補的門檻是本站自訂，非官方評鑑；換一組門檻就會換一組級別，門檻都寫在上面。
+          </li>
         </ul>
       </section>
     </template>
@@ -1121,7 +1123,6 @@ td.num {
     box-shadow: inset 0 0 0 1px var(--hairline);
   }
 }
-
 
 /* The readout sits in the flow with a fixed height, so pointing at a row
    moves nothing on the page. */

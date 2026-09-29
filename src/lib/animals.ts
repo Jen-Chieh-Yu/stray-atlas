@@ -111,7 +111,8 @@ export function animalsLink(query: AnimalQuery) {
 
 /** The ministry's adoption listing, built on the same feed. Where to send
  *  someone whose animal this site no longer lists. */
-export const OFFICIAL_ADOPTION_URL = 'https://www.pet.gov.tw/AnimalApp/AnnounceMent.aspx?PageType=Adopt'
+export const OFFICIAL_ADOPTION_URL =
+  'https://www.pet.gov.tw/AnimalApp/AnnounceMent.aspx?PageType=Adopt'
 
 /* ── Search by number ──────────────────────────────────────────────────────
  * Someone who saw an animal at the shelter or on pet.gov.tw has its 收容編號
@@ -197,7 +198,6 @@ export function tally<T>(items: T[], key: (item: T) => string): [string, number]
   }
   return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'zh-TW'))
 }
-
 
 export function formatCount(value: number): string {
   return value.toLocaleString('zh-TW')
