@@ -52,6 +52,8 @@ python scripts/build_stats.py           # stats/counties.json
 python scripts/build_shelters.py        # shelters.json + animals.json
 python scripts/build_shelter_points.py  # shelter-points.json（地圖圖釘，讀 shelters.json）
 python scripts/build_distribution.py    # stats/distribution.json（分析頁）
+python scripts/build_features.py        # stats/features.json（分組中位數、收容所內毛色對照）
+python scripts/build_quality.py         # stats/quality.json（資料品質頁）
 ```
 
 各腳本共用的路徑、log 與 JSON 寫檔集中在 `scripts/common.py`。
@@ -71,10 +73,18 @@ git pull --ff-only
 npm ci
 npm run dev         # http://localhost:5173/stray-atlas/
 npm run type-check  # 只做型別檢查（commit 前）
+npm test            # vitest：src/lib 的純函式（commit 前）
 npm run build       # 型別檢查 + 打包，產出 dist/（推送前）
 npm run preview     # 預覽 dist/
 
 cp .env.example .env.local   # 選用：填入 Google Maps Embed 金鑰，收容所介紹頁才會顯示內嵌地圖
+```
+
+跑建置腳本的測試（pytest 只有測試需要，腳本本身維持標準函式庫）：
+
+```bash
+pip install "pytest>=9,<10"
+python -m pytest -q
 ```
 
 **更換首頁照片。** 照片由人工從 Unsplash 下載，先在照片頁確認標示為 Unsplash License（不是付費的 Unsplash+），原檔放進 `assets-src/hero/`，在 `scripts/build_hero.py` 與 `src/lib/heroPhotos.ts`（含攝影師、出處與對焦位置）登記後執行：
@@ -93,6 +103,7 @@ python scripts/build_hero.py   # 產生 src/assets/hero/*.webp
 ```
 stray-atlas/
 ├── .github/workflows/
+│   ├── ci.yml               PR 的檢查：型別、vitest、build、pytest、public/data 重建比對
 │   ├── daily-snapshot.yml   每日抓取、驗證、封存快照；有新快照時重建網站資料並觸發部署
 │   └── deploy-pages.yml     打包並發布到 GitHub Pages
 ├── data/
@@ -102,13 +113,15 @@ stray-atlas/
 ├── scripts/                 Python 前處理與分析（標準函式庫，例外見下）
 │   ├── common.py            共用：路徑、log、時間戳記、JSON 寫檔、快照清單
 │   ├── fetch_snapshot.py    每日抓取；驗證、確定性 gzip、manifest
-│   ├── build_all.py         固定一份快照，依序跑下列六步並檢查輸出日期一致
+│   ├── build_all.py         固定一份快照，依序跑下列八步並檢查輸出日期一致
 │   ├── clean.py             欄位清理，同時是其他腳本的載入函式庫
 │   ├── geocode.py           尋獲地分級（不呼叫 geocoder，見〈尋獲地〉）
 │   ├── build_stats.py       縣市層級統計
 │   ├── build_shelters.py    收容所與全部動物名冊
 │   ├── build_shelter_points.py  收容所定位（行政區形心）
 │   ├── build_distribution.py    在所天數分布：直方圖、KDE、ECDF
+│   ├── build_features.py    分組中位數與四分位距、收容所內毛色對照
+│   ├── build_quality.py     各縣市與各收容所的登錄完整度評分
 │   ├── build_hero.py        首頁示意照片縮圖成 WebP（需 pillow，一次性，不在 build_all 內）
 │   └── build_districts.py   由內政部鄉鎮市區界 shapefile 產生對照表與界線（需 pyshp，一次性，不在 build_all 內；原始壓縮檔不進 git）
 ├── public/
@@ -120,7 +133,7 @@ stray-atlas/
 │       ├── shelter-points.json  地圖圖釘
 │       ├── areas.json       縣市代碼對照
 │       ├── counties.geojson、districts.geojson  縣市與鄉鎮市區界（build_districts.py 產出）
-│       └── stats/           counties.json、foundplace.json、distribution.json
+│       └── stats/           counties.json、foundplace.json、distribution.json、features.json、quality.json
 ├── assets-src/hero/         首頁照片原檔（Unsplash 下載，約 24 MB，不進 git）
 ├── src/                     Vue 前端
 │   ├── main.ts、App.vue     進入點與共用外殼（頂欄、導覽、頁尾）
@@ -128,11 +141,12 @@ stray-atlas/
 │   ├── types.ts             資料契約的型別
 │   ├── assets/hero/         首頁示意照片（WebP，1920 與 960 寬各一份）
 │   ├── router/              路由與捲動行為
-│   ├── views/               七個頁面（Home、Animals、ShelterList、Shelter、Map、Analysis、About）
-│   ├── components/          動物卡片與詳細資料、首頁照片輪播、縣市地圖、分析圖表、圖示
+│   ├── views/               八個頁面（Home、Animals、ShelterList、Shelter、Map、Quality、Analysis、About）
+│   ├── components/          動物卡片與詳細資料、首頁照片輪播、縣市地圖、分析圖表、載入骨架、圖示
 │   ├── composables/         資料載入（useAtlasData）與動物名冊（useRoster）
 │   └── lib/                 共用函式：動物、在所天數、收容所地址、詳細資料視窗路由、圖示資料、首頁照片與出處、捲動淡入
-├── index.html、vite.config.ts、tsconfig*.json、env.d.ts
+├── tests/                   建置腳本的 pytest 測試（src/lib 的 vitest 測試在 src/lib/__tests__/）
+├── index.html、vite.config.ts、vitest.config.ts、tsconfig*.json、env.d.ts
 ├── .env.example             Google Maps Embed 金鑰範本（複製成 .env.local）
 ├── CLAUDE.md                AI 協作工作規則
 ├── PROJECT_BRIEF.md         資料剖析結論與已驗證數字
@@ -312,6 +326,8 @@ python scripts/fetch_snapshot.py --force    # 覆蓋當日已存在的檔案
 | KDE 與 ECDF | 在 Python 算好存 JSON | 分析留在腳本裡、瀏覽器只負責畫，與其他頁面同一套分工。高斯 KDE 手寫十五行，不為此引入 scipy |
 | 頻寬選擇 | 公開三段讓讀者切換 | KDE 的形狀有一半是頻寬的主張。用交叉驗證自動選一條反而把選擇藏起來，與這頁想說的事相反 |
 | 地圖繪製 | 內嵌 SVG + d3-geo，自行實作縮放 | 不依賴圖磚服務、不需 API key，demo 現場沒有外部相依可壞。縮放只是一個 transform 加 wheel／pointer 事件，不值得為此引入 d3-zoom |
+| 測試範圍 | 只測 `src/lib` 的純函式與建置腳本，不做元件測試 | 這些函式算出來的數字會直接印在頁面上，錯了讀者看不出來；元件測試要維護一整套 DOM 假設，對一個人維護的專案划不來 |
+| `main` 的保護規則 | ruleset 只禁止刪除分支與 force push，**不設必要狀態檢查** | 必要檢查會連同直接 push 一起擋下，而每日排程機器人以 `GITHUB_TOKEN` 直接推 `main`；個人 repo 的 bypass 清單沒有 GitHub Actions（實測 Write 角色無效）。快照漏一天永久補不回來，紅燈合併隨時可以修 |
 | 收容所介紹頁地圖 | Google Maps Embed，金鑰缺席時退回外部連結 | 單一地址的街道圖是讀者要的東西，自己畫不划算。金鑰由建置環境注入（本機 `.env.local` 的 `VITE_GOOGLE_MAPS_EMBED_KEY`、CI 的 secret `GOOGLE_MAPS_EMBED_KEY`），必須限制 HTTP referrer；沒有金鑰時頁面仍可用，不影響主地圖 |
 
 ---
