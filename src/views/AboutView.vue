@@ -8,16 +8,15 @@
 import { computed, onMounted, ref } from 'vue'
 import PageHead from '@/components/PageHead.vue'
 import { fetchDistribution, useAtlasData } from '@/composables/useAtlasData'
-import { formatCount } from '@/lib/animals'
+import { OFFICIAL_ADOPTION_URL as OFFICIAL_URL, formatCount } from '@/lib/animals'
 import { HERO_PHOTOS } from '@/lib/heroPhotos'
 import { vReveal } from '@/lib/reveal'
 import type { DistributionPayload } from '@/types'
 
 const REPO_URL = 'https://github.com/Jen-Chieh-Yu/stray-atlas'
-/** The ministry's pet registration site, and its adoption listing built on
- *  the same feed. */
+/** The ministry's pet registration site. Its adoption listing, built on the
+ *  same feed, is OFFICIAL_URL. */
 const PET_SITE_URL = 'https://www.pet.gov.tw/'
-const OFFICIAL_URL = 'https://www.pet.gov.tw/AnimalApp/AnnounceMent.aspx?PageType=Adopt'
 
 const { stats } = useAtlasData()
 const distribution = ref<DistributionPayload | null>(null)

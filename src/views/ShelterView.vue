@@ -5,9 +5,10 @@ import AnimalCard from '@/components/AnimalCard.vue'
 import AnimalDialog from '@/components/AnimalDialog.vue'
 import LoadingSkeleton from '@/components/LoadingSkeleton.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
+import MissingAnimalDialog from '@/components/MissingAnimalDialog.vue'
 import ShelterSpark from '@/components/ShelterSpark.vue'
 import { useRoster } from '@/composables/useRoster'
-import { animalsLink, formatCount, median } from '@/lib/animals'
+import { animalsLink, formatCount, isNewerId, median } from '@/lib/animals'
 import { closeAnimalDialog } from '@/lib/dialogRoute'
 import { addressesOf, mapEmbedUrl, mapOpenUrl, phoneOf } from '@/lib/shelters'
 import type { Animal, Kind } from '@/types'
@@ -28,9 +29,8 @@ const {
   error,
   daysOf,
   knownDays,
-  percentileOf,
-  longestId,
   placeOf,
+  shelterById,
 } = useRoster()
 
 const shelter = computed(() => shelters.value.find((item) => item.id === route.params.id) ?? null)
@@ -75,10 +75,19 @@ const labels = computed(() => buckets.value.map((bucket) => bucket.label))
 
 /* ── Detail dialog, same contract as the other card pages ──────────────── */
 
+/** Looked up in the whole roster, not only this shelter's: a link that pairs
+ *  this page with another shelter's animal still shows that animal. */
 const openAnimal = computed<Animal | null>(() => {
   const id = route.query.animal
   if (typeof id !== 'string') return null
-  return mine.value.find((animal) => animal.id === id) ?? null
+  return animals.value.find((animal) => animal.id === id) ?? null
+})
+
+/** A link to an animal no longer in the roster, once the roster is here. */
+const missingId = computed(() => {
+  const id = route.query.animal
+  if (typeof id !== 'string' || animals.value.length === 0 || openAnimal.value) return null
+  return id
 })
 
 function open(animal: Animal) {
@@ -131,8 +140,6 @@ function close() {
             :key="animal.id"
             :animal="animal"
             :days="daysOf(animal)"
-            :percentile="percentileOf(animal)"
-            :longest="animal.id === longestId"
             :place="placeOf(animal)"
             @open="open"
           />
@@ -325,8 +332,18 @@ function close() {
       v-if="openAnimal && shelter"
       :animal="openAnimal"
       :snapshot-date="snapshotDate"
-      :shelter="shelter"
+      :shelter="shelterById.get(openAnimal.shelter)"
+      :roster="animals"
+      :hide-shelter-link="openAnimal.shelter === shelter.id"
       @close="close"
+      @open="open"
+    />
+    <MissingAnimalDialog
+      v-else-if="missingId && shelter"
+      :id="missingId"
+      :newer="isNewerId(missingId, animals)"
+      @close="close"
+      @browse="router.replace(animalsLink({ shelter: shelter.id }))"
     />
   </div>
 </template>

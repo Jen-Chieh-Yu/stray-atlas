@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import AnimalCard from '@/components/AnimalCard.vue'
 import AnimalDialog from '@/components/AnimalDialog.vue'
 import LoadingSkeleton from '@/components/LoadingSkeleton.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
+import MissingAnimalDialog from '@/components/MissingAnimalDialog.vue'
 import PageHead from '@/components/PageHead.vue'
 import { useRoster } from '@/composables/useRoster'
 import { closeAnimalDialog } from '@/lib/dialogRoute'
@@ -15,9 +16,14 @@ import {
   SEX_LABEL,
   SORTS,
   AGE_LABEL,
+  OFFICIAL_ADOPTION_URL,
   formatCount,
   inBand,
+  isIdQuery,
+  isNewerId,
+  matchesId,
   parseAnimalQuery,
+  searchLink,
   tally,
   KIND_PARAM,
 } from '@/lib/animals'
@@ -37,8 +43,6 @@ const {
   placeOf,
   countyOf,
   daysOf,
-  percentileOf,
-  longestId,
 } = useRoster()
 
 /** Sixteen a page on a fixed four-column grid (two below 820px), so every
@@ -105,12 +109,42 @@ function matchesDays(animal: Animal, query: AnimalQuery): boolean {
   return true
 }
 
-/** Every word must hit the county, the shelter or the variety — the three
- *  things the home page's search box promises. */
+/** A number is matched whole against 收容編號 and 流水號 (lib/animals.ts).
+ *  Anything else: every word must hit the county, the shelter or the variety
+ *  — the three things the search boxes promise. */
 function matchesText(animal: Animal, text: string | undefined): boolean {
   if (!text) return true
+  if (isIdQuery(text)) return matchesId(animal, text)
   const haystack = `${countyOf(animal)} ${placeOf(animal)} ${animal.variety}`
   return text.split(/\s+/).every((word) => haystack.includes(word))
+}
+
+const idSearch = computed(() => {
+  const q = filters.value.q
+  return q && isIdQuery(q) ? q : null
+})
+
+/** Hits for the number alone, before any other filter: zero means the number
+ *  is not in the roster at all, which gets its own explanation below. */
+const idHits = computed(() => {
+  const q = idSearch.value
+  return q ? animals.value.filter((animal) => matchesId(animal, q)) : []
+})
+
+/* ── Search box ────────────────────────────────────────────────────────────
+ * Applied on Enter, not per keystroke: recounting every facet on each letter
+ * would make the numbers beside the chips flicker. */
+
+const searchText = ref('')
+
+watch(
+  () => filters.value.q,
+  (q) => (searchText.value = q ?? ''),
+  { immediate: true },
+)
+
+function submitSearch() {
+  void router.replace(searchLink(searchText.value, { ...filters.value, q: undefined }, animals.value))
 }
 
 /** All filters except `skip`. Each control counts against this, so its
@@ -196,7 +230,9 @@ function bandOn(key: DayBandKey): boolean {
 const applied = computed(() => {
   const query = filters.value
   const tags: { label: string; clear: Partial<AnimalQuery> }[] = []
-  if (query.q) tags.push({ label: `搜尋「${query.q}」`, clear: { q: undefined } })
+  if (query.q) {
+    tags.push({ label: `${isIdQuery(query.q) ? '編號' : '搜尋'}「${query.q}」`, clear: { q: undefined } })
+  }
   if (query.county) tags.push({ label: query.county, clear: { county: undefined, shelter: undefined } })
   if (query.shelter) {
     tags.push({
@@ -285,6 +321,13 @@ const openAnimal = computed<Animal | null>(() => {
   return animals.value.find((animal) => animal.id === id) ?? null
 })
 
+/** A link to an animal no longer in the roster, once the roster is here. */
+const missingId = computed(() => {
+  const id = route.query.animal
+  if (typeof id !== 'string' || animals.value.length === 0 || openAnimal.value) return null
+  return id
+})
+
 function open(animal: Animal) {
   void router.push({ query: { ...route.query, animal: animal.id } })
 }
@@ -331,6 +374,22 @@ function onSort(event: Event) {
       <!-- Region above the line, the animal itself below it (DESIGN.md §6). -->
       <div v-reveal class="findbox">
         <div class="find-row upper">
+          <!-- Searches place and breed, and finds one animal by its number;
+               it sits with the region controls because it spans both rows. -->
+          <form class="field" role="search" @submit.prevent="submitSearch">
+            <label for="f-search">搜尋</label>
+            <div class="textbox">
+              <LucideIcon name="search" :size="16" />
+              <input
+                id="f-search"
+                v-model="searchText"
+                type="search"
+                placeholder="縣市、收容所、品種或收容編號"
+                enterkeyhint="search"
+                autocomplete="off"
+              />
+            </div>
+          </form>
           <div class="field">
             <label for="f-county">縣市</label>
             <div class="select">
@@ -490,7 +549,22 @@ function onSort(event: Event) {
         <button type="button" class="clear" @click="clearAll">清除全部</button>
       </div>
 
-      <p v-if="results.length === 0" class="state">沒有符合條件的動物。</p>
+      <p v-if="idSearch && idHits.length > 1" class="idnote">
+        這個編號在資料裡對到 {{ idHits.length }} 隻動物。同一個編號登錄給不同動物，是收容所登錄資料的問題。
+      </p>
+
+      <div v-if="idSearch && idHits.length === 0" class="idmiss">
+        <span class="icon"><LucideIcon name="search-x" :size="18" /></span>
+        <div>
+          <p><b>目前開放認養的名單裡沒有編號「{{ idSearch }}」。</b></p>
+          <p class="more">
+            請確認編號是否正確。若編號無誤，牠可能已被認養、轉到其他收容所或暫停開放認養；本站無法分辨是哪一種。想確認請致電收容所，或到
+            <a :href="OFFICIAL_ADOPTION_URL" target="_blank" rel="noreferrer">農業部動物認領養公告頁（pet.gov.tw）</a>
+            查詢。
+          </p>
+        </div>
+      </div>
+      <p v-else-if="results.length === 0" class="state">沒有符合條件的動物。</p>
 
       <template v-else>
         <div class="grid">
@@ -500,8 +574,6 @@ function onSort(event: Event) {
             v-reveal
             :animal="animal"
             :days="daysOf(animal)"
-            :percentile="percentileOf(animal)"
-            :longest="animal.id === longestId"
             :place="placeOf(animal)"
             @open="open"
           />
@@ -568,7 +640,16 @@ function onSort(event: Event) {
       :animal="openAnimal"
       :snapshot-date="snapshotDate"
       :shelter="shelterById.get(openAnimal.shelter)"
+      :roster="animals"
       @close="close"
+      @open="open"
+    />
+    <MissingAnimalDialog
+      v-else-if="missingId"
+      :id="missingId"
+      :newer="isNewerId(missingId, animals)"
+      @close="close"
+      @browse="close"
     />
   </div>
 </template>
@@ -656,6 +737,45 @@ function onSort(event: Event) {
     right: 0.8rem;
     color: var(--ink-muted);
     pointer-events: none;
+  }
+}
+
+/* The search field, dressed like the selects beside it. */
+.textbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 19rem;
+  padding: 0 0.8rem;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  background: var(--plane);
+  color: var(--ink-muted);
+
+  &:hover {
+    border-color: var(--ramp-3);
+  }
+
+  &:focus-within {
+    outline: 2px solid var(--ramp-4);
+    outline-offset: 1px;
+  }
+
+  & input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.5rem 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.92rem;
+    font-variant-numeric: tabular-nums;
+
+    &::placeholder {
+      color: var(--ink-muted);
+    }
   }
 }
 
@@ -767,6 +887,57 @@ function onSort(event: Event) {
     font: inherit;
     font-size: 0.84rem;
     cursor: pointer;
+  }
+}
+
+/* ── Search by number ── */
+.idnote {
+  margin: 0.9rem 0 0;
+  padding: 0.7rem 0.95rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunk);
+  color: var(--ink-secondary);
+  font-size: 0.88rem;
+}
+
+.idmiss {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
+  padding: 1.1rem 1.25rem;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  background: var(--surface);
+
+  & .icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--radius-sm);
+    background: var(--surface-sunk);
+    color: var(--ink-secondary);
+  }
+
+  & p {
+    margin: 0;
+    color: var(--ink-secondary);
+    font-size: 0.92rem;
+  }
+
+  & .more {
+    margin-top: 0.35rem;
+    font-size: 0.86rem;
+  }
+
+  & b {
+    color: var(--ink);
+  }
+
+  & a {
+    color: var(--accent-text);
   }
 }
 
@@ -906,7 +1077,8 @@ function onSort(event: Event) {
     width: 100%;
   }
 
-  .select {
+  .select,
+  .textbox {
     width: 100%;
     min-width: 0;
   }

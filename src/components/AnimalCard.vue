@@ -12,10 +12,6 @@ import type { Animal } from '@/types'
 const props = defineProps<{
   animal: Animal
   days: number | null
-  /** Share of all animals in the snapshot that have been in for fewer days, 0–100. */
-  percentile: number
-  /** True for the single longest stay in the country, which gets its own sentence. */
-  longest?: boolean
   place: string
 }>()
 
@@ -26,14 +22,6 @@ const broken = ref(false)
 const SEX_ICON: Record<string, IconName> = { M: 'mars', F: 'venus' }
 
 const title = computed(() => props.animal.variety || '未填品種')
-
-/** Floor, not round: 99.96 must not print as 100, which would read as "longer
- *  than every animal", including itself. */
-const rankText = computed(() => {
-  if (props.longest) return '牠是全臺等最久的那一隻'
-  if (props.percentile < 1) return '剛入所，全站幾乎所有動物都等得比牠久'
-  return `等得比 ${(Math.floor(props.percentile * 10) / 10).toFixed(1)}% 的動物久`
-})
 
 const badge = computed(() =>
   props.days === null ? '天數未知' : `已在所 ${formatCount(props.days)} 天`,
@@ -67,9 +55,12 @@ const badge = computed(() =>
         {{ title }}
       </h3>
       <span class="place">{{ place }}</span>
-      <span class="rank">
-        <span class="rank-bar"><span :style="{ width: `${percentile}%` }" /></span>
-        <span class="rank-txt">{{ rankText }}</span>
+      <!-- The number the shelter knows this animal by, which is what a visitor
+           quotes on the phone. The rule above it is a divider only; it used to
+           be a rank bar (2026-09-29). -->
+      <span class="ident">
+        <span class="rule" />
+        <span class="subid"><span class="k">收容編號</span> {{ animal.subid }}</span>
       </span>
       <button type="button" class="detail-btn" @click.stop="emit('open', animal)">
         查看詳情
@@ -166,7 +157,7 @@ const badge = computed(() =>
   color: var(--ink-muted);
 }
 
-.rank {
+.ident {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -174,25 +165,23 @@ const badge = computed(() =>
   margin-top: 0.15rem;
 }
 
-.rank-bar {
+.rule {
   width: 100%;
   height: 4px;
   border-radius: 999px;
-  background: var(--surface-sunk);
-
-  & span {
-    display: block;
-    height: 100%;
-    min-width: 3px;
-    border-radius: 999px;
-    background: var(--ramp-4);
-  }
+  background: var(--ramp-4);
 }
 
-.rank-txt {
-  font-size: 0.78rem;
-  color: var(--ink-muted);
+/* Tabular so numbers of different lengths in one row do not jitter; the label
+   wraps above the number on a narrow card rather than cutting the number. */
+.subid {
+  font-size: 0.8rem;
+  color: var(--ink-secondary);
   font-variant-numeric: tabular-nums;
+
+  & .k {
+    color: var(--ink-muted);
+  }
 }
 
 .detail-btn {

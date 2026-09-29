@@ -62,32 +62,12 @@ export function useRoster() {
       .sort((a, b) => a - b),
   )
 
-  /** Share of the snapshot that has been in for strictly fewer days. It ranks
-   *  an animal against the others still in the shelter today, which is all a
-   *  stock snapshot can rank against (CLAUDE.md §1.3). */
-  function percentileOf(animal: Animal): number {
-    const value = daysOf(animal)
-    const sorted = knownDays.value
-    if (value === null || sorted.length === 0) return 0
-    let low = 0
-    let high = sorted.length
-    while (low < high) {
-      const mid = (low + high) >> 1
-      if (sorted[mid] < value) low = mid + 1
-      else high = mid
-    }
-    return (low / sorted.length) * 100
-  }
-
   /** Longest stay first. Sorted explicitly rather than trusting the file order. */
   const byLongest = computed(() =>
     animals.value
       .filter((animal) => daysOf(animal) !== null)
       .sort((a, b) => (daysOf(b) ?? 0) - (daysOf(a) ?? 0)),
   )
-
-  /** The single longest stay, which its card names outright. */
-  const longestId = computed(() => byLongest.value[0]?.id ?? null)
 
   return {
     animals,
@@ -101,8 +81,6 @@ export function useRoster() {
     countyOf,
     daysOf,
     knownDays,
-    percentileOf,
     byLongest,
-    longestId,
   }
 }

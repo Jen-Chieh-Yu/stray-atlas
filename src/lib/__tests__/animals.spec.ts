@@ -3,8 +3,13 @@ import {
   animalsLink,
   DAY_BANDS,
   inBand,
+  isIdQuery,
+  isNewerId,
+  matchesId,
   median,
   parseAnimalQuery,
+  pickSiblings,
+  searchLink,
   tally,
 } from '@/lib/animals'
 
@@ -104,6 +109,118 @@ describe('animalsLink', () => {
     // parser; the two must agree or a chip lands on the wrong filter.
     const source = { kind: '貓' as const, county: '雲林縣', days: '2-5y' as const }
     expect(parseAnimalQuery(animalsLink(source).query)).toMatchObject(source)
+  })
+})
+
+describe('isIdQuery', () => {
+  it('recognises the shelters’ different numbering schemes', () => {
+    // Formats seen in the 2026-09-29 snapshot.
+    for (const id of ['AAAHG1141003002', 'W150910-14', '107-E015D', '1141317', '415705']) {
+      expect(isIdQuery(id), id).toBe(true)
+    }
+  })
+
+  it('leaves place and breed searches to the text matcher', () => {
+    expect(isIdQuery('臺北市')).toBe(false)
+    expect(isIdQuery('米克斯')).toBe(false)
+    expect(isIdQuery('柴犬')).toBe(false)
+  })
+
+  it('needs a digit, and no Han character or space', () => {
+    expect(isIdQuery('abc')).toBe(false)
+    expect(isIdQuery('第2區')).toBe(false)
+    expect(isIdQuery('AAAHG 1141003002')).toBe(false)
+    expect(isIdQuery(undefined)).toBe(false)
+  })
+})
+
+describe('matchesId', () => {
+  const animal = { id: '424951', subid: 'AAAHG1141003002' }
+
+  it('matches either number, ignoring case', () => {
+    expect(matchesId(animal, 'aaahg1141003002')).toBe(true)
+    expect(matchesId(animal, '424951')).toBe(true)
+  })
+
+  it('never matches a fragment', () => {
+    // A fragment hits hundreds of animals and finds none of them.
+    expect(matchesId(animal, '1141003')).toBe(false)
+    expect(matchesId(animal, '42495')).toBe(false)
+  })
+})
+
+describe('searchLink', () => {
+  const roster = [
+    { id: '1', subid: 'A100' },
+    { id: '2', subid: 'B200' },
+    { id: '3', subid: 'B200' },
+  ]
+
+  it('opens the one animal a number points to, dropping every other filter', () => {
+    const link = searchLink(' a100 ', { kind: '狗', county: '臺北市' }, roster)
+    expect(link).toEqual({ path: '/animals', query: { q: 'a100', animal: '1' } })
+  })
+
+  it('lists every animal a duplicated number points to', () => {
+    expect(searchLink('B200', { kind: '貓' }, roster).query).toEqual({ q: 'B200' })
+  })
+
+  it('keeps the filters for a text search', () => {
+    expect(searchLink('米克斯', { kind: '貓' }, roster).query).toEqual({ kind: 'cat', q: '米克斯' })
+  })
+
+  it('drops the search when the box is emptied', () => {
+    expect(searchLink('  ', { kind: '貓' }, roster).query).toEqual({ kind: 'cat' })
+  })
+})
+
+describe('isNewerId', () => {
+  const roster = [{ id: '469480' }, { id: '35558' }]
+
+  it('flags a 流水號 above every one in the roster', () => {
+    expect(isNewerId('470102', roster)).toBe(true)
+    expect(isNewerId('415705', roster)).toBe(false)
+  })
+
+  it('says nothing about 收容編號, which are not sequential', () => {
+    expect(isNewerId('W990101-01', roster)).toBe(false)
+  })
+
+  it('says nothing against an empty roster', () => {
+    expect(isNewerId('1', [])).toBe(false)
+  })
+})
+
+describe('pickSiblings', () => {
+  const pool = [
+    { id: 'a', photo: '' },
+    { id: 'b', photo: 'b.jpg' },
+    { id: 'c', photo: 'c.jpg' },
+    { id: 'd', photo: '' },
+    { id: 'e', photo: 'e.jpg' },
+  ]
+
+  it('puts animals with a photo first and fills up with the rest', () => {
+    const picked = pickSiblings(pool, 4, () => 0.5)
+    expect(picked).toHaveLength(4)
+    expect(picked.slice(0, 3).every((animal) => animal.photo)).toBe(true)
+    expect(picked[3].photo).toBe('')
+  })
+
+  it('returns fewer when the pool is short', () => {
+    expect(pickSiblings(pool.slice(0, 2), 4)).toHaveLength(2)
+  })
+
+  it('depends on the random source, so each opening can differ', () => {
+    const first = pickSiblings(pool, 2, () => 0.5).map((animal) => animal.id)
+    const last = pickSiblings(pool, 2, () => 0.99).map((animal) => animal.id)
+    expect(first).not.toEqual(last)
+  })
+
+  it('does not reorder the caller’s array', () => {
+    const copy = [...pool]
+    pickSiblings(pool, 4)
+    expect(pool).toEqual(copy)
   })
 })
 
