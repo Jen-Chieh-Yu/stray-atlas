@@ -38,7 +38,9 @@ const emit = defineEmits<{ close: []; browse: [] }>()
         <p><b>這隻動物不在目前開放認養的名單裡。</b></p>
         <p class="more">
           牠可能已被認養、轉到其他收容所或暫停開放認養，也可能是連結不完整；本站無法分辨是哪一種。想確認牠的狀況，請致電收容所，或到
-          <a :href="OFFICIAL_ADOPTION_URL" target="_blank" rel="noreferrer">農業部動物認領養公告頁（pet.gov.tw）</a>
+          <a :href="OFFICIAL_ADOPTION_URL" target="_blank" rel="noreferrer"
+            >農業部動物認領養公告頁（pet.gov.tw）</a
+          >
           查詢。
         </p>
         <p v-if="newer" class="newer">

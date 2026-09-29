@@ -123,17 +123,17 @@ const readout = computed(() => {
         </template>
 
         <template v-for="mark in references" :key="`r${mark.days}`">
-          <line class="reference" :x1="x(mark.days)" :x2="x(mark.days)" :y1="PAD.top" :y2="bottom" />
+          <line
+            class="reference"
+            :x1="x(mark.days)"
+            :x2="x(mark.days)"
+            :y1="PAD.top"
+            :y2="bottom"
+          />
           <text class="label" :x="x(mark.days) + 5" :y="PAD.top + 12">{{ mark.label }}</text>
         </template>
 
-        <path
-          v-for="p in paths"
-          :key="p.key"
-          class="line"
-          :d="p.d"
-          :style="{ stroke: p.colour }"
-        />
+        <path v-for="p in paths" :key="p.key" class="line" :d="p.d" :style="{ stroke: p.colour }" />
 
         <g class="axis">
           <line :x1="PAD.left" :x2="W - PAD.right" :y1="bottom" :y2="bottom" />

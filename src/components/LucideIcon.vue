@@ -34,7 +34,14 @@ const props = withDefaults(defineProps<{ name: IconName; size?: number; label?: 
       <path v-if="'d' in shape" :d="shape.d" />
       <circle v-else-if="'cx' in shape" :cx="shape.cx" :cy="shape.cy" :r="shape.r" />
       <line v-else-if="'x1' in shape" :x1="shape.x1" :y1="shape.y1" :x2="shape.x2" :y2="shape.y2" />
-      <rect v-else :x="shape.x" :y="shape.y" :width="shape.width" :height="shape.height" :rx="shape.rx" />
+      <rect
+        v-else
+        :x="shape.x"
+        :y="shape.y"
+        :width="shape.width"
+        :height="shape.height"
+        :rx="shape.rx"
+      />
     </template>
   </svg>
 </template>

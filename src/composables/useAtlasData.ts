@@ -52,7 +52,6 @@ const loading = ref(true)
 let started = false
 
 export function useAtlasData() {
-
   async function load() {
     loading.value = true
     error.value = null

@@ -73,6 +73,8 @@ git pull --ff-only
 npm ci
 npm run dev         # http://localhost:5173/stray-atlas/
 npm run type-check  # 只做型別檢查（commit 前）
+npm run lint        # ESLint：邏輯問題（commit 前）
+npm run format      # Prettier：重排格式；只想檢查用 npm run format:check
 npm test            # vitest：src/lib 的純函式（commit 前）
 npm run build       # 型別檢查 + 打包，產出 dist/（推送前）
 npm run preview     # 預覽 dist/
@@ -103,7 +105,7 @@ python scripts/build_hero.py   # 產生 src/assets/hero/*.webp
 ```
 stray-atlas/
 ├── .github/workflows/
-│   ├── ci.yml               PR 的檢查：型別、vitest、build、pytest、public/data 重建比對
+│   ├── ci.yml               PR 的檢查：ESLint、Prettier、型別、vitest、build、pytest、public/data 重建比對
 │   ├── daily-snapshot.yml   每日抓取、驗證、封存快照；有新快照時重建網站資料並觸發部署
 │   └── deploy-pages.yml     打包並發布到 GitHub Pages
 ├── data/
@@ -147,6 +149,7 @@ stray-atlas/
 │   └── lib/                 共用函式：動物、在所天數、收容所地址、詳細資料視窗路由、圖示資料、首頁照片與出處、捲動淡入
 ├── tests/                   建置腳本的 pytest 測試（src/lib 的 vitest 測試在 src/lib/__tests__/）
 ├── index.html、vite.config.ts、vitest.config.ts、tsconfig*.json、env.d.ts
+├── eslint.config.js、.prettierrc、.prettierignore、.editorconfig   靜態檢查與格式設定
 ├── .env.example             Google Maps Embed 金鑰範本（複製成 .env.local）
 ├── CLAUDE.md                AI 協作工作規則
 ├── PROJECT_BRIEF.md         資料剖析結論與已驗證數字
@@ -326,6 +329,7 @@ python scripts/fetch_snapshot.py --force    # 覆蓋當日已存在的檔案
 | KDE 與 ECDF | 在 Python 算好存 JSON | 分析留在腳本裡、瀏覽器只負責畫，與其他頁面同一套分工。高斯 KDE 手寫十五行，不為此引入 scipy |
 | 頻寬選擇 | 公開三段讓讀者切換 | KDE 的形狀有一半是頻寬的主張。用交叉驗證自動選一條反而把選擇藏起來，與這頁想說的事相反 |
 | 地圖繪製 | 內嵌 SVG + d3-geo，自行實作縮放 | 不依賴圖磚服務、不需 API key，demo 現場沒有外部相依可壞。縮放只是一個 transform 加 wheel／pointer 事件，不值得為此引入 d3-zoom |
+| 靜態檢查與格式 | ESLint 只管邏輯、Prettier 只管格式，兩者分開跑；不掛 `eslint-plugin-prettier`，不裝 husky | 格式問題混進 ESLint 會讓每個空白都變成錯誤；單人專案由 CI 擋住就夠，不需要在本機 commit 時再攔一次。Prettier 不碰 Markdown 與 workflow：前者的表格由人排版，後者在 PR 階段無法實測，不該在格式化時被動到 |
 | 測試範圍 | 只測 `src/lib` 的純函式與建置腳本，不做元件測試 | 這些函式算出來的數字會直接印在頁面上，錯了讀者看不出來；元件測試要維護一整套 DOM 假設，對一個人維護的專案划不來 |
 | `main` 的保護規則 | ruleset 只禁止刪除分支與 force push，**不設必要狀態檢查** | 必要檢查會連同直接 push 一起擋下，而每日排程機器人以 `GITHUB_TOKEN` 直接推 `main`；個人 repo 的 bypass 清單沒有 GitHub Actions（實測 Write 角色無效）。快照漏一天永久補不回來，紅燈合併隨時可以修 |
 | 收容所介紹頁地圖 | Google Maps Embed，金鑰缺席時退回外部連結 | 單一地址的街道圖是讀者要的東西，自己畫不划算。金鑰由建置環境注入（本機 `.env.local` 的 `VITE_GOOGLE_MAPS_EMBED_KEY`、CI 的 secret `GOOGLE_MAPS_EMBED_KEY`），必須限制 HTTP referrer；沒有金鑰時頁面仍可用，不影響主地圖 |

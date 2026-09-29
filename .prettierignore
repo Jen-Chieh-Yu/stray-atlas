@@ -1,0 +1,26 @@
+# `prettier --write .` rewrites files in place; without this list it would
+# touch generated output and files whose layout is maintained by hand.
+node_modules
+dist
+coverage
+
+# Generated data, written by the Python pipeline.
+public/data
+data
+
+# Marked linguist-generated in .gitattributes; npm owns its format.
+package-lock.json
+
+# Documents are formatted by hand. Prettier pads every Markdown table to
+# align its columns and rewrites list and emphasis markers, which turns a
+# one-line edit to CLAUDE.md or DESIGN.md into a diff of the whole table.
+*.md
+
+# Workflows cannot be exercised in a pull request (CLAUDE.md 6.6), so they
+# should only change when their behaviour does, never in a formatting pass.
+.github
+
+# Scratch prototypes, drafts and downloads, not in version control.
+.notes
+tmp
+assets-src

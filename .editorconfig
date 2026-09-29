@@ -1,0 +1,29 @@
+# Editor defaults shared by every editor that reads EditorConfig. Prettier
+# reads this file too; .prettierrc overrides it where both set a value.
+root = true
+
+# Every file, not only code: a .gitignore or a .md saved in another encoding
+# is how Chinese comments turn into mojibake.
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{js,mjs,cjs,ts,mts,cts,vue,css,json,yml,yaml}]
+indent_style = space
+indent_size = 2
+# Same as printWidth in .prettierrc.
+max_line_length = 100
+
+[*.py]
+indent_style = space
+indent_size = 4
+
+# Two trailing spaces are a hard line break in Markdown.
+[*.md]
+trim_trailing_whitespace = false
+
+# Windows-only scripts keep CRLF, as .gitattributes does.
+[*.{bat,cmd,ps1}]
+end_of_line = crlf

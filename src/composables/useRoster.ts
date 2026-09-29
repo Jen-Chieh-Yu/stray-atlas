@@ -48,7 +48,10 @@ export function useRoster() {
   const daysById = computed(
     () =>
       new Map(
-        animals.value.map((animal) => [animal.id, daysInShelter(animal.created, snapshotDate.value)]),
+        animals.value.map((animal) => [
+          animal.id,
+          daysInShelter(animal.created, snapshotDate.value),
+        ]),
       ),
   )
 

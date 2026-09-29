@@ -220,10 +220,17 @@ function names(list: Shelter[]): string {
 
     <template v-else>
       <div class="stats">
-        <div class="stat"><b>{{ totals.shelters }}</b><span>間公立收容所</span></div>
-        <div class="stat"><b>{{ totals.counties }}</b><span>個縣市有收容所</span></div>
         <div class="stat">
-          <b>{{ formatCount(totals.animals) }}</b><span>隻動物目前仍在所</span>
+          <b>{{ totals.shelters }}</b
+          ><span>間公立收容所</span>
+        </div>
+        <div class="stat">
+          <b>{{ totals.counties }}</b
+          ><span>個縣市有收容所</span>
+        </div>
+        <div class="stat">
+          <b>{{ formatCount(totals.animals) }}</b
+          ><span>隻動物目前仍在所</span>
         </div>
       </div>
 
@@ -235,7 +242,9 @@ function names(list: Shelter[]): string {
               <select
                 id="s-county"
                 :value="filters.county ?? ''"
-                @change="update({ county: ($event.target as HTMLSelectElement).value || undefined })"
+                @change="
+                  update({ county: ($event.target as HTMLSelectElement).value || undefined })
+                "
               >
                 <option value="">全部（{{ counties.length }} 個）</option>
                 <option v-for="county in counties" :key="county.name" :value="county.name">
@@ -254,7 +263,9 @@ function names(list: Shelter[]): string {
                 type="search"
                 placeholder="輸入關鍵字，例如「動物之家」"
                 :value="filters.q ?? ''"
-                @input="update({ q: ($event.target as HTMLInputElement).value.trim() || undefined })"
+                @input="
+                  update({ q: ($event.target as HTMLInputElement).value.trim() || undefined })
+                "
               />
             </div>
           </div>
@@ -264,7 +275,12 @@ function names(list: Shelter[]): string {
           <div class="field" role="group" aria-labelledby="l-has">
             <span id="l-has" class="label">目前收容</span>
             <div class="pills">
-              <button type="button" class="pill-btn" :aria-pressed="!filters.has" @click="update({ has: undefined })">
+              <button
+                type="button"
+                class="pill-btn"
+                :aria-pressed="!filters.has"
+                @click="update({ has: undefined })"
+              >
                 不限
               </button>
               <button
@@ -374,7 +390,9 @@ function names(list: Shelter[]): string {
                 <span class="county">{{ shelter.county }}</span>
               </div>
               <h2>
-                <RouterLink :to="{ name: 'shelter', params: { id: shelter.id } }">{{ shelter.name }}</RouterLink>
+                <RouterLink :to="{ name: 'shelter', params: { id: shelter.id } }">{{
+                  shelter.name
+                }}</RouterLink>
               </h2>
               <div class="smeta">
                 <span v-for="address in addressesOf(shelter)" :key="address.text">
@@ -384,21 +402,37 @@ function names(list: Shelter[]): string {
                 <span>
                   <LucideIcon name="phone" :size="14" />
                   <span v-if="phoneOf(shelter).href" class="line">{{ shelter.tel }}</span>
-                  <span v-else class="line missing">電話欄位不完整（原始資料：{{ shelter.tel }}）</span>
+                  <span v-else class="line missing"
+                    >電話欄位不完整（原始資料：{{ shelter.tel }}）</span
+                  >
                 </span>
               </div>
             </div>
             <div class="r-counts">
-              <div class="scount total"><b>{{ formatCount(shelter.all.count) }}</b><span>在所</span></div>
-              <div class="scount"><b>{{ formatCount(shelter.狗.count) }}</b><span>狗</span></div>
-              <div class="scount"><b>{{ formatCount(shelter.貓.count) }}</b><span>貓</span></div>
-              <div class="scount"><b>{{ formatCount(shelter.其他.count) }}</b><span>其他</span></div>
+              <div class="scount total">
+                <b>{{ formatCount(shelter.all.count) }}</b
+                ><span>在所</span>
+              </div>
+              <div class="scount">
+                <b>{{ formatCount(shelter.狗.count) }}</b
+                ><span>狗</span>
+              </div>
+              <div class="scount">
+                <b>{{ formatCount(shelter.貓.count) }}</b
+                ><span>貓</span>
+              </div>
+              <div class="scount">
+                <b>{{ formatCount(shelter.其他.count) }}</b
+                ><span>其他</span>
+              </div>
             </div>
             <div class="r-spark">
               <ShelterSpark :histogram="shelter.all.histogram" :labels="labels" />
               <div class="spark-foot">
-                中位數 {{ shelter.all.median_days === null ? '—' : formatCount(shelter.all.median_days) }} 天 ·
-                最久 {{ shelter.all.max_days === null ? '—' : formatCount(shelter.all.max_days) }} 天
+                中位數
+                {{ shelter.all.median_days === null ? '—' : formatCount(shelter.all.median_days) }}
+                天 · 最久
+                {{ shelter.all.max_days === null ? '—' : formatCount(shelter.all.max_days) }} 天
               </div>
             </div>
             <div class="r-actions">
@@ -424,7 +458,9 @@ function names(list: Shelter[]): string {
               <span class="scard-n">在所 {{ formatCount(shelter.all.count) }} 隻</span>
             </div>
             <h2>
-              <RouterLink :to="{ name: 'shelter', params: { id: shelter.id } }">{{ shelter.name }}</RouterLink>
+              <RouterLink :to="{ name: 'shelter', params: { id: shelter.id } }">{{
+                shelter.name
+              }}</RouterLink>
             </h2>
             <div class="smeta">
               <span v-for="address in addressesOf(shelter)" :key="address.text">
@@ -434,20 +470,33 @@ function names(list: Shelter[]): string {
               <span>
                 <LucideIcon name="phone" :size="14" />
                 <span v-if="phoneOf(shelter).href" class="line">{{ shelter.tel }}</span>
-                <span v-else class="line missing">電話欄位不完整（原始資料：{{ shelter.tel }}）</span>
+                <span v-else class="line missing"
+                  >電話欄位不完整（原始資料：{{ shelter.tel }}）</span
+                >
               </span>
             </div>
             <div class="scounts">
-              <div class="scount"><b>{{ formatCount(shelter.狗.count) }}</b><span>狗</span></div>
-              <div class="scount"><b>{{ formatCount(shelter.貓.count) }}</b><span>貓</span></div>
-              <div class="scount"><b>{{ formatCount(shelter.其他.count) }}</b><span>其他</span></div>
+              <div class="scount">
+                <b>{{ formatCount(shelter.狗.count) }}</b
+                ><span>狗</span>
+              </div>
+              <div class="scount">
+                <b>{{ formatCount(shelter.貓.count) }}</b
+                ><span>貓</span>
+              </div>
+              <div class="scount">
+                <b>{{ formatCount(shelter.其他.count) }}</b
+                ><span>其他</span>
+              </div>
             </div>
             <div class="spark-block">
               <div class="spark-cap">在所時間分布</div>
               <ShelterSpark :histogram="shelter.all.histogram" :labels="labels" />
               <div class="spark-foot">
-                中位數 {{ shelter.all.median_days === null ? '—' : formatCount(shelter.all.median_days) }} 天 ·
-                最久 {{ shelter.all.max_days === null ? '—' : formatCount(shelter.all.max_days) }} 天
+                中位數
+                {{ shelter.all.median_days === null ? '—' : formatCount(shelter.all.median_days) }}
+                天 · 最久
+                {{ shelter.all.max_days === null ? '—' : formatCount(shelter.all.max_days) }} 天
               </div>
             </div>
             <div class="actions">
@@ -487,7 +536,9 @@ function names(list: Shelter[]): string {
             }}）。
           </li>
           <li v-if="notes.machine.length">
-            {{ notes.machine.length }} 間的地址欄混進了地圖連結或座標（{{ names(notes.machine) }}），本頁不顯示；其中的座標改拿來在收容所介紹頁定位地圖。「龍巖人本旁」「屏東科技大學內」這類地標補述幫得上忙，予以保留。滑鼠停在地址上可以看到原文。
+            {{ notes.machine.length }} 間的地址欄混進了地圖連結或座標（{{
+              names(notes.machine)
+            }}），本頁不顯示；其中的座標改拿來在收容所介紹頁定位地圖。「龍巖人本旁」「屏東科技大學內」這類地標補述幫得上忙，予以保留。滑鼠停在地址上可以看到原文。
           </li>
           <li v-if="notes.twoPlaces.length">
             {{ names(notes.twoPlaces) }} 在原始資料裡登錄了不同的地點，全部列出而不擇一。
@@ -497,7 +548,8 @@ function names(list: Shelter[]): string {
             <code>-</code>、全形與半形），本頁合併為一筆。
           </li>
           <li v-for="group in notes.shared" :key="group[0].id">
-            {{ names(group) }} 是不同紀錄共用同一個地址；是否為同一處所需要向主管機關確認，本頁照原始資料分開列出。
+            {{ names(group) }}
+            是不同紀錄共用同一個地址；是否為同一處所需要向主管機關確認，本頁照原始資料分開列出。
           </li>
         </ul>
       </section>

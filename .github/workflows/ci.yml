@@ -40,6 +40,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Two separate steps so a failure says which one: ESLint for logic,
+      # Prettier for layout (eslint.config.js explains the split).
+      - name: Lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
       - name: Type check
         run: npm run type-check
 

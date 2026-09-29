@@ -76,32 +76,30 @@ onMounted(async () => {
 const featureGroups = computed(() =>
   (features.value?.groups ?? []).map((group) => ({
     title: group.title,
-    rows: group.items.map(
-      (item): SpanRow => ({
-        key: `${group.key}-${item.label}`,
-        label: item.label,
-        // Small groups are drawn, not hidden, but the reader is told which
-        // ones move when a single animal leaves.
-        flag: item.small_sample ? '樣本少' : undefined,
-        // The legend already says the line runs P25 to P75, so the numbers
-        // go under the label without repeating the labels themselves —
-        // spelling them out here wraps the column onto a second line.
-        sub: `${formatCount(item.n)} 隻 · ${formatCount(item.p25_days)}–${formatCount(
-          item.p75_days,
-        )} 天`,
-        start: item.p25_days,
-        end: item.p75_days,
-        dots: [
-          {
-            days: item.median_days,
-            variant: 'solid',
-            title: `${item.label} 中位數 ${formatCount(item.median_days)} 天`,
-          },
-        ],
-        figure: formatCount(item.median_days),
-        aside: item.iqr_ratio === null ? '—' : `${item.iqr_ratio.toFixed(1)} 倍`,
-      }),
-    ),
+    rows: group.items.map((item): SpanRow => ({
+      key: `${group.key}-${item.label}`,
+      label: item.label,
+      // Small groups are drawn, not hidden, but the reader is told which
+      // ones move when a single animal leaves.
+      flag: item.small_sample ? '樣本少' : undefined,
+      // The legend already says the line runs P25 to P75, so the numbers
+      // go under the label without repeating the labels themselves —
+      // spelling them out here wraps the column onto a second line.
+      sub: `${formatCount(item.n)} 隻 · ${formatCount(item.p25_days)}–${formatCount(
+        item.p75_days,
+      )} 天`,
+      start: item.p25_days,
+      end: item.p75_days,
+      dots: [
+        {
+          days: item.median_days,
+          variant: 'solid',
+          title: `${item.label} 中位數 ${formatCount(item.median_days)} 天`,
+        },
+      ],
+      figure: formatCount(item.median_days),
+      aside: item.iqr_ratio === null ? '—' : `${item.iqr_ratio.toFixed(1)} 倍`,
+    })),
   })),
 )
 
@@ -111,30 +109,28 @@ const coatGroups = computed(() => {
   if (shelters.length === 0) return []
   return [
     {
-      rows: shelters.map(
-        (shelter): SpanRow => ({
-          key: shelter.id,
-          label: shelter.name,
-          sub: `黑 ${formatCount(shelter.dark_n)} · 非黑 ${formatCount(shelter.light_n)}`,
-          start: Math.min(shelter.light_median_days, shelter.dark_median_days),
-          end: Math.max(shelter.light_median_days, shelter.dark_median_days),
-          tone: shelter.difference_days > 0 ? 'up' : 'down',
-          dots: [
-            {
-              days: shelter.light_median_days,
-              variant: 'open',
-              title: `不含黑 中位數 ${formatCount(shelter.light_median_days)} 天`,
-            },
-            {
-              days: shelter.dark_median_days,
-              variant: 'dark',
-              title: `含黑 中位數 ${formatCount(shelter.dark_median_days)} 天`,
-            },
-          ],
-          figure: `${shelter.difference_days > 0 ? '+' : ''}${formatCount(shelter.difference_days)}`,
-          aside: '天',
-        }),
-      ),
+      rows: shelters.map((shelter): SpanRow => ({
+        key: shelter.id,
+        label: shelter.name,
+        sub: `黑 ${formatCount(shelter.dark_n)} · 非黑 ${formatCount(shelter.light_n)}`,
+        start: Math.min(shelter.light_median_days, shelter.dark_median_days),
+        end: Math.max(shelter.light_median_days, shelter.dark_median_days),
+        tone: shelter.difference_days > 0 ? 'up' : 'down',
+        dots: [
+          {
+            days: shelter.light_median_days,
+            variant: 'open',
+            title: `不含黑 中位數 ${formatCount(shelter.light_median_days)} 天`,
+          },
+          {
+            days: shelter.dark_median_days,
+            variant: 'dark',
+            title: `含黑 中位數 ${formatCount(shelter.dark_median_days)} 天`,
+          },
+        ],
+        figure: `${shelter.difference_days > 0 ? '+' : ''}${formatCount(shelter.difference_days)}`,
+        aside: '天',
+      })),
     },
   ]
 })
@@ -217,7 +213,9 @@ const block = computed(() => (current.value ? current.value[scale.value] : null)
  *  on the curve is invisible until it is named. */
 const bandwidth = computed(() => {
   const value = block.value?.kde[smoothing.value].bandwidth ?? 0
-  return scale.value === 'log' ? `${value.toFixed(3)} log₁₀ 天` : `${formatCount(Math.round(value))} 天`
+  return scale.value === 'log'
+    ? `${value.toFixed(3)} log₁₀ 天`
+    : `${formatCount(Math.round(value))} 天`
 })
 
 /** All three, not only the one in force. The multipliers are stated in the
@@ -326,7 +324,8 @@ const shelterRange = computed(() => {
           <span class="no">03</span>
           <h2>存活分析<em>Survival Analysis</em></h2>
           <p>
-            要回答「一隻狗平均多久會被認養」，需要的是 Kaplan–Meier 這一類處理設限資料的方法，以及進出所的時間序列。本站只有單日快照，兩者都沒有。
+            要回答「一隻狗平均多久會被認養」，需要的是 Kaplan–Meier
+            這一類處理設限資料的方法，以及進出所的時間序列。本站只有單日快照，兩者都沒有。
           </p>
           <span class="status">本站不做認養速度的推論</span>
         </div>
@@ -385,9 +384,10 @@ const shelterRange = computed(() => {
         </div>
         <!-- What the three groups currently add up to, stated once. -->
         <p class="applied" aria-live="polite">
-          已套用：<b>{{ labelOf(SCOPES, scope) }} {{ formatCount(current.count) }} 隻</b>
-          · {{ scale === 'log' ? '對數軸' : '線性軸' }} · 平滑度
-          {{ labelOf(SMOOTHINGS, smoothing) }}（頻寬 <b>{{ bandwidth }}</b>）
+          已套用：<b>{{ labelOf(SCOPES, scope) }} {{ formatCount(current.count) }} 隻</b> ·
+          {{ scale === 'log' ? '對數軸' : '線性軸' }} · 平滑度
+          {{ labelOf(SMOOTHINGS, smoothing) }}（頻寬 <b>{{ bandwidth }}</b
+          >）
           <!-- All three, in the order of the buttons above, so the reader can
                see the size of the choice without clicking through it. Here
                rather than under the pills: every control group is one label
@@ -426,7 +426,8 @@ const shelterRange = computed(() => {
             線性軸下這是一條單調遞減的長尾，全部結構都被壓在最前面幾百天；切到對數軸才看得到兩個隆起——一群已在所一年上下，另一群已在所數年。同一組數字，兩種軸說的是不同層次的事，所以兩種都放在這裡讓你切換。
           </p>
           <p>
-            曲線的形狀有一半是頻寬的主張。三段平滑度分別是 Silverman 參考值的 0.6／1.0／1.7 倍，當前數值就寫在控制列右端——把選擇公開，讀者才有機會不同意。
+            曲線的形狀有一半是頻寬的主張。三段平滑度分別是 Silverman 參考值的 0.6／1.0／1.7
+            倍，當前數值就寫在控制列右端——把選擇公開，讀者才有機會不同意。
           </p>
         </div>
       </section>
@@ -449,12 +450,13 @@ const shelterRange = computed(() => {
         <div class="note">
           <h3>階梯曲線判讀指引</h3>
           <p>
-            <strong>要引用的數字請讀這一張，不要讀上面那一張。</strong>ECDF 沒有頻寬、沒有平滑假設，「{{
-              pctRound(data.scopes.dog.over_year)
-            }} 的狗已在所超過一年」這種句子不該取決於一個讀者可以自己拖動的控制項。
+            <strong>要引用的數字請讀這一張，不要讀上面那一張。</strong>ECDF
+            沒有頻寬、沒有平滑假設，「{{ pctRound(data.scopes.dog.over_year) }}
+            的狗已在所超過一年」這種句子不該取決於一個讀者可以自己拖動的控制項。
           </p>
           <p>
-            畫成階梯而不是折線是有理由的：ECDF 在每一個觀測值上跳躍，在兩隻動物之間畫一條斜線，等於宣稱有一個沒人擁有過的數值存在。
+            畫成階梯而不是折線是有理由的：ECDF
+            在每一個觀測值上跳躍，在兩隻動物之間畫一條斜線，等於宣稱有一個沒人擁有過的數值存在。
           </p>
         </div>
       </section>
@@ -549,9 +551,9 @@ const shelterRange = computed(() => {
             >「已絕育」的中位數比「未絕育」長，最可能的原因是<strong>因果方向相反</strong>——待得越久，越可能在所內完成絕育。它留在圖上是因為刪掉會讓讀者自己在別處算出同一個數字，卻沒有這段提醒。
           </p>
           <p>
-            右欄的倍數是 <strong>P75 ÷ P25</strong>，不是兩者相差幾天。<strong
-              >在對數軸上，橫線的長度本來就是這個倍數</strong
-            >——改用天數差會讓中位數大的分組自動看起來比較離散，和圖上看到的相反。<template
+            右欄的倍數是
+            <strong>P75 ÷ P25</strong
+            >，不是兩者相差幾天。<strong>在對數軸上，橫線的長度本來就是這個倍數</strong>——改用天數差會讓中位數大的分組自動看起來比較離散，和圖上看到的相反。<template
               v-if="colourSpread"
             >
               毛色那一組正好可以拿來對照：{{ colourSpread.shortest.label }}是
@@ -585,7 +587,10 @@ const shelterRange = computed(() => {
         </p>
         <div class="tally">
           <div>
-            <b>{{ features.dark_coat.shelters_dark_longer }} / {{ features.dark_coat.shelters_compared }}</b>
+            <b
+              >{{ features.dark_coat.shelters_dark_longer }} /
+              {{ features.dark_coat.shelters_compared }}</b
+            >
             <span>間收容所的深色犬中位數較長</span>
           </div>
           <div>
@@ -618,8 +623,8 @@ const shelterRange = computed(() => {
             方向一致並不等於「黑狗比較難被認養」。這份資料<strong>沒有任何一筆記錄了離所</strong>，所以只能說「目前仍在所的深色犬待得比較久」。兩者的差別不是措辭謹慎，是這份資料真的答不了後者。
           </p>
           <p>
-            只納入含黑與不含黑<strong>各至少
-            {{ features.dark_coat.min_group }} 隻</strong>的收容所，共
+            只納入含黑與不含黑<strong>各至少 {{ features.dark_coat.min_group }} 隻</strong
+            >的收容所，共
             {{ features.dark_coat.shelters_compared }}
             間；其餘樣本太少，一兩隻長住犬就能翻轉中位數。門檻寫在這裡，換一個門檻就會換一組結果。方向相反的
             {{ coatAgainst }} 間也留在圖上——把它們拿掉，一個計數就變成一個主張。
@@ -639,18 +644,26 @@ const shelterRange = computed(() => {
           <span class="sub">依在所數排序 · 右側同時顯示在所數與中位數</span>
         </div>
         <ol class="ranklist">
-          <li v-for="(row, index) in countyRows" :key="row.name" class="rank-row" :class="{ hot: row.hot }">
+          <li
+            v-for="(row, index) in countyRows"
+            :key="row.name"
+            class="rank-row"
+            :class="{ hot: row.hot }"
+          >
             <span class="rk">{{ String(index + 1).padStart(2, '0') }}</span>
             <span class="nm">{{ row.name }}</span>
             <span class="sh">{{ row.shelters }} 間</span>
             <span class="v1">{{ formatCount(row.count) }} 隻</span>
-            <span class="v2">{{ row.median === null ? '—' : `${formatCount(row.median)} 天` }}</span>
+            <span class="v2">{{
+              row.median === null ? '—' : `${formatCount(row.median)} 天`
+            }}</span>
           </li>
         </ol>
         <div class="note">
           <h3>縣市排行資料背景與口徑差異</h3>
           <p>
-            縣市是用「動物現在在哪一間收容所」推得的，不是動物被撿到的地方<template v-if="foundplace"
+            縣市是用「動物現在在哪一間收容所」推得的，不是動物被撿到的地方<template
+              v-if="foundplace"
               >——全部 {{ formatCount(foundplace.rows) }} 筆裡只有
               {{ formatCount(foundplace.county_source.text) }} 筆（{{
                 pct(foundplace.county_source.text / foundplace.rows)
@@ -660,8 +673,10 @@ const shelterRange = computed(() => {
             >。所以這張表講的是收容所的負擔分布，不是流浪動物的地理分布。
           </p>
           <p v-if="hotLine !== null">
-            強調色的門檻是<strong>中位數達全國兩倍</strong>，也就是 {{ formatCount(hotLine) }}
-            天以上，目前有 {{ hotCount }} 個縣市達到。門檻寫出來，讀者可以不同意；沒寫出來的門檻，就變成對那幾個縣市的指控。
+            強調色的門檻是<strong>中位數達全國兩倍</strong>，也就是
+            {{ formatCount(hotLine) }} 天以上，目前有
+            {{ hotCount }}
+            個縣市達到。門檻寫出來，讀者可以不同意；沒寫出來的門檻，就變成對那幾個縣市的指控。
           </p>
           <p>
             各縣市的收容所數量差很多（{{ shelterRange[0] }} 到 {{ shelterRange[1] }}

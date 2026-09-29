@@ -42,7 +42,9 @@ const mine = computed(() =>
 )
 
 const longest = computed(() => mine.value.slice(0, 4))
-const overTwoYears = computed(() => mine.value.filter((animal) => (daysOf(animal) ?? -1) > 730).length)
+const overTwoYears = computed(
+  () => mine.value.filter((animal) => (daysOf(animal) ?? -1) > 730).length,
+)
 
 const rank = computed(() => {
   const own = shelter.value?.all.count ?? 0
@@ -108,7 +110,9 @@ function close() {
     <LoadingSkeleton v-if="loading" variant="block" />
     <p v-else-if="error" class="state">收容所資料載入失敗（{{ error }}）。</p>
     <p v-else-if="!shelter" class="state">
-      找不到這間收容所，它可能已不在最新的資料裡。<RouterLink to="/shelters">回收容所列表</RouterLink>
+      找不到這間收容所，它可能已不在最新的資料裡。<RouterLink to="/shelters"
+        >回收容所列表</RouterLink
+      >
     </p>
 
     <template v-else>
@@ -125,7 +129,9 @@ function close() {
            three parts rather than one long scroll. -->
       <section class="sect" aria-labelledby="s-animals">
         <div class="sect-head">
-          <span class="sect-icon" aria-hidden="true"><LucideIcon name="hourglass" :size="20" /></span>
+          <span class="sect-icon" aria-hidden="true"
+            ><LucideIcon name="hourglass" :size="20"
+          /></span>
           <div class="sect-title">
             <h2 id="s-animals">這裡等最久的</h2>
             <p>這間收容所已在所天數最長的 {{ longest.length }} 隻。完整名單與篩選在「找動物」。</p>
@@ -149,10 +155,18 @@ function close() {
             看這裡的全部 {{ formatCount(shelter.all.count) }} 隻動物
             <LucideIcon name="arrow-right" :size="16" />
           </RouterLink>
-          <RouterLink v-if="shelter.狗.count" :to="animalsLink({ shelter: shelter.id, kind: '狗' })" class="cta">
+          <RouterLink
+            v-if="shelter.狗.count"
+            :to="animalsLink({ shelter: shelter.id, kind: '狗' })"
+            class="cta"
+          >
             <LucideIcon name="dog" :size="16" /> 只看狗 {{ formatCount(shelter.狗.count) }}
           </RouterLink>
-          <RouterLink v-if="shelter.貓.count" :to="animalsLink({ shelter: shelter.id, kind: '貓' })" class="cta">
+          <RouterLink
+            v-if="shelter.貓.count"
+            :to="animalsLink({ shelter: shelter.id, kind: '貓' })"
+            class="cta"
+          >
             <LucideIcon name="cat" :size="16" /> 只看貓 {{ formatCount(shelter.貓.count) }}
           </RouterLink>
           <RouterLink
@@ -167,7 +181,9 @@ function close() {
 
       <section class="sect" aria-labelledby="s-contact">
         <div class="sect-head">
-          <span class="sect-icon" aria-hidden="true"><LucideIcon name="map-pinned" :size="20" /></span>
+          <span class="sect-icon" aria-hidden="true"
+            ><LucideIcon name="map-pinned" :size="20"
+          /></span>
           <div class="sect-title">
             <h2 id="s-contact">聯絡與位置</h2>
             <p>地址與電話來自原始資料；地圖由 Google 依地址定位，入口請以現場指標為準。</p>
@@ -180,9 +196,16 @@ function close() {
               <LucideIcon name="map-pin" :size="18" />
               <div>
                 <span class="k">
-                  地址<template v-if="addresses.length > 1">（來源資料登錄了 {{ addresses.length }} 個地點，全部列出）</template>
+                  地址<template v-if="addresses.length > 1"
+                    >（來源資料登錄了 {{ addresses.length }} 個地點，全部列出）</template
+                  >
                 </span>
-                <span v-for="address in addresses" :key="address.text" class="v" :title="`原始資料：${address.raw}`">
+                <span
+                  v-for="address in addresses"
+                  :key="address.text"
+                  class="v"
+                  :title="`原始資料：${address.raw}`"
+                >
                   {{ address.text }}
                 </span>
               </div>
@@ -197,7 +220,8 @@ function close() {
               </div>
             </div>
             <div class="callout">
-              <b>本站不辦理認養。</b>名單以頁尾的快照日期為準，上面的動物可能已經被認養；開放時間、預約方式與認養規定，請以收容所現場公告為準。
+              <b>本站不辦理認養。</b
+              >名單以頁尾的快照日期為準，上面的動物可能已經被認養；開放時間、預約方式與認養規定，請以收容所現場公告為準。
             </div>
           </section>
 
@@ -217,7 +241,8 @@ function close() {
             </div>
             <div class="mapbar">
               <span>
-                地圖依{{ primary.coords ? '原始資料的座標' : '地址文字' }}由 Google 定位，入口位置請以現場指標為準。
+                地圖依{{ primary.coords ? '原始資料的座標' : '地址文字' }}由 Google
+                定位，入口位置請以現場指標為準。
               </span>
               <span class="maplinks">
                 <a :href="mapOpenUrl(primary)" target="_blank" rel="noreferrer">
@@ -242,7 +267,9 @@ function close() {
            gives the totals, the chart on the right shows how they spread. -->
       <section class="sect" aria-labelledby="s-status">
         <div class="sect-head">
-          <span class="sect-icon" aria-hidden="true"><LucideIcon name="chart-column" :size="20" /></span>
+          <span class="sect-icon" aria-hidden="true"
+            ><LucideIcon name="chart-column" :size="20"
+          /></span>
           <div class="sect-title">
             <h2 id="s-status">收容動物現況</h2>
             <p>全部只計算目前仍在所的動物；滯留中位數旁附上全臺的數字作對照。</p>
@@ -275,15 +302,23 @@ function close() {
             <div class="stat accent">
               <dt>滯留中位數</dt>
               <dd>
-                <b>{{ shelter.all.median_days === null ? '—' : formatCount(shelter.all.median_days) }}<small>天</small></b>
+                <b
+                  >{{ shelter.all.median_days === null ? '—' : formatCount(shelter.all.median_days)
+                  }}<small>天</small></b
+                >
                 <em v-if="nationalMedian !== null">全臺為 {{ formatCount(nationalMedian) }} 天</em>
               </dd>
             </div>
             <div class="stat">
               <dt>最長滯留</dt>
               <dd>
-                <b>{{ shelter.all.max_days === null ? '—' : formatCount(shelter.all.max_days) }}<small>天</small></b>
-                <em v-if="shelter.all.max_days">約 {{ (shelter.all.max_days / 365).toFixed(1) }} 年</em>
+                <b
+                  >{{ shelter.all.max_days === null ? '—' : formatCount(shelter.all.max_days)
+                  }}<small>天</small></b
+                >
+                <em v-if="shelter.all.max_days"
+                  >約 {{ (shelter.all.max_days / 365).toFixed(1) }} 年</em
+                >
               </dd>
             </div>
           </dl>
@@ -321,9 +356,13 @@ function close() {
           <span class="kicker">這一頁不能拿來說什麼</span>
         </div>
         <ul>
-          <li>在所動物多不代表這間收容所做得比較差。收容量、腹地與所轄範圍差距很大，這一頁不做收容所之間的評比。</li>
+          <li>
+            在所動物多不代表這間收容所做得比較差。收容量、腹地與所轄範圍差距很大，這一頁不做收容所之間的評比。
+          </li>
           <li>「滯留中位數」與分布只包含<strong>目前仍在所</strong>的動物，看不出認養速度。</li>
-          <li>地址與電話直接來自原始資料；地圖位置由 Google 依地址文字解析，不是本站量測的座標。</li>
+          <li>
+            地址與電話直接來自原始資料；地圖位置由 Google 依地址文字解析，不是本站量測的座標。
+          </li>
         </ul>
       </section>
     </template>
