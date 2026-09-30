@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-09-29",
-  "generated_at_utc": "2026-09-29T03:58:01Z",
-  "rows": 8461,
+  "snapshot_date": "2026-09-30",
+  "generated_at_utc": "2026-09-30T03:45:14Z",
+  "rows": 8445,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5166,
-    "district": 1210,
-    "blank": 1033,
-    "landmark": 936,
+    "address": 5154,
+    "blank": 1039,
+    "district": 1204,
+    "landmark": 932,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1842,
-      "share": 0.2177
+      "rows": 1839,
+      "share": 0.2178
     },
     "low": {
-      "rows": 5463,
-      "share": 0.6457
+      "rows": 5444,
+      "share": 0.6446
     },
     "none": {
-      "rows": 1149,
-      "share": 0.1358
+      "rows": 1155,
+      "share": 0.1368
     }
   },
   "county_source": {
     "text": 190,
-    "shelter": 7122,
-    "none": 1149
+    "shelter": 7100,
+    "none": 1155
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3055,
-    "verified_against_reference": 3052,
+    "extracted": 3046,
+    "verified_against_reference": 3043,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
-      "新莊區豐年街",
-      "蘆洲區蘆洲區民族路422巷15弄12號",
-      "新莊區龍安路",
-      "外縣市桃園市八德區公園路",
-      "三峽區中正路一段19巷8號"
+      "蘆洲區蘆洲區中山二路176號",
+      "古坑鄉新生路",
+      "五股區五股區凌雲路三段28-10號",
+      "蘆洲區蘆洲區長安街347巷3號6樓",
+      "板橋區四川路一段157巷"
     ],
     "low": [
-      "世賢路四段450之1號",
-      "中正西路20號",
-      "上海路134號",
-      "菁山里菁山路９９巷",
-      "銅鑼鄉盛隆村"
+      "林口街 (拾獲地為文山區老泉里)",
+      "新樓街51號",
+      "苗栗市新川里",
+      "瑤鳳路三段446號",
+      "福林路２５４巷"
     ],
     "none": [
       "臺北市動物之家",
