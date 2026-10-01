@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-09-30",
-  "generated_at_utc": "2026-09-30T03:45:14Z",
-  "rows": 8445,
+  "snapshot_date": "2026-10-01",
+  "generated_at_utc": "2026-10-01T03:52:43Z",
+  "rows": 8459,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5154,
-    "blank": 1039,
-    "district": 1204,
+    "blank": 1050,
+    "address": 5160,
     "landmark": 932,
+    "district": 1201,
     "non_place": 116
   },
   "confidence": {
@@ -17,26 +17,26 @@
     },
     "medium": {
       "rows": 1839,
-      "share": 0.2178
+      "share": 0.2174
     },
     "low": {
-      "rows": 5444,
-      "share": 0.6446
+      "rows": 5447,
+      "share": 0.6439
     },
     "none": {
-      "rows": 1155,
-      "share": 0.1368
+      "rows": 1166,
+      "share": 0.1378
     }
   },
   "county_source": {
     "text": 190,
-    "shelter": 7100,
-    "none": 1155
+    "shelter": 7103,
+    "none": 1166
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3046,
-    "verified_against_reference": 3043,
+    "extracted": 3043,
+    "verified_against_reference": 3040,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
+      "板橋區雙十路二段",
+      "板橋區篤行路三段",
+      "新莊區民安西路403巷",
       "蘆洲區蘆洲區中山二路176號",
-      "古坑鄉新生路",
-      "五股區五股區凌雲路三段28-10號",
-      "蘆洲區蘆洲區長安街347巷3號6樓",
-      "板橋區四川路一段157巷"
+      "古坑鄉新生路"
     ],
     "low": [
-      "林口街 (拾獲地為文山區老泉里)",
-      "新樓街51號",
-      "苗栗市新川里",
-      "瑤鳳路三段446號",
-      "福林路２５４巷"
+      "竹圍東巷1號",
+      "成都北路253號",
+      "茅營里",
+      "天母里天母北路",
+      "七寮路"
     ],
     "none": [
       "臺北市動物之家",
