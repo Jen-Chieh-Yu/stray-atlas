@@ -38,14 +38,15 @@ from common import PUBLIC_DATA, RAW_DIR, STATS_DIR, latest_snapshot_date, log, r
 
 SCRIPTS = Path(__file__).resolve().parent
 
-# (script, takes --date). build_shelter_points.py reads shelters.json instead,
-# so it follows whatever the step before it wrote.
+# (script, takes --date). build_shelter_points.py and build_home.py read
+# build_shelters.py's output instead, so they follow whatever it wrote.
 STEPS: tuple[tuple[str, bool], ...] = (
     ("clean.py", True),  # areas.json, meta.json
     ("geocode.py", True),  # stats/foundplace.json
     ("build_stats.py", True),  # stats/counties.json
     ("build_shelters.py", True),  # shelters.json, animals.json
     ("build_shelter_points.py", False),  # shelter-points.json
+    ("build_home.py", False),  # home.json
     ("build_distribution.py", True),  # stats/distribution.json
     ("build_features.py", True),  # stats/features.json
     ("build_quality.py", True),  # stats/quality.json
@@ -60,6 +61,7 @@ DATED_OUTPUTS = (
     STATS_DIR / "counties.json",
     PUBLIC_DATA / "shelters.json",
     PUBLIC_DATA / "shelter-points.json",
+    PUBLIC_DATA / "home.json",
     STATS_DIR / "distribution.json",
     STATS_DIR / "features.json",
     STATS_DIR / "quality.json",

@@ -4,12 +4,12 @@ import type { Animal, Shelter, ShelterPayload } from '@/types'
 
 /** Every animal and shelter, plus the per-animal numbers the cards show.
  *
- *  Shared by the home page and the find-animals page so both rank an animal
- *  the same way. The two files are fetched once per visit (useAtlasData
- *  caches the promises), so a second caller costs nothing.
+ *  Shared by the pages that list animals so each ranks an animal the same
+ *  way. The two files are fetched once per visit (useAtlasData caches the
+ *  promises), so a second caller costs nothing. The home page does not use
+ *  this: it draws from home.json and fetches the roster afterwards.
  *
- *  Used by: HomeView.vue, AnimalsView.vue, ShelterListView.vue and
- *  ShelterView.vue.
+ *  Used by: AnimalsView.vue, ShelterListView.vue and ShelterView.vue.
  */
 export function useRoster() {
   const animals = ref<Animal[]>([])

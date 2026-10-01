@@ -51,6 +51,7 @@ python scripts/geocode.py               # stats/foundplace.json（尋獲地分�
 python scripts/build_stats.py           # stats/counties.json
 python scripts/build_shelters.py        # shelters.json + animals.json
 python scripts/build_shelter_points.py  # shelter-points.json（地圖圖釘，讀 shelters.json）
+python scripts/build_home.py            # home.json（首頁計數與卡片，讀 shelters.json + animals.json）
 python scripts/build_distribution.py    # stats/distribution.json（分析頁）
 python scripts/build_features.py        # stats/features.json（分組中位數、收容所內毛色對照）
 python scripts/build_quality.py         # stats/quality.json（資料品質頁）
@@ -127,6 +128,7 @@ stray-atlas/
 │   ├── build_stats.py       縣市層級統計
 │   ├── build_shelters.py    收容所與全部動物名冊
 │   ├── build_shelter_points.py  收容所定位（行政區形心）
+│   ├── build_home.py        首頁的計數與卡片，讓首頁不必先載入整份名冊
 │   ├── build_distribution.py    在所天數分布：直方圖、KDE、ECDF
 │   ├── build_features.py    分組中位數與四分位距、收容所內毛色對照
 │   ├── build_quality.py     各縣市與各收容所的登錄完整度評分
@@ -137,6 +139,7 @@ stray-atlas/
 │   └── data/                產出的 JSON / GeoJSON（前端資料契約，見 CLAUDE.md §4.1）
 │       ├── meta.json        快照日期與清理摘要（頁尾日期讀這裡）
 │       ├── animals.json     全部動物
+│       ├── home.json        首頁的計數與卡片（首頁畫完後才在背景載入 animals.json）
 │       ├── shelters.json    收容所與各所統計
 │       ├── shelter-points.json  地圖圖釘
 │       ├── areas.json       縣市代碼對照

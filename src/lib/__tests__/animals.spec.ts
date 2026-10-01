@@ -9,7 +9,9 @@ import {
   median,
   parseAnimalQuery,
   pickSiblings,
+  rank,
   searchLink,
+  sumCounts,
   tally,
 } from '@/lib/animals'
 
@@ -253,5 +255,29 @@ describe('tally', () => {
   it('breaks ties by name so the order is stable between renders', () => {
     const counts = tally(['貓', '狗'], (item) => item)
     expect(counts.map(([name]) => name)).toEqual(['狗', '貓'])
+  })
+})
+
+describe('sumCounts', () => {
+  it('adds the same key across tables, keeping first-seen order', () => {
+    // The home page adds home.json's per-kind tables into all-kinds counts.
+    const counts = sumCounts([
+      ['雲林縣', 2],
+      ['臺南市', 1],
+      ['雲林縣', 3],
+    ])
+    expect([...counts]).toEqual([
+      ['雲林縣', 5],
+      ['臺南市', 1],
+    ])
+  })
+})
+
+describe('rank', () => {
+  it('orders counts made elsewhere exactly as tally orders its own', () => {
+    // home.json carries counts, not an order; the page must rank them the
+    // way it ranked the roster before, or ties would swap places.
+    const items = ['貓', '狗', '兔', '狗']
+    expect(rank(Object.entries({ 貓: 1, 狗: 2, 兔: 1 }))).toEqual(tally(items, (item) => item))
   })
 })

@@ -189,14 +189,23 @@ export function median(values: number[]): number | null {
   return sorted.length % 2 ? sorted[mid] : Math.round((sorted[mid - 1] + sorted[mid]) / 2)
 }
 
-/** Count per key, largest first; ties broken by name so the order is stable. */
-export function tally<T>(items: T[], key: (item: T) => string): [string, number][] {
+/** Add up [key, count] pairs key by key, keeping first-seen order. */
+export function sumCounts(entries: Iterable<[string, number]>): Map<string, number> {
   const counts = new Map<string, number>()
-  for (const item of items) {
-    const name = key(item)
-    counts.set(name, (counts.get(name) ?? 0) + 1)
-  }
-  return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'zh-TW'))
+  for (const [name, count] of entries) counts.set(name, (counts.get(name) ?? 0) + count)
+  return counts
+}
+
+/** Counts largest first; ties broken by name so the order is stable. The
+ *  home page ranks the counts in home.json with this, rather than taking an
+ *  order from Python, which cannot reproduce zh-TW collation. */
+export function rank(counts: Iterable<[string, number]>): [string, number][] {
+  return [...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'zh-TW'))
+}
+
+/** Count per key, ranked. */
+export function tally<T>(items: T[], key: (item: T) => string): [string, number][] {
+  return rank(sumCounts(items.map((item): [string, number] => [key(item), 1])))
 }
 
 export function formatCount(value: number): string {

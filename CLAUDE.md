@@ -161,6 +161,7 @@ public/data/
   shelters.json           # 37 處收容所：在所數、滯留分布、地址、電話
   shelter-points.json     # 收容所定位（行政區形心）＋地圖面板要顯示的欄位
   animals.json            # 全部動物名冊，8,000 餘筆，供找動物／收容所頁共用
+  home.json               # 首頁的計數與 18 張卡片，首頁畫完後才在背景載入 animals.json
   stats/counties.json     # 縣市層級統計，地圖染色的依據
   stats/foundplace.json   # 尋獲地分級結果（不含座標，見下）
   stats/distribution.json # 在所天數分布：直方圖、三段頻寬 KDE、ECDF
