@@ -87,6 +87,40 @@ export interface Animal {
   created: string
 }
 
+/** home.json, one kind's counts. Written by scripts/build_home.py.
+ *
+ *  Counts per key, never an order: the page ranks them with rank() in
+ *  src/lib/animals.ts so ties fall exactly as they do on every other page.
+ *  Keys appear in roster order. */
+export interface HomeKind {
+  count: number
+  /** Animals whose variety_group is 'mixed'. */
+  mixed: number
+  /** Keyed by the holding shelter's county; '' where it has none. */
+  counties: Record<string, number>
+  /** Keyed by variety as recorded; '' where it is blank. */
+  varieties: Record<string, number>
+  body: Record<string, number>
+  age: Record<string, number>
+  /** Keyed by DAY_BANDS key. Animals without a build date are in none. */
+  bands: Record<string, number>
+}
+
+/** home.json: everything the home page draws, so it can render without
+ *  animals.json, which it then fetches in the background. */
+export interface HomePayload {
+  snapshot_date: string
+  generated_at_utc: string
+  roster: { count: number }
+  /** Over every animal with a build date, rounded like median(). */
+  median_days: number | null
+  kinds: Record<Kind, HomeKind>
+  /** Same records as animals.json: the ten longest stays, and the four
+   *  newest dogs and cats by build date. */
+  longest: Animal[]
+  newest: Record<'狗' | '貓', Animal[]>
+}
+
 export type Scope = 'all' | 'dog' | 'cat'
 export type Scale = 'log' | 'linear'
 export type Smoothing = 'fine' | 'standard' | 'smooth'

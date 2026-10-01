@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import AnimalCard from '@/components/AnimalCard.vue'
 import AnimalDialog from '@/components/AnimalDialog.vue'
@@ -7,7 +7,7 @@ import HeroCarousel from '@/components/HeroCarousel.vue'
 import LoadingSkeleton from '@/components/LoadingSkeleton.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
 import MissingAnimalDialog from '@/components/MissingAnimalDialog.vue'
-import { useRoster } from '@/composables/useRoster'
+import { daysInShelter, fetchAnimals, fetchHome, fetchShelters } from '@/composables/useAtlasData'
 import { closeAnimalDialog } from '@/lib/dialogRoute'
 import { vReveal } from '@/lib/reveal'
 import {
@@ -16,56 +16,117 @@ import {
   DAY_BANDS,
   animalsLink,
   formatCount,
-  inBand,
+  isIdQuery,
   isNewerId,
-  median,
+  rank,
   searchLink,
-  tally,
+  sumCounts,
+  type DayBandKey,
 } from '@/lib/animals'
-import type { Animal, Kind } from '@/types'
+import type { Animal, HomeKind, HomePayload, Shelter } from '@/types'
 
 const route = useRoute()
 const router = useRouter()
 
-const {
-  animals,
-  shelters,
-  snapshotDate,
-  loading,
-  error,
-  shelterById,
-  placeOf,
-  countyOf,
-  daysOf,
-  knownDays,
-  byLongest,
-} = useRoster()
+/* ── Data ──────────────────────────────────────────────────────────────────
+ * The page draws from home.json, which build_home.py computes from the
+ * roster. The roster itself is fetched after the page is up, or at once when
+ * something needs it: an ?animal= link, or a search by number. */
 
-const longest = computed(() => byLongest.value.slice(0, 10))
+const home = ref<HomePayload | null>(null)
+const shelters = ref<Shelter[]>([])
+const snapshotDate = ref('')
+const loading = ref(true)
+const error = ref<string | null>(null)
+/** Empty until the background fetch lands. */
+const animals = ref<Animal[]>([])
 
-/** Newest intake first, by 建檔日 — the date the record entered the system. */
-function newest(kind: Kind): Animal[] {
-  return animals.value
-    .filter((animal) => animal.kind === kind && daysOf(animal) !== null)
-    .sort((a, b) => (daysOf(a) ?? 0) - (daysOf(b) ?? 0))
-    .slice(0, 4)
+function loadRoster(): Promise<Animal[]> {
+  return fetchAnimals().then((list) => {
+    animals.value = list
+    return list
+  })
 }
 
-const kindCount = computed(() => new Map(tally(animals.value, (animal) => animal.kind)))
+/** Not an error state when it fails: every section is already drawn, and
+ *  /animals reports the failure itself if the reader goes there. */
+function prefetchRoster() {
+  const start = () => void loadRoster().catch(() => undefined)
+  if ('requestIdleCallback' in window) window.requestIdleCallback(start, { timeout: 2000 })
+  else setTimeout(start, 0)
+}
 
+onMounted(async () => {
+  try {
+    const [homePayload, shelterPayload] = await Promise.all([fetchHome(), fetchShelters()])
+    home.value = homePayload
+    shelters.value = shelterPayload.shelters
+    snapshotDate.value = shelterPayload.snapshot_date
+  } catch (cause) {
+    error.value = cause instanceof Error ? cause.message : String(cause)
+  } finally {
+    loading.value = false
+  }
+  if (!error.value) {
+    await nextTick()
+    prefetchRoster()
+  }
+})
+
+watch(
+  () => route.query.animal,
+  (id) => {
+    if (typeof id === 'string') void loadRoster().catch(() => undefined)
+  },
+  { immediate: true },
+)
+
+const shelterById = computed(() => new Map(shelters.value.map((shelter) => [shelter.id, shelter])))
+
+function placeOf(animal: Animal): string {
+  return shelterById.value.get(animal.shelter)?.name ?? ''
+}
+
+function daysOf(animal: Animal): number | null {
+  return daysInShelter(animal.created, snapshotDate.value)
+}
+
+/** Every kind's table, for the chips that count all kinds together. */
+const blocks = computed<HomeKind[]>(() => Object.values(home.value?.kinds ?? {}))
+
+/** One key's count summed over every kind. */
+function across(table: (block: HomeKind) => Record<string, number>, key: string): number {
+  return blocks.value.reduce((sum, block) => sum + (table(block)[key] ?? 0), 0)
+}
+
+/** This band and every band above it, as the daysFrom filter reads it. */
+function fromBand(bands: Record<string, number>, from: DayBandKey): number {
+  const start = DAY_BANDS.findIndex((band) => band.key === from)
+  return DAY_BANDS.slice(start).reduce((sum, band) => sum + (bands[band.key] ?? 0), 0)
+}
+
+const total = computed(() => home.value?.roster.count ?? 0)
+const longest = computed(() => home.value?.longest ?? [])
+
+const kindCount = computed(
+  () =>
+    new Map(Object.entries(home.value?.kinds ?? {}).map(([kind, block]) => [kind, block.count])),
+)
+
+/** Newest intake first, by 建檔日 — the date the record entered the system. */
 const newestBlocks = computed(() => [
   {
     kind: '狗' as const,
     icon: 'dog' as const,
     title: '狗狗',
-    list: newest('狗'),
+    list: home.value?.newest['狗'] ?? [],
     note: '依建檔日期由新到舊。建檔日是資料進到系統的時間，不等於被撿到的日子。',
   },
   {
     kind: '貓' as const,
     icon: 'cat' as const,
     title: '貓咪',
-    list: newest('貓'),
+    list: home.value?.newest['貓'] ?? [],
     note: '依建檔日期由新到舊。想看等最久的，用「已在所天數」排序。',
   },
 ])
@@ -83,43 +144,57 @@ const search = ref('')
 /** Shortcuts under the search field follow the tab, since the links carry it. */
 const quickChips = computed(() => {
   const kind = species.value
-  const list = animals.value.filter((animal) => animal.kind === kind)
-  const chips = tally(list, countyOf)
+  const block = home.value?.kinds[kind]
+  if (!block) return []
+  const chips = rank(Object.entries(block.counties))
     .filter(([county]) => county)
     .slice(0, 4)
     .map(([county, count]) => ({ label: county, count, to: animalsLink({ kind, county }) }))
   chips.push(
     {
       label: '幼體',
-      count: list.filter((animal) => animal.age === 'CHILD').length,
+      count: block.age.CHILD ?? 0,
       to: animalsLink({ kind, age: 'CHILD' }),
     },
     {
       label: '小型',
-      count: list.filter((animal) => animal.body === 'SMALL').length,
+      count: block.body.SMALL ?? 0,
       to: animalsLink({ kind, body: 'SMALL' }),
     },
     {
       label: '已在所 2 年以上',
-      count: list.filter((animal) => (daysOf(animal) ?? -1) > 730).length,
+      count: fromBand(block.bands, '2-5y'),
       to: animalsLink({ kind, daysFrom: '2-5y' }),
     },
   )
   return chips.filter((chip) => chip.count > 0)
 })
 
-function submitSearch() {
-  void router.push(searchLink(search.value, { kind: species.value }, animals.value))
+/** A search by number opens the one animal it matches, which needs the
+ *  roster; any other search is resolved by /animals itself. */
+async function submitSearch() {
+  const text = search.value
+  const roster = isIdQuery(text.trim())
+    ? await loadRoster().catch(() => animals.value)
+    : animals.value
+  void router.push(searchLink(text, { kind: species.value }, roster))
 }
 
 /* ── Browse bands ──────────────────────────────────────────────────────── */
 
 function varietyCard(kind: '狗' | '貓', limit: number) {
-  const list = animals.value.filter((animal) => animal.kind === kind)
-  const varieties = tally(list, (animal) => animal.variety || '未填品種')
+  const block = home.value?.kinds[kind]
+  const varieties = rank(
+    sumCounts(
+      Object.entries(block?.varieties ?? {}).map(([name, count]): [string, number] => [
+        name || '未填品種',
+        count,
+      ]),
+    ),
+  )
   return {
     kinds: varieties.length,
-    total: list.length,
+    total: block?.count ?? 0,
     top: varieties.slice(0, limit).map(([name, count]) => ({
       name,
       count,
@@ -146,27 +221,25 @@ const kindCards = computed(() => [
 ])
 
 const mixedShare = computed(() => {
-  const total = animals.value.length
-  if (total === 0) return 0
-  return Math.round(
-    (animals.value.filter((animal) => animal.group === 'mixed').length / total) * 100,
-  )
+  if (total.value === 0) return 0
+  const mixed = blocks.value.reduce((sum, block) => sum + block.mixed, 0)
+  return Math.round((mixed / total.value) * 100)
 })
 
 /** 其他 is a handful of species; group the variety names into plain words. */
 const OTHER_GROUPS = ['兔', '刺蝟', '鸚鵡', '象龜', '絨鼠']
 const others = computed(() => {
-  const list = animals.value.filter((animal) => animal.kind === '其他')
+  const block = home.value?.kinds['其他']
   const names: string[] = []
-  for (const animal of list) {
-    const name = OTHER_GROUPS.find((group) => animal.variety.includes(group)) ?? animal.variety
+  for (const variety of Object.keys(block?.varieties ?? {})) {
+    const name = OTHER_GROUPS.find((group) => variety.includes(group)) ?? variety
     if (name && !names.includes(name)) names.push(name)
   }
-  return { count: list.length, names }
+  return { count: block?.count ?? 0, names }
 })
 
 const counties = computed(() =>
-  tally(animals.value, countyOf)
+  rank(sumCounts(blocks.value.flatMap((block) => Object.entries(block.counties))))
     .filter(([county]) => county)
     .map(([county, count]) => ({ label: county, count, to: animalsLink({ county }) })),
 )
@@ -174,7 +247,7 @@ const counties = computed(() =>
 const bodyChips = computed(() =>
   Object.entries(BODY_LABEL).map(([code, label]) => ({
     label,
-    count: animals.value.filter((animal) => animal.body === code).length,
+    count: across((block) => block.body, code),
     to: animalsLink({ body: code }),
   })),
 )
@@ -182,7 +255,7 @@ const bodyChips = computed(() =>
 const ageChips = computed(() =>
   Object.entries(AGE_LABEL).map(([code, label]) => ({
     label,
-    count: animals.value.filter((animal) => animal.age === code).length,
+    count: across((block) => block.age, code),
     to: animalsLink({ age: code }),
   })),
 )
@@ -190,12 +263,12 @@ const ageChips = computed(() =>
 const bandChips = computed(() =>
   DAY_BANDS.map((band) => ({
     label: band.label,
-    count: animals.value.filter((animal) => inBand(daysOf(animal), band.min, band.max)).length,
+    count: across((block) => block.bands, band.key),
     to: animalsLink({ days: band.key }),
   })),
 )
 
-const overallMedian = computed(() => median(knownDays.value))
+const overallMedian = computed(() => home.value?.median_days ?? null)
 const countyCount = computed(() => new Set(shelters.value.map((shelter) => shelter.county)).size)
 
 /* ── Longest strip: arrows ─────────────────────────────────────────────── */
@@ -244,11 +317,17 @@ onBeforeUnmount(() => observer?.disconnect())
 /* ── Detail dialog ─────────────────────────────────────────────────────── */
 
 /** Same contract as the grid pages: the open animal is ?animal=<id>, so Back
- *  closes the dialog and the link can be shared. */
+ *  closes the dialog and the link can be shared. A card on this page opens
+ *  from home.json at once; any other id waits for the roster. */
 const openAnimal = computed<Animal | null>(() => {
   const id = route.query.animal
   if (typeof id !== 'string') return null
-  return animals.value.find((animal) => animal.id === id) ?? null
+  const cards = [...longest.value, ...newestBlocks.value.flatMap((block) => block.list)]
+  return (
+    animals.value.find((animal) => animal.id === id) ??
+    cards.find((animal) => animal.id === id) ??
+    null
+  )
 })
 
 /** A link to an animal no longer in the roster, once the roster is here. */
@@ -365,13 +444,7 @@ const FLOW = [
       </div>
     </div>
 
-    <LoadingSkeleton
-      v-if="loading"
-      class="wrap"
-      variant="cards"
-      :count="4"
-      hint="全國動物資料約 272 KB"
-    />
+    <LoadingSkeleton v-if="loading" class="wrap" variant="cards" :count="4" />
     <p v-else-if="error" class="wrap state">資料載入失敗（{{ error }}）。</p>
 
     <template v-else>
@@ -379,7 +452,7 @@ const FLOW = [
       <section v-reveal class="wrap">
         <div class="stats">
           <div class="stat">
-            <b>{{ formatCount(animals.length) }}</b
+            <b>{{ formatCount(total) }}</b
             ><span>隻動物目前仍在所</span>
           </div>
           <div class="stat">
@@ -570,7 +643,7 @@ const FLOW = [
 
             <div class="kind-card">
               <h3 class="kind-head">
-                依體型與年齡 <span class="n">{{ formatCount(animals.length) }} 隻</span>
+                依體型與年齡 <span class="n">{{ formatCount(total) }} 隻</span>
               </h3>
               <span class="kind-sub">體型</span>
               <div class="kind-chips">

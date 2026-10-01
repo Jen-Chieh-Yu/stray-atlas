@@ -6,6 +6,7 @@ import type {
   DistributionPayload,
   FeaturesPayload,
   FoundplacePayload,
+  HomePayload,
   MetaPayload,
   QualityPayload,
   ShelterPayload,
@@ -81,6 +82,7 @@ export function useAtlasData() {
 
 let sheltersOnce: Promise<ShelterPayload> | null = null
 let animalsOnce: Promise<Animal[]> | null = null
+let homeOnce: Promise<HomePayload> | null = null
 let distributionOnce: Promise<DistributionPayload> | null = null
 let pointsOnce: Promise<ShelterPointPayload> | null = null
 let foundplaceOnce: Promise<FoundplacePayload> | null = null
@@ -106,6 +108,16 @@ export function fetchAnimals(): Promise<Animal[]> {
     return response.json() as Promise<Animal[]>
   })
   return animalsOnce
+}
+
+/** The home page's counts and cards. A few kilobytes, so the first page most
+ *  visitors see does not wait on the whole roster to draw 18 cards. */
+export function fetchHome(): Promise<HomePayload> {
+  homeOnce ??= fetch(dataUrl('home.json')).then((response) => {
+    if (!response.ok) throw new Error(`home.json ${response.status}`)
+    return response.json() as Promise<HomePayload>
+  })
+  return homeOnce
 }
 
 /** The pre-computed duration distribution. Histograms, KDE curves and the
