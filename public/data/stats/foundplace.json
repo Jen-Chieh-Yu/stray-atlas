@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-10-01",
-  "generated_at_utc": "2026-10-01T03:52:43Z",
-  "rows": 8459,
+  "snapshot_date": "2026-10-02",
+  "generated_at_utc": "2026-10-02T03:49:52Z",
+  "rows": 8492,
   "district_reference": "loaded",
   "place_kinds": {
-    "blank": 1050,
-    "address": 5160,
-    "landmark": 932,
-    "district": 1201,
+    "district": 1234,
+    "address": 5169,
+    "blank": 1042,
+    "landmark": 931,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1839,
-      "share": 0.2174
+      "rows": 1851,
+      "share": 0.218
     },
     "low": {
-      "rows": 5447,
-      "share": 0.6439
+      "rows": 5476,
+      "share": 0.6448
     },
     "none": {
-      "rows": 1166,
-      "share": 0.1378
+      "rows": 1158,
+      "share": 0.1364
     }
   },
   "county_source": {
     "text": 190,
-    "shelter": 7103,
-    "none": 1166
+    "shelter": 7144,
+    "none": 1158
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3043,
-    "verified_against_reference": 3040,
+    "extracted": 3088,
+    "verified_against_reference": 3085,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
-      "板橋區雙十路二段",
-      "板橋區篤行路三段",
-      "新莊區民安西路403巷",
-      "蘆洲區蘆洲區中山二路176號",
-      "古坑鄉新生路"
+      "金湖鎮新市里復興路",
+      "金沙鎮汶沙里勝利路",
+      "板橋區僑中一街136號1F",
+      "金城鎮東門里民族路",
+      "金湖鎮新市里林森路（金湖國小）"
     ],
     "low": [
-      "竹圍東巷1號",
-      "成都北路253號",
-      "茅營里",
-      "天母里天母北路",
-      "七寮路"
+      "斗六市榴北里",
+      "世賢路四段450之1號",
+      "竹子湖路",
+      "金沙鎮汶沙里沙美（大士宮）",
+      "金城鎮南門里安和新村"
     ],
     "none": [
       "臺北市動物之家",
