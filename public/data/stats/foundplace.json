@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-10-03",
-  "generated_at_utc": "2026-10-03T03:34:09Z",
-  "rows": 8528,
+  "snapshot_date": "2026-10-04",
+  "generated_at_utc": "2026-10-04T04:03:47Z",
+  "rows": 8498,
   "district_reference": "loaded",
   "place_kinds": {
-    "blank": 1057,
-    "address": 5171,
+    "address": 5143,
     "landmark": 933,
-    "district": 1251,
+    "blank": 1056,
+    "district": 1250,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1856,
-      "share": 0.2176
+      "rows": 1858,
+      "share": 0.2186
     },
     "low": {
-      "rows": 5492,
-      "share": 0.644
+      "rows": 5461,
+      "share": 0.6426
     },
     "none": {
-      "rows": 1173,
-      "share": 0.1375
+      "rows": 1172,
+      "share": 0.1379
     }
   },
   "county_source": {
     "text": 190,
-    "shelter": 7165,
-    "none": 1173
+    "shelter": 7136,
+    "none": 1172
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3110,
-    "verified_against_reference": 3107,
+    "extracted": 3111,
+    "verified_against_reference": 3108,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
+      "板橋區新海路181號",
+      "板橋區光武街2巷2號",
+      "三峽區中正路一段19巷8號",
       "中和區興南路三段",
-      "虎尾鎮虎興西七街",
-      "金城鎮東門里伯玉路一段",
-      "金城鎮東門里民族路",
-      "新莊區自強街"
+      "虎尾鎮虎興西七街"
     ],
     "low": [
-      "復興三路５２１巷",
-      "鹿港體育場",
-      "南興街天和宮附近",
-      "惠安街24號",
-      "社斗路二段"
+      "湖田里小油坑車道口",
+      "南雅西路2段259巷4號",
+      "菁山路１０１巷４９弄",
+      "萬大路423巷",
+      "西園路315巷116號"
     ],
     "none": [
       "臺北市動物之家",

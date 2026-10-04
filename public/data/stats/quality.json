@@ -1,7 +1,7 @@
 {
- "snapshot_date": "2026-10-03",
- "generated_at_utc": "2026-10-03T03:34:14Z",
- "rows": 8528,
+ "snapshot_date": "2026-10-04",
+ "generated_at_utc": "2026-10-04T04:03:52Z",
+ "rows": 8498,
  "min_rows_for_grade": 100,
  "metrics": [
   {
@@ -12,7 +12,7 @@
     "good": 0.9,
     "fair": 0.75
    },
-   "national": 0.8132
+   "national": 0.8124
   },
   {
    "key": "place",
@@ -22,7 +22,7 @@
     "good": 0.6,
     "fair": 0.3
    },
-   "national": 0.3643
+   "national": 0.3657
   },
   {
    "key": "sterilization",
@@ -32,7 +32,7 @@
     "good": 0.9,
     "fair": 0.7
    },
-   "national": 0.8798
+   "national": 0.8809
   },
   {
    "key": "opendate",
@@ -42,7 +42,7 @@
     "good": 0.95,
     "fair": 0.85
    },
-   "national": 0.9526
+   "national": 0.9523
   }
  ],
  "counties": [
@@ -50,12 +50,12 @@
    "pkid": "3",
    "name": "新北市",
    "shelters": 9,
-   "rows": 2776,
+   "rows": 2778,
    "scores": {
     "photo": 0.4906,
-    "place": 0.7385,
+    "place": 0.7387,
     "sterilization": 0.9834,
-    "opendate": 0.9474
+    "opendate": 0.9471
    },
    "grades": {
     "photo": "poor",
@@ -68,12 +68,12 @@
    "pkid": "2",
    "name": "臺北市",
    "shelters": 1,
-   "rows": 967,
+   "rows": 958,
    "scores": {
     "photo": 0.9969,
-    "place": 0.0124,
-    "sterilization": 0.971,
-    "opendate": 0.9969
+    "place": 0.0125,
+    "sterilization": 0.9718,
+    "opendate": 0.9958
    },
    "grades": {
     "photo": "good",
@@ -86,12 +86,12 @@
    "pkid": "17",
    "name": "高雄市",
    "shelters": 2,
-   "rows": 700,
+   "rows": 699,
    "scores": {
     "photo": 0.9957,
-    "place": 0.06,
-    "sterilization": 0.7614,
-    "opendate": 0.9143
+    "place": 0.0601,
+    "sterilization": 0.7611,
+    "opendate": 0.9142
    },
    "grades": {
     "photo": "good",
@@ -104,11 +104,11 @@
    "pkid": "16",
    "name": "臺南市",
    "shelters": 2,
-   "rows": 575,
+   "rows": 577,
    "scores": {
-    "photo": 0.8296,
-    "place": 0.1096,
-    "sterilization": 0.4243,
+    "photo": 0.8302,
+    "place": 0.1092,
+    "sterilization": 0.4246,
     "opendate": 0.9757
    },
    "grades": {
@@ -122,12 +122,12 @@
    "pkid": "6",
    "name": "桃園市",
    "shelters": 1,
-   "rows": 496,
+   "rows": 492,
    "scores": {
-    "photo": 0.9879,
-    "place": 0.0444,
-    "sterilization": 0.877,
-    "opendate": 0.9073
+    "photo": 0.9878,
+    "place": 0.0447,
+    "sterilization": 0.878,
+    "opendate": 0.9065
    },
    "grades": {
     "photo": "good",
@@ -176,12 +176,12 @@
    "pkid": "11",
    "name": "彰化縣",
    "shelters": 2,
-   "rows": 340,
+   "rows": 337,
    "scores": {
-    "photo": 0.9824,
-    "place": 0.0118,
-    "sterilization": 0.8059,
-    "opendate": 0.9206
+    "photo": 0.9822,
+    "place": 0.0119,
+    "sterilization": 0.8012,
+    "opendate": 0.9228
    },
    "grades": {
     "photo": "good",
@@ -230,12 +230,12 @@
    "pkid": "5",
    "name": "宜蘭縣",
    "shelters": 1,
-   "rows": 245,
+   "rows": 235,
    "scores": {
-    "photo": 0.9714,
+    "photo": 0.9702,
     "place": 0.0,
-    "sterilization": 0.2939,
-    "opendate": 0.9918
+    "sterilization": 0.3064,
+    "opendate": 0.9915
    },
    "grades": {
     "photo": "good",
@@ -248,12 +248,12 @@
    "pkid": "9",
    "name": "苗栗縣",
    "shelters": 2,
-   "rows": 186,
+   "rows": 185,
    "scores": {
     "photo": 1.0,
-    "place": 0.8011,
-    "sterilization": 0.9516,
-    "opendate": 0.9839
+    "place": 0.8,
+    "sterilization": 0.9514,
+    "opendate": 0.9838
    },
    "grades": {
     "photo": "good",
@@ -284,17 +284,17 @@
    "pkid": "4",
    "name": "基隆市",
    "shelters": 1,
-   "rows": 156,
+   "rows": 152,
    "scores": {
-    "photo": 0.9936,
-    "place": 0.0513,
-    "sterilization": 0.6923,
-    "opendate": 0.9744
+    "photo": 0.9934,
+    "place": 0.0526,
+    "sterilization": 0.7039,
+    "opendate": 0.9737
    },
    "grades": {
     "photo": "good",
     "place": "poor",
-    "sterilization": "poor",
+    "sterilization": "fair",
     "opendate": "good"
    }
   },
@@ -302,12 +302,12 @@
    "pkid": "19",
    "name": "花蓮縣",
    "shelters": 1,
-   "rows": 136,
+   "rows": 135,
    "scores": {
     "photo": 1.0,
-    "place": 0.0441,
+    "place": 0.0444,
     "sterilization": 0.9926,
-    "opendate": 0.8603
+    "opendate": 0.8593
    },
    "grades": {
     "photo": "good",
@@ -320,12 +320,12 @@
    "pkid": "7",
    "name": "新竹縣",
    "shelters": 2,
-   "rows": 133,
+   "rows": 132,
    "scores": {
-    "photo": 0.9624,
-    "place": 0.0677,
+    "photo": 0.9621,
+    "place": 0.0682,
     "sterilization": 1.0,
-    "opendate": 0.9624
+    "opendate": 0.9621
    },
    "grades": {
     "photo": "good",
@@ -448,12 +448,12 @@
    "id": "e32bd54eef",
    "name": "臺北市動物之家",
    "county": "臺北市",
-   "rows": 967,
+   "rows": 958,
    "scores": {
     "photo": 0.9969,
-    "place": 0.0124,
-    "sterilization": 0.971,
-    "opendate": 0.9969
+    "place": 0.0125,
+    "sterilization": 0.9718,
+    "opendate": 0.9958
    },
    "grades": {
     "photo": "good",
@@ -520,12 +520,12 @@
    "id": "e1942dfc8c",
    "name": "桃園市動物保護教育園區",
    "county": "桃園市",
-   "rows": 496,
+   "rows": 492,
    "scores": {
-    "photo": 0.9879,
-    "place": 0.0444,
-    "sterilization": 0.877,
-    "opendate": 0.9073
+    "photo": 0.9878,
+    "place": 0.0447,
+    "sterilization": 0.878,
+    "opendate": 0.9065
    },
    "grades": {
     "photo": "good",
@@ -646,12 +646,12 @@
    "id": "ec9eec2921",
    "name": "宜蘭縣流浪動物中途之家",
    "county": "宜蘭縣",
-   "rows": 245,
+   "rows": 235,
    "scores": {
-    "photo": 0.9714,
+    "photo": 0.9702,
     "place": 0.0,
-    "sterilization": 0.2939,
-    "opendate": 0.9918
+    "sterilization": 0.3064,
+    "opendate": 0.9915
    },
    "grades": {
     "photo": "good",
@@ -664,12 +664,12 @@
    "id": "e29d9cccaa",
    "name": "高雄市壽山動物保護教育園區",
    "county": "高雄市",
-   "rows": 231,
+   "rows": 230,
    "scores": {
     "photo": 0.9957,
     "place": 0.0,
-    "sterilization": 0.4416,
-    "opendate": 0.7619
+    "sterilization": 0.4391,
+    "opendate": 0.7609
    },
    "grades": {
     "photo": "good",
@@ -697,20 +697,20 @@
    }
   },
   {
-   "id": "ad3f398c00",
-   "name": "彰化縣流浪狗中途之家臨時收容所",
-   "county": "彰化縣",
+   "id": "dc67aab234",
+   "name": "新北市板橋區公立動物之家",
+   "county": "新北市",
    "rows": 202,
    "scores": {
-    "photo": 1.0,
-    "place": 0.0099,
-    "sterilization": 0.6832,
-    "opendate": 0.8663
+    "photo": 0.8762,
+    "place": 0.401,
+    "sterilization": 1.0,
+    "opendate": 0.9356
    },
    "grades": {
-    "photo": "good",
-    "place": "poor",
-    "sterilization": "poor",
+    "photo": "fair",
+    "place": "fair",
+    "sterilization": "good",
     "opendate": "fair"
    }
   },
@@ -733,56 +733,56 @@
    }
   },
   {
-   "id": "dc67aab234",
-   "name": "新北市板橋區公立動物之家",
-   "county": "新北市",
-   "rows": 200,
-   "scores": {
-    "photo": 0.88,
-    "place": 0.395,
-    "sterilization": 1.0,
-    "opendate": 0.94
-   },
-   "grades": {
-    "photo": "fair",
-    "place": "fair",
-    "sterilization": "good",
-    "opendate": "fair"
-   }
-  },
-  {
-   "id": "87e430aeaa",
-   "name": "苗栗縣動物保護教育園區",
-   "county": "苗栗縣",
-   "rows": 172,
+   "id": "ad3f398c00",
+   "name": "彰化縣流浪狗中途之家臨時收容所",
+   "county": "彰化縣",
+   "rows": 199,
    "scores": {
     "photo": 1.0,
-    "place": 0.8547,
-    "sterilization": 0.9477,
-    "opendate": 0.9884
+    "place": 0.0101,
+    "sterilization": 0.6734,
+    "opendate": 0.8693
    },
    "grades": {
     "photo": "good",
-    "place": "good",
-    "sterilization": "good",
-    "opendate": "good"
+    "place": "poor",
+    "sterilization": "poor",
+    "opendate": "fair"
    }
   },
   {
    "id": "2800f5b8cb",
    "name": "臺南市動物之家灣裡站",
    "county": "臺南市",
-   "rows": 171,
+   "rows": 173,
    "scores": {
     "photo": 0.9942,
-    "place": 0.0117,
-    "sterilization": 0.4678,
+    "place": 0.0116,
+    "sterilization": 0.4682,
     "opendate": 1.0
    },
    "grades": {
     "photo": "good",
     "place": "poor",
     "sterilization": "poor",
+    "opendate": "good"
+   }
+  },
+  {
+   "id": "87e430aeaa",
+   "name": "苗栗縣動物保護教育園區",
+   "county": "苗栗縣",
+   "rows": 171,
+   "scores": {
+    "photo": 1.0,
+    "place": 0.8538,
+    "sterilization": 0.9474,
+    "opendate": 0.9883
+   },
+   "grades": {
+    "photo": "good",
+    "place": "good",
+    "sterilization": "good",
     "opendate": "good"
    }
   },
@@ -808,17 +808,17 @@
    "id": "200d66f85d",
    "name": "基隆市寵物銀行",
    "county": "基隆市",
-   "rows": 156,
+   "rows": 152,
    "scores": {
-    "photo": 0.9936,
-    "place": 0.0513,
-    "sterilization": 0.6923,
-    "opendate": 0.9744
+    "photo": 0.9934,
+    "place": 0.0526,
+    "sterilization": 0.7039,
+    "opendate": 0.9737
    },
    "grades": {
     "photo": "good",
     "place": "poor",
-    "sterilization": "poor",
+    "sterilization": "fair",
     "opendate": "good"
    }
   },
@@ -844,12 +844,12 @@
    "id": "29795a5301",
    "name": "花蓮縣狗貓躍動園區",
    "county": "花蓮縣",
-   "rows": 136,
+   "rows": 135,
    "scores": {
     "photo": 1.0,
-    "place": 0.0441,
+    "place": 0.0444,
     "sterilization": 0.9926,
-    "opendate": 0.8603
+    "opendate": 0.8593
    },
    "grades": {
     "photo": "good",
@@ -862,12 +862,12 @@
    "id": "c5e859af84",
    "name": "新竹縣動物保護教育園區",
    "county": "新竹縣",
-   "rows": 125,
+   "rows": 124,
    "scores": {
-    "photo": 0.976,
-    "place": 0.072,
+    "photo": 0.9758,
+    "place": 0.0726,
     "sterilization": 1.0,
-    "opendate": 0.96
+    "opendate": 0.9597
    },
    "grades": {
     "photo": "good",
@@ -1115,11 +1115,11 @@
   "variety": [
    {
     "value": "混種犬",
-    "count": 5499
+    "count": 5498
    },
    {
     "value": "混種貓",
-    "count": 2482
+    "count": 2458
    },
    {
     "value": "混種狗",
@@ -1138,13 +1138,13 @@
    {
     "pkid": "5",
     "name": "宜蘭縣",
-    "rows": 245,
-    "T": 0.1306,
-    "F": 0.1633,
-    "N": 0.7061,
+    "rows": 235,
+    "T": 0.1362,
+    "F": 0.1702,
+    "N": 0.6936,
     "T_n": 32,
     "F_n": 40,
-    "N_n": 173
+    "N_n": 163
    },
    {
     "pkid": "20",
@@ -1160,33 +1160,33 @@
    {
     "pkid": "16",
     "name": "臺南市",
-    "rows": 575,
-    "T": 0.207,
-    "F": 0.2174,
-    "N": 0.5757,
-    "T_n": 119,
+    "rows": 577,
+    "T": 0.208,
+    "F": 0.2166,
+    "N": 0.5754,
+    "T_n": 120,
     "F_n": 125,
-    "N_n": 331
+    "N_n": 332
    },
    {
     "pkid": "4",
     "name": "基隆市",
-    "rows": 156,
-    "T": 0.4936,
-    "F": 0.1987,
-    "N": 0.3077,
-    "T_n": 77,
+    "rows": 152,
+    "T": 0.5,
+    "F": 0.2039,
+    "N": 0.2961,
+    "T_n": 76,
     "F_n": 31,
-    "N_n": 48
+    "N_n": 45
    },
    {
     "pkid": "17",
     "name": "高雄市",
-    "rows": 700,
-    "T": 0.5986,
-    "F": 0.1629,
-    "N": 0.2386,
-    "T_n": 419,
+    "rows": 699,
+    "T": 0.598,
+    "F": 0.1631,
+    "N": 0.2389,
+    "T_n": 418,
     "F_n": 114,
     "N_n": 167
    },
@@ -1204,24 +1204,24 @@
    {
     "pkid": "11",
     "name": "彰化縣",
-    "rows": 340,
-    "T": 0.7647,
-    "F": 0.0412,
-    "N": 0.1941,
-    "T_n": 260,
-    "F_n": 14,
-    "N_n": 66
+    "rows": 337,
+    "T": 0.7567,
+    "F": 0.0445,
+    "N": 0.1988,
+    "T_n": 255,
+    "F_n": 15,
+    "N_n": 67
    },
    {
     "pkid": "6",
     "name": "桃園市",
-    "rows": 496,
-    "T": 0.1653,
-    "F": 0.7117,
-    "N": 0.123,
-    "T_n": 82,
+    "rows": 492,
+    "T": 0.1606,
+    "F": 0.7175,
+    "N": 0.122,
+    "T_n": 79,
     "F_n": 353,
-    "N_n": 61
+    "N_n": 60
    },
    {
     "pkid": "10",
@@ -1248,11 +1248,11 @@
    {
     "pkid": "9",
     "name": "苗栗縣",
-    "rows": 186,
-    "T": 0.8602,
-    "F": 0.0914,
-    "N": 0.0484,
-    "T_n": 160,
+    "rows": 185,
+    "T": 0.8595,
+    "F": 0.0919,
+    "N": 0.0486,
+    "T_n": 159,
     "F_n": 17,
     "N_n": 9
    },
@@ -1281,23 +1281,23 @@
    {
     "pkid": "2",
     "name": "臺北市",
-    "rows": 967,
-    "T": 0.8749,
-    "F": 0.0962,
-    "N": 0.029,
-    "T_n": 846,
-    "F_n": 93,
-    "N_n": 28
+    "rows": 958,
+    "T": 0.8779,
+    "F": 0.0939,
+    "N": 0.0282,
+    "T_n": 841,
+    "F_n": 90,
+    "N_n": 27
    },
    {
     "pkid": "3",
     "name": "新北市",
-    "rows": 2776,
+    "rows": 2778,
     "T": 0.4276,
     "F": 0.5558,
     "N": 0.0166,
-    "T_n": 1187,
-    "F_n": 1543,
+    "T_n": 1188,
+    "F_n": 1544,
     "N_n": 46
    },
    {
@@ -1336,23 +1336,23 @@
    {
     "pkid": "19",
     "name": "花蓮縣",
-    "rows": 136,
-    "T": 0.9559,
-    "F": 0.0368,
+    "rows": 135,
+    "T": 0.9556,
+    "F": 0.037,
     "N": 0.0074,
-    "T_n": 130,
+    "T_n": 129,
     "F_n": 5,
     "N_n": 1
    },
    {
     "pkid": "7",
     "name": "新竹縣",
-    "rows": 133,
-    "T": 0.6992,
-    "F": 0.3008,
+    "rows": 132,
+    "T": 0.7045,
+    "F": 0.2955,
     "N": 0.0,
     "T_n": 93,
-    "F_n": 40,
+    "F_n": 39,
     "N_n": 0
    },
    {
