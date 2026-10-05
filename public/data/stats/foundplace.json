@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-10-04",
-  "generated_at_utc": "2026-10-04T04:03:47Z",
-  "rows": 8498,
+  "snapshot_date": "2026-10-05",
+  "generated_at_utc": "2026-10-05T03:48:16Z",
+  "rows": 8493,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5143,
+    "address": 5146,
+    "blank": 1044,
+    "district": 1254,
     "landmark": 933,
-    "blank": 1056,
-    "district": 1250,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1858,
-      "share": 0.2186
+      "rows": 1860,
+      "share": 0.219
     },
     "low": {
-      "rows": 5461,
-      "share": 0.6426
+      "rows": 5466,
+      "share": 0.6436
     },
     "none": {
-      "rows": 1172,
-      "share": 0.1379
+      "rows": 1160,
+      "share": 0.1366
     }
   },
   "county_source": {
     "text": 190,
-    "shelter": 7136,
-    "none": 1172
+    "shelter": 7143,
+    "none": 1160
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3111,
-    "verified_against_reference": 3108,
+    "extracted": 3117,
+    "verified_against_reference": 3114,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
-      "板橋區新海路181號",
-      "板橋區光武街2巷2號",
-      "三峽區中正路一段19巷8號",
-      "中和區興南路三段",
-      "虎尾鎮虎興西七街"
+      "林口區中山路258號",
+      "新莊區中正路",
+      "新莊區中港路",
+      "林口區文化一路高架橋工地",
+      "板橋區光武街2巷2號"
     ],
     "low": [
-      "湖田里小油坑車道口",
-      "南雅西路2段259巷4號",
-      "菁山路１０１巷４９弄",
-      "萬大路423巷",
-      "西園路315巷116號"
+      "崇德路616號附近",
+      "金華路一段116巷8號前",
+      "北園街124巷",
+      "安中路一段701巷",
+      "中正南路475號"
     ],
     "none": [
       "臺北市動物之家",

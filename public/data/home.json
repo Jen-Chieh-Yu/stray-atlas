@@ -1,40 +1,40 @@
 {
- "snapshot_date": "2026-10-04",
- "generated_at_utc": "2026-10-04T04:03:48Z",
+ "snapshot_date": "2026-10-05",
+ "generated_at_utc": "2026-10-05T03:48:17Z",
  "roster": {
-  "count": 8498
+  "count": 8493
  },
- "median_days": 353,
+ "median_days": 354,
  "kinds": {
   "狗": {
-   "count": 5990,
-   "mixed": 5565,
+   "count": 5971,
+   "mixed": 5551,
    "counties": {
     "新北市": 1236,
-    "臺北市": 691,
+    "臺北市": 692,
     "南投縣": 298,
     "新竹市": 137,
-    "臺南市": 482,
+    "臺南市": 470,
     "澎湖縣": 296,
-    "桃園市": 399,
+    "桃園市": 395,
     "金門縣": 180,
     "雲林縣": 363,
     "臺東縣": 54,
     "連江縣": 58,
-    "基隆市": 103,
+    "基隆市": 105,
     "屏東縣": 71,
-    "新竹縣": 105,
+    "新竹縣": 102,
     "高雄市": 674,
     "花蓮縣": 108,
     "宜蘭縣": 184,
-    "臺中市": 54,
-    "彰化縣": 324,
-    "苗栗縣": 135,
+    "臺中市": 53,
+    "彰化縣": 323,
+    "苗栗縣": 134,
     "嘉義縣": 13,
     "嘉義市": 25
    },
    "varieties": {
-    "混種犬": 5498,
+    "混種犬": 5484,
     "其他": 13,
     "": 5,
     "比特犬": 39,
@@ -45,7 +45,7 @@
     "大白熊": 1,
     "獒犬": 3,
     "法國鬥牛犬": 15,
-    "柴犬": 112,
+    "柴犬": 110,
     "臘腸犬": 13,
     "迷你雪納瑞": 6,
     "瑪爾濟斯犬": 23,
@@ -58,7 +58,7 @@
     "高加索犬": 1,
     "黃金獵犬": 2,
     "比熊犬": 5,
-    "威爾斯柯基犬": 14,
+    "威爾斯柯基犬": 13,
     "哈士奇(西伯利亞雪橇犬)": 10,
     "德國狼犬(德國牧羊犬)": 3,
     "長毛臘腸": 5,
@@ -66,8 +66,8 @@
     "斯塔福郡鬥牛梗": 1,
     "雪納瑞": 2,
     "迷你貴賓犬": 6,
-    "吉娃娃犬": 7,
     "拳師犬": 1,
+    "吉娃娃犬": 6,
     "比利時狼犬": 1,
     "阿根廷杜告犬": 2,
     "玩具貴賓犬": 7,
@@ -86,57 +86,56 @@
     "約克夏": 5,
     "波士頓梗": 1,
     "阿富汗獵犬": 1,
-    "牛頭梗": 1,
     "蝴蝶犬": 1
    },
    "body": {
-    "MEDIUM": 3660,
-    "SMALL": 836,
-    "BIG": 1494
+    "MEDIUM": 3648,
+    "SMALL": 830,
+    "BIG": 1493
    },
    "age": {
-    "ADULT": 4858,
-    "CHILD": 899,
+    "ADULT": 4846,
+    "CHILD": 892,
     "": 233
    },
    "bands": {
-    "0-30": 498,
-    "31-90": 617,
-    "91-365": 1285,
+    "0-30": 474,
+    "31-90": 613,
+    "91-365": 1294,
     "1-2y": 833,
     "2-5y": 1310,
     "5y+": 1447
    }
   },
   "貓": {
-   "count": 2492,
-   "mixed": 2458,
+   "count": 2505,
+   "mixed": 2471,
    "counties": {
-    "新北市": 1542,
+    "新北市": 1549,
     "桃園市": 93,
-    "臺南市": 93,
-    "臺北市": 267,
+    "臺南市": 100,
+    "臺北市": 266,
     "臺中市": 10,
     "苗栗縣": 50,
     "連江縣": 4,
     "南投縣": 48,
     "金門縣": 142,
     "花蓮縣": 27,
-    "高雄市": 24,
-    "新竹縣": 27,
+    "高雄市": 23,
+    "新竹縣": 28,
     "彰化縣": 13,
-    "宜蘭縣": 49,
+    "宜蘭縣": 48,
     "臺東縣": 12,
     "雲林縣": 11,
     "屏東縣": 1,
-    "基隆市": 49,
-    "新竹市": 16,
+    "基隆市": 48,
+    "新竹市": 18,
     "嘉義市": 2,
     "澎湖縣": 11,
     "嘉義縣": 1
    },
    "varieties": {
-    "混種貓": 2458,
+    "混種貓": 2471,
     "英國長毛貓": 1,
     "喜馬拉雅貓(短毛)": 1,
     "賓士貓": 1,
@@ -150,26 +149,26 @@
     "曼赤肯貓": 2
    },
    "body": {
-    "SMALL": 1107,
-    "MEDIUM": 1226,
-    "BIG": 159
+    "SMALL": 1111,
+    "MEDIUM": 1236,
+    "BIG": 158
    },
    "age": {
     "": 23,
-    "ADULT": 1140,
-    "CHILD": 1329
+    "ADULT": 1143,
+    "CHILD": 1339
    },
    "bands": {
-    "0-30": 286,
-    "31-90": 370,
-    "91-365": 1260,
-    "1-2y": 308,
+    "0-30": 297,
+    "31-90": 373,
+    "91-365": 1255,
+    "1-2y": 312,
     "2-5y": 246,
     "5y+": 22
    }
   },
   "其他": {
-   "count": 16,
+   "count": 17,
    "mixed": 3,
    "counties": {
     "屏東縣": 1,
@@ -178,7 +177,7 @@
     "雲林縣": 2,
     "高雄市": 1,
     "宜蘭縣": 2,
-    "新竹市": 6
+    "新竹市": 7
    },
    "varieties": {
     "月輪鸚鵡": 1,
@@ -191,20 +190,21 @@
     "玄鳳鸚鵡": 2,
     "未確認": 3,
     "豬": 1,
-    "天竺鼠": 1
+    "天竺鼠": 1,
+    "雞": 1
    },
    "body": {
-    "SMALL": 10,
+    "SMALL": 11,
     "MEDIUM": 5,
     "BIG": 1
    },
    "age": {
-    "ADULT": 15,
+    "ADULT": 16,
     "CHILD": 1
    },
    "bands": {
     "0-30": 7,
-    "31-90": 5,
+    "31-90": 6,
     "91-365": 2,
     "1-2y": 2,
     "2-5y": 0,
@@ -387,21 +387,21 @@
  "newest": {
   "狗": [
    {
-    "id": "470135",
-    "subid": "AAADG1151004001",
+    "id": "470174",
+    "subid": "AAAHG1151005001",
     "kind": "狗",
-    "variety": "貴賓犬",
-    "group": "breed",
-    "sex": "M",
-    "body": "SMALL",
-    "colour": "咖啡色",
+    "variety": "混種犬",
+    "group": "mixed",
+    "sex": "F",
+    "body": "MEDIUM",
+    "colour": "黃白色",
     "age": "ADULT",
-    "sterilized": "T",
-    "opendate": "",
+    "sterilized": "F",
+    "opendate": "2026-10-18",
     "remark": "",
     "photo": "",
-    "shelter": "dc67aab234",
-    "created": "2026-10-04"
+    "shelter": "036ddab65f",
+    "created": "2026-10-05"
    },
    {
     "id": "470125",
@@ -421,44 +421,44 @@
     "created": "2026-10-04"
    },
    {
-    "id": "470119",
-    "subid": "GAAAG1151004001",
+    "id": "470140",
+    "subid": "QAAAG1151004003",
+    "kind": "狗",
+    "variety": "貴賓犬",
+    "group": "breed",
+    "sex": "M",
+    "body": "SMALL",
+    "colour": "棕色",
+    "age": "ADULT",
+    "sterilized": "N",
+    "opendate": "",
+    "remark": "",
+    "photo": "https://www.pet.gov.tw/upload/pic/1791098474055.png",
+    "shelter": "200d66f85d",
+    "created": "2026-10-04"
+   },
+   {
+    "id": "470139",
+    "subid": "QAAAG1151004002",
     "kind": "狗",
     "variety": "混種犬",
     "group": "mixed",
     "sex": "F",
     "body": "SMALL",
-    "colour": "黑色",
-    "age": "CHILD",
-    "sterilized": "N",
-    "opendate": "2026-10-04",
-    "remark": "",
-    "photo": "https://www.pet.gov.tw/upload/pic/1791078292774.png",
-    "shelter": "ad3f398c00",
-    "created": "2026-10-04"
-   },
-   {
-    "id": "470001",
-    "subid": "VAAAG115100203",
-    "kind": "狗",
-    "variety": "混種犬",
-    "group": "mixed",
-    "sex": "M",
-    "body": "MEDIUM",
-    "colour": "黑色",
+    "colour": "棕色",
     "age": "ADULT",
-    "sterilized": "T",
-    "opendate": "2026-10-09",
-    "remark": "左後腳斷肢，外傷，屁股脫毛，無睪，本動物尚待協尋飼主，如截至10 月9 日 仍無飼主領回，將開放民眾認養。",
-    "photo": "https://www.pet.gov.tw/upload/pic/1790921589464.png",
-    "shelter": "e32bd54eef",
-    "created": "2026-10-02"
+    "sterilized": "F",
+    "opendate": "",
+    "remark": "",
+    "photo": "https://www.pet.gov.tw/upload/pic/1791098352935.png",
+    "shelter": "200d66f85d",
+    "created": "2026-10-04"
    }
   ],
   "貓": [
    {
-    "id": "470136",
-    "subid": "AAADG2026100403",
+    "id": "470173",
+    "subid": "AAAIG1151005002",
     "kind": "貓",
     "variety": "混種貓",
     "group": "mixed",
@@ -467,62 +467,62 @@
     "colour": "虎斑色",
     "age": "CHILD",
     "sterilized": "F",
-    "opendate": "2026-10-04",
+    "opendate": "2026-10-05",
     "remark": "",
-    "photo": "https://www.pet.gov.tw/upload/pic/1791086065870.png",
-    "shelter": "dc67aab234",
-    "created": "2026-10-04"
+    "photo": "",
+    "shelter": "ff18cf76ba",
+    "created": "2026-10-05"
    },
    {
-    "id": "469949",
-    "subid": "EAAAG1151002001",
+    "id": "470172",
+    "subid": "AAAIG1151005001",
     "kind": "貓",
     "variety": "混種貓",
     "group": "mixed",
-    "sex": "F",
-    "body": "BIG",
-    "colour": "三花色",
+    "sex": "M",
+    "body": "SMALL",
+    "colour": "灰白色",
     "age": "ADULT",
-    "sterilized": "T",
-    "opendate": "2026-10-02",
+    "sterilized": "F",
+    "opendate": "2026-10-05",
     "remark": "",
-    "photo": "https://www.pet.gov.tw/upload/pic/1790904907511.png",
-    "shelter": "87e430aeaa",
-    "created": "2026-10-02"
+    "photo": "",
+    "shelter": "ff18cf76ba",
+    "created": "2026-10-05"
    },
    {
-    "id": "470065",
-    "subid": "AAAIG1151002002",
+    "id": "470167",
+    "subid": "AAAGG1151005003",
     "kind": "貓",
     "variety": "混種貓",
     "group": "mixed",
     "sex": "F",
-    "body": "SMALL",
-    "colour": "三花色",
+    "body": "MEDIUM",
+    "colour": "虎斑色",
     "age": "CHILD",
-    "sterilized": "F",
-    "opendate": "2026-10-03",
+    "sterilized": "N",
+    "opendate": "",
     "remark": "",
     "photo": "",
-    "shelter": "ff18cf76ba",
-    "created": "2026-10-02"
+    "shelter": "96309cff5a",
+    "created": "2026-10-05"
    },
    {
-    "id": "470064",
-    "subid": "AAAIG1151002001",
+    "id": "470161",
+    "subid": "AAAGG1151005002",
     "kind": "貓",
     "variety": "混種貓",
     "group": "mixed",
-    "sex": "F",
-    "body": "SMALL",
-    "colour": "三花色",
+    "sex": "M",
+    "body": "MEDIUM",
+    "colour": "虎斑色",
     "age": "CHILD",
-    "sterilized": "F",
-    "opendate": "2026-10-03",
+    "sterilized": "N",
+    "opendate": "",
     "remark": "",
     "photo": "",
-    "shelter": "ff18cf76ba",
-    "created": "2026-10-02"
+    "shelter": "96309cff5a",
+    "created": "2026-10-05"
    }
   ]
  }
