@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-10-05",
-  "generated_at_utc": "2026-10-05T03:48:16Z",
-  "rows": 8493,
+  "snapshot_date": "2026-10-06",
+  "generated_at_utc": "2026-10-06T04:36:08Z",
+  "rows": 8509,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5146,
-    "blank": 1044,
-    "district": 1254,
+    "address": 5177,
     "landmark": 933,
+    "blank": 1036,
+    "district": 1247,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1860,
-      "share": 0.219
+      "rows": 1875,
+      "share": 0.2204
     },
     "low": {
-      "rows": 5466,
-      "share": 0.6436
+      "rows": 5475,
+      "share": 0.6434
     },
     "none": {
-      "rows": 1160,
-      "share": 0.1366
+      "rows": 1152,
+      "share": 0.1354
     }
   },
   "county_source": {
-    "text": 190,
-    "shelter": 7143,
-    "none": 1160
+    "text": 188,
+    "shelter": 7169,
+    "none": 1152
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3117,
-    "verified_against_reference": 3114,
+    "extracted": 3125,
+    "verified_against_reference": 3122,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
-      "林口區中山路258號",
-      "新莊區中正路",
-      "新莊區中港路",
-      "林口區文化一路高架橋工地",
-      "板橋區光武街2巷2號"
+      "蘆洲區和平路116巷",
+      "五股區外寮路",
+      "新莊區西盛街",
+      "新莊區自強街",
+      "五股區五股區中興路三段45巷5-5號"
     ],
     "low": [
-      "崇德路616號附近",
-      "金華路一段116巷8號前",
-      "北園街124巷",
-      "安中路一段701巷",
-      "中正南路475號"
+      "研究院路二段(原拾獲地:三重路)",
+      "樹林頭公園",
+      "旭光路",
+      "辛亥路",
+      "南港二段"
     ],
     "none": [
       "臺北市動物之家",
