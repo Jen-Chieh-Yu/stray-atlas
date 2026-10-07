@@ -423,7 +423,7 @@ const FLOW = [
               <input
                 v-model="search"
                 type="search"
-                placeholder="以縣市、收容所、品種或收容編號搜尋"
+                placeholder="以縣市、收容所、品種、毛色或收容編號搜尋"
                 aria-label="搜尋"
               />
             </label>
