@@ -17,15 +17,21 @@ import {
   SEX_LABEL,
   SORTS,
   AGE_LABEL,
+  NO_COLOUR,
   OFFICIAL_ADOPTION_URL,
+  STERILIZED_LABEL,
+  ageCode,
+  colourOf,
   formatCount,
   inBand,
   isIdQuery,
   isNewerId,
   matchesId,
+  matchesWords,
   parseAnimalQuery,
   rosterHint,
   searchLink,
+  searchTagLabel,
   tally,
   KIND_PARAM,
   LOST_PET_LINKS,
@@ -63,10 +69,11 @@ const KINDS: Kind[] = ['狗', '貓', '其他']
 const knownVarieties = computed(
   () => new Set(animals.value.map((animal) => animal.variety || '未填品種')),
 )
+const knownColours = computed(() => new Set(animals.value.map(colourOf)))
 
-/** Free-text values are checked against the data here: a county, shelter or
- *  variety that is not in this snapshot is dropped, so an old link widens the
- *  list instead of emptying it. */
+/** Free-text values are checked against the data here: a county, shelter,
+ *  variety or colour that is not in this snapshot is dropped, so an old link
+ *  widens the list instead of emptying it. */
 const filters = computed<AnimalQuery>(() => {
   const query = parseAnimalQuery(route.query)
   if (animals.value.length === 0) return query
@@ -76,6 +83,7 @@ const filters = computed<AnimalQuery>(() => {
     county: query.county && counties.has(query.county) ? query.county : undefined,
     shelter: query.shelter && shelterById.value.has(query.shelter) ? query.shelter : undefined,
     variety: query.variety && knownVarieties.value.has(query.variety) ? query.variety : undefined,
+    colour: query.colour && knownColours.value.has(query.colour) ? query.colour : undefined,
   }
 })
 
@@ -92,6 +100,8 @@ function update(patch: Partial<AnimalQuery>) {
     'sex',
     'body',
     'age',
+    'colour',
+    'sterilized',
     'days',
     'daysFrom',
     'q',
@@ -123,14 +133,14 @@ function matchesDays(animal: Animal, query: AnimalQuery): boolean {
   return true
 }
 
-/** A number is matched whole against 收容編號 and 流水號 (lib/animals.ts).
- *  Anything else: every word must hit the county, the shelter or the variety
- *  — the three things the search boxes promise. */
+/** A number is matched whole against 收容編號 and 流水號; anything else word
+ *  by word against the county, the shelter, the variety and the colour, the
+ *  things the search box promises, plus a few words people use that the data
+ *  does not (米克斯, 橘貓). Both rules are in lib/animals.ts. */
 function matchesText(animal: Animal, text: string | undefined): boolean {
   if (!text) return true
   if (isIdQuery(text)) return matchesId(animal, text)
-  const haystack = `${countyOf(animal)} ${placeOf(animal)} ${animal.variety}`
-  return text.split(/\s+/).every((word) => haystack.includes(word))
+  return matchesWords(animal, `${countyOf(animal)} ${placeOf(animal)}`, text)
 }
 
 const idSearch = computed(() => {
@@ -175,7 +185,10 @@ function matching(skip: FilterKey | null): Animal[] {
       return false
     if (skip !== 'sex' && query.sex && animal.sex !== query.sex) return false
     if (skip !== 'body' && query.body && animal.body !== query.body) return false
-    if (skip !== 'age' && query.age && animal.age !== query.age) return false
+    if (skip !== 'age' && query.age && ageCode(animal) !== query.age) return false
+    if (skip !== 'colour' && query.colour && colourOf(animal) !== query.colour) return false
+    if (skip !== 'sterilized' && query.sterilized && animal.sterilized !== query.sterilized)
+      return false
     if (skip !== 'days' && !matchesDays(animal, query)) return false
     if (skip !== 'q' && !matchesText(animal, query.q)) return false
     return true
@@ -225,8 +238,24 @@ const varietyOptions = computed(() => {
   return options
 })
 
+/** Like the varieties, most first, with the blank ones last rather than
+ *  ranked among the colours. */
+const colourOptions = computed(() => {
+  const options = tally(matching('colour'), colourOf)
+  const chosen = filters.value.colour
+  if (chosen && !options.some(([name]) => name === chosen)) options.push([chosen, 0])
+  const blank = options.findIndex(([name]) => name === NO_COLOUR)
+  if (blank >= 0) options.push(...options.splice(blank, 1))
+  return options
+})
+const colourKinds = computed(
+  () => colourOptions.value.filter(([name]) => name !== NO_COLOUR).length,
+)
+
 const sexCounts = computed(() => countBy('sex', (animal) => animal.sex))
 const bodyCounts = computed(() => countBy('body', (animal) => animal.body))
+const ageCounts = computed(() => countBy('age', ageCode))
+const sterilizedCounts = computed(() => countBy('sterilized', (animal) => animal.sterilized))
 
 const bandCounts = computed(() => {
   const list = matching('days')
@@ -248,12 +277,7 @@ function bandOn(key: DayBandKey): boolean {
 const applied = computed(() => {
   const query = filters.value
   const tags: { label: string; clear: Partial<AnimalQuery> }[] = []
-  if (query.q) {
-    tags.push({
-      label: `${isIdQuery(query.q) ? '編號' : '搜尋'}「${query.q}」`,
-      clear: { q: undefined },
-    })
-  }
+  if (query.q) tags.push({ label: searchTagLabel(query.q), clear: { q: undefined } })
   if (query.county)
     tags.push({ label: query.county, clear: { county: undefined, shelter: undefined } })
   if (query.shelter) {
@@ -264,10 +288,16 @@ const applied = computed(() => {
   }
   if (query.kind) tags.push({ label: query.kind, clear: { kind: undefined, variety: undefined } })
   if (query.variety) tags.push({ label: query.variety, clear: { variety: undefined } })
+  if (query.colour) tags.push({ label: `毛色：${query.colour}`, clear: { colour: undefined } })
   if (query.sex) tags.push({ label: SEX_LABEL[query.sex], clear: { sex: undefined } })
   if (query.body) tags.push({ label: BODY_LABEL[query.body], clear: { body: undefined } })
-  // No age row in the draft; the home page links here with one, so it shows as a tag.
-  if (query.age) tags.push({ label: AGE_LABEL[query.age], clear: { age: undefined } })
+  if (query.age) tags.push({ label: `年齡：${AGE_LABEL[query.age]}`, clear: { age: undefined } })
+  if (query.sterilized) {
+    tags.push({
+      label: `絕育：${STERILIZED_LABEL[query.sterilized]}`,
+      clear: { sterilized: undefined },
+    })
+  }
   if (query.days) {
     const band = DAY_BANDS.find((item) => item.key === query.days)!
     tags.push({ label: `已在所 ${band.label}`, clear: { days: undefined } })
@@ -391,7 +421,7 @@ const noPhotoShare = computed(() => {
   return ((animals.value.filter((animal) => !animal.photo).length / total) * 100).toFixed(1)
 })
 
-function onSelect(key: 'county' | 'shelter' | 'variety', event: Event) {
+function onSelect(key: 'county' | 'shelter' | 'variety' | 'colour', event: Event) {
   const value = (event.target as HTMLSelectElement).value || undefined
   if (key === 'county') update({ county: value, shelter: undefined })
   else update({ [key]: value })
@@ -442,7 +472,7 @@ function onSort(event: Event) {
                 id="f-search"
                 v-model="searchText"
                 type="search"
-                placeholder="縣市、收容所、品種或收容編號"
+                placeholder="縣市、收容所、品種、毛色或收容編號"
                 enterkeyhint="search"
                 autocomplete="off"
               />
@@ -524,6 +554,28 @@ function onSort(event: Event) {
             </div>
           </div>
 
+          <!-- 28 colours and a blank: a dropdown, as the varieties are. -->
+          <div class="field">
+            <label for="f-colour">毛色</label>
+            <div class="select">
+              <select
+                id="f-colour"
+                :value="filters.colour ?? ''"
+                @change="onSelect('colour', $event)"
+              >
+                <option value="">
+                  全部（{{ colourKinds }} 種{{
+                    colourOptions.some(([name]) => name === NO_COLOUR) ? '＋未填' : ''
+                  }}）
+                </option>
+                <option v-for="[name, count] in colourOptions" :key="name" :value="name">
+                  {{ name }}（{{ formatCount(count) }}）
+                </option>
+              </select>
+              <LucideIcon name="chevron-down" :size="16" />
+            </div>
+          </div>
+
           <div class="field" role="group" aria-labelledby="l-sex">
             <span id="l-sex" class="label">性別</span>
             <div class="pills">
@@ -568,6 +620,56 @@ function onSort(event: Event) {
                 @click="update({ body: code })"
               >
                 {{ label }} {{ formatCount(bodyCounts.get(code) ?? 0) }}
+              </button>
+            </div>
+          </div>
+
+          <div class="field" role="group" aria-labelledby="l-age">
+            <span id="l-age" class="label">年齡</span>
+            <div class="pills">
+              <button
+                type="button"
+                class="pill-btn"
+                :aria-pressed="!filters.age"
+                @click="update({ age: undefined })"
+              >
+                不限
+              </button>
+              <button
+                v-for="(label, code) in AGE_LABEL"
+                :key="code"
+                type="button"
+                class="pill-btn"
+                :aria-pressed="filters.age === code"
+                @click="update({ age: code })"
+              >
+                {{ label }} {{ formatCount(ageCounts.get(code) ?? 0) }}
+              </button>
+            </div>
+          </div>
+
+          <!-- 未填 is its own chip: a shelter that left it blank has not said
+               the animal is unsterilized. -->
+          <div class="field" role="group" aria-labelledby="l-sterilized">
+            <span id="l-sterilized" class="label">絕育</span>
+            <div class="pills">
+              <button
+                type="button"
+                class="pill-btn"
+                :aria-pressed="!filters.sterilized"
+                @click="update({ sterilized: undefined })"
+              >
+                不限
+              </button>
+              <button
+                v-for="(label, code) in STERILIZED_LABEL"
+                :key="code"
+                type="button"
+                class="pill-btn"
+                :aria-pressed="filters.sterilized === code"
+                @click="update({ sterilized: code })"
+              >
+                {{ label }} {{ formatCount(sterilizedCounts.get(code) ?? 0) }}
               </button>
             </div>
           </div>

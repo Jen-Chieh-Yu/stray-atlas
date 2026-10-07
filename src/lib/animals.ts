@@ -8,18 +8,33 @@ import type { Animal, Kind } from '@/types'
  *  and MapView.vue (link builder, formatCount, median), and AnalysisView.vue,
  *  AboutView.vue, AnimalCard.vue and ShelterSpark.vue (formatCount; SEX_LABEL
  *  on the card). The search-by-number helpers are used by HomeView.vue,
- *  AnimalsView.vue and ShelterView.vue, pickSiblings by AnimalDialog.vue,
- *  OFFICIAL_ADOPTION_URL by App.vue, AboutView.vue, AnimalsView.vue and
- *  MissingAnimalDialog.vue, SHELTER_SYSTEM_URL by AboutView.vue,
- *  LOST_PET_LINKS by AnimalsView.vue, the 開放認養日
- *  helpers by AnimalCard.vue and AnimalDialog.vue, and rosterHint by
- *  AnimalsView.vue.
+ *  AnimalsView.vue and ShelterView.vue; the word search, its synonyms and
+ *  the age, colour and sterilization codes by AnimalsView.vue; pickSiblings
+ *  by AnimalDialog.vue; OFFICIAL_ADOPTION_URL by App.vue, AboutView.vue,
+ *  AnimalsView.vue and MissingAnimalDialog.vue; SHELTER_SYSTEM_URL by
+ *  AboutView.vue; LOST_PET_LINKS by AnimalsView.vue; the 開放認養日 helpers
+ *  by AnimalCard.vue and AnimalDialog.vue; and rosterHint by AnimalsView.vue.
  */
 
 /** Display labels for the coded columns. One copy, shared by every page. */
 export const SEX_LABEL: Record<string, string> = { M: '公', F: '母', N: '未填' }
 export const BODY_LABEL: Record<string, string> = { SMALL: '小型', MEDIUM: '中型', BIG: '大型' }
-export const AGE_LABEL: Record<string, string> = { CHILD: '幼體', ADULT: '成體' }
+/** N is the find-animals page's code for an age or a sterilization the
+ *  shelter left blank: a group of its own, never folded into another (an
+ *  unrecorded sterilization is not 未絕育). The data writes a blank age as ''. */
+export const AGE_LABEL: Record<string, string> = { CHILD: '幼體', ADULT: '成體', N: '未填' }
+export const STERILIZED_LABEL: Record<string, string> = { T: '已絕育', F: '未絕育', N: '未填' }
+
+export function ageCode(animal: Pick<Animal, 'age'>): string {
+  return animal.age || 'N'
+}
+
+/** What the colour filter calls a blank 毛色. */
+export const NO_COLOUR = '未填'
+
+export function colourOf(animal: Pick<Animal, 'colour'>): string {
+  return animal.colour || NO_COLOUR
+}
 
 /** 已在所 bands, as the find-animals draft lists them. The key is what goes in
  *  the URL, so a link from the home page survives a relabel. */
@@ -58,6 +73,10 @@ export interface AnimalQuery {
   sex?: string
   body?: string
   age?: string
+  /** 毛色 as the data writes it, or NO_COLOUR; checked against the data by
+   *  the page, like variety. */
+  colour?: string
+  sterilized?: string
   days?: DayBandKey
   /** A lower bound: this band and every band above it. Ignored when `days` is set. */
   daysFrom?: DayBandKey
@@ -84,6 +103,7 @@ export function parseAnimalQuery(query: LocationQuery): AnimalQuery {
   const sex = single(query.sex)
   const body = single(query.body)
   const age = single(query.age)
+  const sterilized = single(query.sterilized)
   const days = single(query.days)
   const daysFrom = single(query.daysFrom)
   const sort = single(query.sort)
@@ -95,6 +115,8 @@ export function parseAnimalQuery(query: LocationQuery): AnimalQuery {
     sex: sex && sex in SEX_LABEL ? sex : undefined,
     body: body && body in BODY_LABEL ? body : undefined,
     age: age && age in AGE_LABEL ? age : undefined,
+    colour: single(query.colour),
+    sterilized: sterilized && sterilized in STERILIZED_LABEL ? sterilized : undefined,
     // A band and a lower bound describe the same control; the exact band wins.
     days: isBand(days) ? days : undefined,
     daysFrom: !isBand(days) && isBand(daysFrom) ? daysFrom : undefined,
@@ -204,6 +226,65 @@ export function searchLink(
   const hits = animals.filter((animal) => matchesId(animal, q))
   if (hits.length === 1) link.query.animal = hits[0].id
   return link
+}
+
+/* ── Words people search with that the data does not use ──────────────────
+ * Each adds to what the word already matches, never replaces it: 賓士 still
+ * finds the one cat recorded as the breed 賓士貓. 台灣犬 is deliberately
+ * absent: it is a breed the shelters record (eight dogs on 2026-10-07), so it
+ * is matched as written. Shelters write orange as 黃; 橘貓 takes in 黃白色,
+ * the orange-and-white cats most people also call 橘貓 (decided 2026-10-07),
+ * and leaves out 黑黃色, which on a cat is mostly tortoiseshell. Colours need
+ * no entry of their own (虎斑, 三花): the search reads the colour too. */
+
+type Searchable = Pick<Animal, 'kind' | 'variety' | 'colour'>
+
+export interface SearchSynonym {
+  word: string
+  /** How the applied-filter tag explains it. */
+  means: string
+  matches: (animal: Searchable) => boolean
+}
+
+const ORANGE = new Set(['黃色', '黃虎斑色', '黃白色'])
+const isMixed = (animal: Searchable) => animal.variety.includes('混種')
+
+export const SEARCH_SYNONYMS: SearchSynonym[] = [
+  { word: '米克斯', means: '品種含「混種」', matches: isMixed },
+  { word: '土狗', means: '狗，品種含「混種」', matches: (a) => a.kind === '狗' && isMixed(a) },
+  { word: '土貓', means: '貓，品種含「混種」', matches: (a) => a.kind === '貓' && isMixed(a) },
+  {
+    word: '橘貓',
+    means: '貓，毛色黃色、黃虎斑色或黃白色',
+    matches: (a) => a.kind === '貓' && ORANGE.has(a.colour),
+  },
+  {
+    word: '賓士',
+    means: '貓，毛色黑白色',
+    matches: (a) => a.kind === '貓' && a.colour === '黑白色',
+  },
+]
+
+const SYNONYM_BY_WORD = new Map(SEARCH_SYNONYMS.map((synonym) => [synonym.word, synonym]))
+
+/** Search text that is not a number: every word must appear in the place
+ *  (county and shelter), the variety or the colour, or be a synonym whose
+ *  meaning the animal fits. */
+export function matchesWords(animal: Searchable, place: string, text: string): boolean {
+  const haystack = `${place} ${animal.variety} ${animal.colour}`
+  return text
+    .split(/\s+/)
+    .every((word) => haystack.includes(word) || !!SYNONYM_BY_WORD.get(word)?.matches(animal))
+}
+
+/** The applied-filter tag for a search, naming what any synonym stood for so
+ *  nobody takes 8,000 米克斯 for a literal match. */
+export function searchTagLabel(q: string): string {
+  if (isIdQuery(q)) return `編號「${q}」`
+  const used = q.split(/\s+/).flatMap((word) => SYNONYM_BY_WORD.get(word) ?? [])
+  if (used.length === 0) return `搜尋「${q}」`
+  if (used.length === 1 && used[0].word === q) return `搜尋「${q}」＝${used[0].means}`
+  return `搜尋「${q}」（${used.map((synonym) => `${synonym.word}＝${synonym.means}`).join('；')}）`
 }
 
 /** True when a 流水號 is larger than every one in the roster, i.e. the animal

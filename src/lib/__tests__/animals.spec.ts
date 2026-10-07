@@ -1,11 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import {
+  ageCode,
   animalsLink,
+  colourOf,
   DAY_BANDS,
   inBand,
   isIdQuery,
   isNewerId,
   matchesId,
+  matchesWords,
   median,
   monthDay,
   monthDayLong,
@@ -15,6 +18,7 @@ import {
   rank,
   rosterHint,
   searchLink,
+  searchTagLabel,
   sumCounts,
   tally,
 } from '@/lib/animals'
@@ -97,6 +101,74 @@ describe('parseAnimalQuery', () => {
 
   it('ignores an empty value', () => {
     expect(parseAnimalQuery({ county: '' }).county).toBeUndefined()
+  })
+
+  it('reads colour, sterilization and an unrecorded age', () => {
+    const query = parseAnimalQuery({ colour: '黑色', sterilized: 'N', age: 'N' })
+    expect(query).toMatchObject({ colour: '黑色', sterilized: 'N', age: 'N' })
+    expect(parseAnimalQuery({ sterilized: 'yes' }).sterilized).toBeUndefined()
+  })
+})
+
+describe('ageCode and colourOf', () => {
+  it('gives a blank its own code, never another group', () => {
+    expect(ageCode({ age: '' })).toBe('N')
+    expect(ageCode({ age: 'CHILD' })).toBe('CHILD')
+    expect(colourOf({ colour: '' })).toBe('未填')
+    expect(colourOf({ colour: '虎斑色' })).toBe('虎斑色')
+  })
+})
+
+describe('matchesWords', () => {
+  const dog = { kind: '狗' as const, variety: '混種犬', colour: '黑色' }
+  const orangeCat = { kind: '貓' as const, variety: '混種貓', colour: '黃白色' }
+  const place = '臺北市 臺北市動物之家'
+
+  it('searches the colour as well as place and variety', () => {
+    expect(matchesWords(dog, place, '黑色')).toBe(true)
+    expect(matchesWords({ ...dog, colour: '黑虎斑色' }, place, '虎斑')).toBe(true)
+  })
+
+  it('reads the words people use for mixed breeds', () => {
+    expect(matchesWords(dog, place, '米克斯')).toBe(true)
+    expect(matchesWords(dog, place, '土狗')).toBe(true)
+    expect(matchesWords(dog, place, '土貓')).toBe(false)
+    expect(matchesWords(orangeCat, place, '土貓')).toBe(true)
+  })
+
+  it('counts orange-and-white as 橘貓, but only for cats', () => {
+    expect(matchesWords(orangeCat, place, '橘貓')).toBe(true)
+    expect(matchesWords({ ...orangeCat, colour: '黑黃色' }, place, '橘貓')).toBe(false)
+    expect(matchesWords({ ...dog, colour: '黃色' }, place, '橘貓')).toBe(false)
+  })
+
+  it('adds to the literal match rather than replacing it', () => {
+    const benz = { kind: '貓' as const, variety: '賓士貓', colour: '白色' }
+    expect(matchesWords(benz, place, '賓士')).toBe(true)
+  })
+
+  it('matches 台灣犬 as written, since it is a recorded breed', () => {
+    expect(matchesWords(dog, place, '台灣犬')).toBe(false)
+    expect(matchesWords({ ...dog, variety: '台灣犬' }, place, '台灣犬')).toBe(true)
+  })
+
+  it('still needs every word', () => {
+    expect(matchesWords(dog, place, '米克斯 臺北市')).toBe(true)
+    expect(matchesWords(dog, place, '米克斯 雲林縣')).toBe(false)
+  })
+})
+
+describe('searchTagLabel', () => {
+  it('says what a synonym stood for', () => {
+    expect(searchTagLabel('米克斯')).toBe('搜尋「米克斯」＝品種含「混種」')
+    expect(searchTagLabel('橘貓 臺北市')).toBe(
+      '搜尋「橘貓 臺北市」（橘貓＝貓，毛色黃色、黃虎斑色或黃白色）',
+    )
+  })
+
+  it('stays plain for other words and numbers', () => {
+    expect(searchTagLabel('臺北市')).toBe('搜尋「臺北市」')
+    expect(searchTagLabel('AAAEG102111407')).toBe('編號「AAAEG102111407」')
   })
 })
 
