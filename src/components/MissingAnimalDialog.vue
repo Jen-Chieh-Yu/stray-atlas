@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { RouterLink } from 'vue-router'
 import DialogShell from '@/components/DialogShell.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
 import { OFFICIAL_ADOPTION_URL } from '@/lib/animals'
@@ -48,6 +49,14 @@ const emit = defineEmits<{ close: []; browse: [] }>()
         </p>
       </div>
     </div>
+    <!-- A lost pet is the other common reason to arrive here with a number;
+         the note on the find-animals page says where else to look. -->
+    <p class="lost">
+      在找走失的寵物？剛進收容所的動物通常還不在名單上，<RouterLink
+        :to="{ path: '/animals', hash: '#lost' }"
+        >看怎麼找 →</RouterLink
+      >
+    </p>
 
     <footer class="actions">
       <button type="button" class="chip small" @click="emit('browse')">
@@ -140,6 +149,17 @@ const emit = defineEmits<{ close: []; browse: [] }>()
   border-left: 3px solid var(--ramp-3);
   background: var(--surface);
   font-size: 0.84rem;
+}
+
+.lost {
+  margin: 0;
+  padding: 0.75rem 1.25rem 0;
+  color: var(--ink-secondary);
+  font-size: 0.86rem;
+
+  & a {
+    color: var(--accent-text);
+  }
 }
 
 .actions {

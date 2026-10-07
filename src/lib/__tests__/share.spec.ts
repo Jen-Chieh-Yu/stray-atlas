@@ -121,7 +121,7 @@ describe('sharePageHtml', () => {
   })
 
   it('credits the photos and the data', () => {
-    expect(page).toContain('經全國動物收容資訊網（pet.gov.tw）公開')
+    expect(page).toContain('經全國動物收容管理系統（pet.gov.tw）公開')
     expect(page).toContain('政府資料開放授權條款')
   })
 

@@ -50,6 +50,10 @@ export const router = createRouter({
   // scroll (the pager) do it themselves. Back and forward restore as usual.
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition
+    // A page scrolls to its own anchor once it has drawn it (AnimalsView and
+    // #lost, below a roster that may still be loading); going to the top first
+    // would only move the page twice.
+    if (to.hash) return false
     if (to.path === from.path) return false
     return { top: 0 }
   },
