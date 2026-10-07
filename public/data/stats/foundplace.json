@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-10-06",
-  "generated_at_utc": "2026-10-06T04:36:08Z",
-  "rows": 8509,
+  "snapshot_date": "2026-10-07",
+  "generated_at_utc": "2026-10-07T04:02:20Z",
+  "rows": 8476,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5177,
+    "blank": 1014,
+    "district": 1242,
+    "address": 5171,
     "landmark": 933,
-    "blank": 1036,
-    "district": 1247,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1875,
-      "share": 0.2204
+      "rows": 1877,
+      "share": 0.2214
     },
     "low": {
-      "rows": 5475,
-      "share": 0.6434
+      "rows": 5462,
+      "share": 0.6444
     },
     "none": {
-      "rows": 1152,
-      "share": 0.1354
+      "rows": 1130,
+      "share": 0.1333
     }
   },
   "county_source": {
     "text": 188,
-    "shelter": 7169,
-    "none": 1152
+    "shelter": 7158,
+    "none": 1130
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3125,
-    "verified_against_reference": 3122,
+    "extracted": 3122,
+    "verified_against_reference": 3119,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
-      "蘆洲區和平路116巷",
-      "五股區外寮路",
-      "新莊區西盛街",
-      "新莊區自強街",
-      "五股區五股區中興路三段45巷5-5號"
+      "三重區中正北路",
+      "林口區林口仁愛路二段492號",
+      "鶯歌區中正三路247巷69號",
+      "新莊區中正路",
+      "蘆洲區和平路116巷"
     ],
     "low": [
-      "研究院路二段(原拾獲地:三重路)",
-      "樹林頭公園",
-      "旭光路",
-      "辛亥路",
-      "南港二段"
+      "鳳林鎮公所",
+      "志學村中山路四段56號",
+      "元培街",
+      "復興路五段206號3樓之8",
+      "大雪山森林遊樂園區"
     ],
     "none": [
       "臺北市動物之家",
