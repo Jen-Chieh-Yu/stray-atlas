@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import AnimalCard from '@/components/AnimalCard.vue'
 import AnimalDialog from '@/components/AnimalDialog.vue'
@@ -28,6 +28,7 @@ import {
   searchLink,
   tally,
   KIND_PARAM,
+  LOST_PET_LINKS,
 } from '@/lib/animals'
 import type { AnimalQuery, DayBandKey } from '@/lib/animals'
 import type { Animal, Kind } from '@/types'
@@ -340,6 +341,27 @@ function scrollToResults() {
   document.getElementById('results')?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' })
 }
 
+/* ── 在找走失的寵物 ─────────────────────────────────────────────────────────
+ * The note at the foot of the page, reached from the line under the title,
+ * from a number that found nothing, and from the 不在目前名單 dialog on any
+ * page (/animals#lost). The router leaves #lost to this page (router/index.ts)
+ * because the note sits below the roster, which may still be loading. */
+
+function scrollToLost() {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  document.getElementById('lost')?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' })
+}
+
+watch(
+  () => [route.hash, loading.value] as const,
+  async ([hash, waiting]) => {
+    if (hash !== '#lost' || waiting) return
+    await nextTick()
+    scrollToLost()
+  },
+  { immediate: true, flush: 'post' },
+)
+
 /* ── Detail dialog ─────────────────────────────────────────────────────── */
 
 const openAnimal = computed<Animal | null>(() => {
@@ -388,6 +410,20 @@ function onSort(event: Event) {
         animals.length ? ` ${formatCount(animals.length)} 隻` : ''
       }}動物，狗、貓與其他動物在同一個清單裡，用下面的條件收斂。
     </PageHead>
+
+    <!-- For someone looking for their own pet: this list leaves out the
+         animals they are most likely to find (DESIGN.md §6). -->
+    <p class="lost-hint">
+      <LucideIcon name="circle-help" :size="16" />
+      <span
+        ><b>在找走失的寵物？</b
+        >剛進收容所的動物要先公告招領，通常還不在這份名單上，在這裡找不到不代表牠不在收容所。<a
+          href="#lost"
+          @click.prevent="scrollToLost"
+          >怎麼找 ↓</a
+        ></span
+      >
+    </p>
 
     <LoadingSkeleton v-if="loading" variant="cards" :count="4" :hint="loadingHint" />
     <p v-else-if="error" class="state">資料載入失敗（{{ error }}）。</p>
@@ -608,6 +644,13 @@ function onSort(event: Event) {
             >
             查詢。
           </p>
+          <p class="more">
+            在找走失的寵物？剛進收容所的動物通常還不在名單上，<a
+              href="#lost"
+              @click.prevent="scrollToLost"
+              >看怎麼找 ↓</a
+            >
+          </p>
         </div>
       </div>
       <p v-else-if="results.length === 0" class="state">沒有符合條件的動物。</p>
@@ -687,6 +730,54 @@ function onSort(event: Event) {
         </div>
       </section>
     </template>
+
+    <!-- Outside the loading switch, so 怎麼找 works while the roster loads. -->
+    <section id="lost" class="lost" aria-labelledby="lost-title">
+      <div class="lost-head">
+        <h2 id="lost-title">在找走失的寵物</h2>
+        <span class="kicker">LOST PETS</span>
+      </div>
+      <p>
+        本站只列<b>目前開放認養</b>的動物。剛被帶進收容所的動物會先公告招領、等飼主來認，這段期間通常不在這份名單上；收容所標為暫時不適合認養的動物也不在。所以<b>在這裡找不到，不代表牠不在收容所</b>，請照下面的方式找：
+      </p>
+      <ol class="lost-steps">
+        <li>
+          <b>每天看全國收容公告</b>
+          新入所的動物會先刊在全國動物收容管理系統的<a
+            :href="LOST_PET_LINKS.announcements"
+            target="_blank"
+            rel="noreferrer"
+            >收容公告</a
+          >，可依收容所縣市與收容所篩選。
+        </li>
+        <li>
+          <b>直接打電話問收容所</b>
+          從走失地點附近的收容所問起，電話在<RouterLink to="/shelters">收容所列表</RouterLink
+          >。拾獲的動物不一定送到同縣市的收容所。
+        </li>
+        <li>
+          <b>申報寵物遺失</b>
+          做過寵物登記、植入晶片的，可以到寵物登記管理資訊網<a
+            :href="LOST_PET_LINKS.report"
+            target="_blank"
+            rel="noreferrer"
+            >申報遺失</a
+          >（需要飼主證號與晶片號碼），申報後會刊登並全國協尋。
+        </li>
+        <li>
+          <b>看縣市自己的公告頁</b>
+          部分縣市另有招領公告，例如<template
+            v-for="(item, index) in LOST_PET_LINKS.counties"
+            :key="item.county"
+            >{{ index ? '、' : ''
+            }}<a :href="item.url" target="_blank" rel="noreferrer">{{ item.county }}</a></template
+          >。
+        </li>
+      </ol>
+      <p class="fine">
+        本站資料取自農業部開放資料，每天更新一次，不是即時資料；最新狀況以收容所與上述官方網站為準。
+      </p>
+    </section>
 
     <AnimalDialog
       v-if="openAnimal"
@@ -1066,6 +1157,120 @@ function onSort(event: Event) {
   font-variant-numeric: tabular-nums;
 }
 
+/* ── 在找走失的寵物 ── */
+.lost-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin: 1rem 0 0;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid var(--hairline);
+  border-left: 4px solid var(--ramp-3);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink-secondary);
+  font-size: 0.88rem;
+  line-height: 1.65;
+
+  & svg {
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+    color: var(--ramp-4);
+  }
+
+  & b {
+    color: var(--ink);
+  }
+
+  & a {
+    color: var(--accent-text);
+    white-space: nowrap;
+  }
+}
+
+.lost {
+  margin-top: 1.5rem;
+  padding: 1.4rem 1.6rem 1.5rem;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  background: var(--surface);
+  scroll-margin-top: 5rem;
+
+  & > p {
+    margin: 0 0 1rem;
+    color: var(--ink-secondary);
+    font-size: 0.9rem;
+    line-height: 1.75;
+  }
+
+  & b {
+    color: var(--ink);
+  }
+
+  & a {
+    color: var(--accent-text);
+  }
+
+  & .fine {
+    margin: 1rem 0 0;
+    color: var(--ink-muted);
+    font-size: 0.78rem;
+  }
+}
+
+.lost-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+
+  & h2 {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+}
+
+.lost-steps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+
+  & li {
+    position: relative;
+    padding-left: 2.1rem;
+    color: var(--ink-secondary);
+    font-size: 0.86rem;
+    line-height: 1.65;
+    counter-increment: step;
+  }
+
+  & li::before {
+    content: counter(step);
+    position: absolute;
+    top: 0.1rem;
+    left: 0;
+    display: grid;
+    place-items: center;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 999px;
+    background: var(--ramp-4);
+    color: var(--on-accent);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  & b {
+    display: block;
+    font-size: 0.92rem;
+  }
+}
+
 /* ── Boundary card ── */
 .boundary {
   margin-top: 3rem;
@@ -1124,6 +1329,10 @@ function onSort(event: Event) {
 @media (max-width: 820px) {
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lost-steps {
+    grid-template-columns: 1fr;
   }
 
   .field {

@@ -6,16 +6,21 @@
  *  it describes.
  */
 import { computed, onMounted, ref } from 'vue'
+import { RouterLink } from 'vue-router'
 import PageHead from '@/components/PageHead.vue'
 import { fetchDistribution, useAtlasData } from '@/composables/useAtlasData'
-import { OFFICIAL_ADOPTION_URL as OFFICIAL_URL, formatCount } from '@/lib/animals'
+import {
+  OFFICIAL_ADOPTION_URL as OFFICIAL_URL,
+  SHELTER_SYSTEM_URL,
+  formatCount,
+} from '@/lib/animals'
 import { HERO_PHOTOS } from '@/lib/heroPhotos'
 import { vReveal } from '@/lib/reveal'
 import type { DistributionPayload } from '@/types'
 
 const REPO_URL = 'https://github.com/Jen-Chieh-Yu/stray-atlas'
-/** The ministry's pet registration site. Its adoption listing, built on the
- *  same feed, is OFFICIAL_URL. */
+/** The ministry's pet registration site, 寵物登記管理資訊網. Its adoption
+ *  listing, built on the same feed, is OFFICIAL_URL. */
 const PET_SITE_URL = 'https://www.pet.gov.tw/'
 
 const { stats } = useAtlasData()
@@ -92,7 +97,7 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
     <section v-reveal aria-labelledby="ab-purpose">
       <h2 id="ab-purpose">服務目的</h2>
       <p>
-        農業部的寵物登記管理網站（<a :href="PET_SITE_URL" target="_blank" rel="noreferrer"
+        農業部的寵物登記管理資訊網（<a :href="PET_SITE_URL" target="_blank" rel="noreferrer"
           >pet.gov.tw</a
         >）上，已經有<a :href="OFFICIAL_URL" target="_blank" rel="noreferrer">動物認領養公告頁</a
         >提供全國收容動物的查詢，本站用的是同一份開放資料，差別在於讀法：<strong>找動物</strong>用地區、種類、性別、體型與已在所時間收斂清單；<strong>收容所</strong>看每一間現在收了多少、狗貓各佔多少；<strong>縣市地圖</strong>看全臺的分布；<strong>資料分析</strong>看在所天數的整體樣貌。
@@ -106,6 +111,13 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
       <p>
         <strong>本站不辦理認養，也不代為保留或媒合動物。</strong
         >實際認養請直接與該收容所聯絡，每一張動物卡片與收容所頁面上都附有地址與電話。
+      </p>
+      <p>
+        <strong>在找走失的寵物？</strong
+        >這份名單只有開放認養的動物，剛進收容所、還在公告招領的動物通常不在裡面。該去哪裡找，見<RouterLink
+          :to="{ path: '/animals', hash: '#lost' }"
+          >找動物頁的說明</RouterLink
+        >。
       </p>
     </section>
 
@@ -142,12 +154,12 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
             <tr>
               <th scope="row">動物照片</th>
               <td>
-                由各公立動物收容所拍攝登錄，經全國動物收容資訊網（<a
-                  :href="PET_SITE_URL"
+                由各公立動物收容所拍攝登錄，經<a
+                  :href="SHELTER_SYSTEM_URL"
                   target="_blank"
                   rel="noreferrer"
-                  >pet.gov.tw</a
-                >）公開；本站僅以原網址連結顯示，分享連結的預覽圖也直接使用該網址
+                  >全國動物收容管理系統</a
+                >（pet.gov.tw）公開；本站僅以原網址連結顯示，分享連結的預覽圖也直接使用該網址
               </td>
               <td>來源未另行說明</td>
             </tr>

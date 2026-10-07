@@ -31,7 +31,7 @@ export const DEFAULT_OG_IMAGE = `${SITE_URL}og.png`
  *  published and keeps no copy. Chosen 2026-10-07, with the licence for the
  *  photos themselves unstated by the source (DESIGN.md §10). */
 export const PHOTO_CREDIT =
-  '動物照片由各公立動物收容所拍攝登錄，經全國動物收容資訊網（pet.gov.tw）公開；本站僅以原網址連結顯示。'
+  '動物照片由各公立動物收容所拍攝登錄，經全國動物收容管理系統（pet.gov.tw）公開；本站僅以原網址連結顯示。'
 
 /** The attribution the Open Government Data License asks for (its attachment,
  *  顯名聲明). The dataset states no version number, so the snapshot date

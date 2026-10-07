@@ -10,8 +10,10 @@ import type { Animal, Kind } from '@/types'
  *  on the card). The search-by-number helpers are used by HomeView.vue,
  *  AnimalsView.vue and ShelterView.vue, pickSiblings by AnimalDialog.vue,
  *  OFFICIAL_ADOPTION_URL by App.vue, AboutView.vue, AnimalsView.vue and
- *  MissingAnimalDialog.vue, the 開放認養日 helpers by AnimalCard.vue and
- *  AnimalDialog.vue, and rosterHint by AnimalsView.vue.
+ *  MissingAnimalDialog.vue, SHELTER_SYSTEM_URL by AboutView.vue,
+ *  LOST_PET_LINKS by AnimalsView.vue, the 開放認養日
+ *  helpers by AnimalCard.vue and AnimalDialog.vue, and rosterHint by
+ *  AnimalsView.vue.
  */
 
 /** Display labels for the coded columns. One copy, shared by every page. */
@@ -114,6 +116,27 @@ export function animalsLink(query: AnimalQuery) {
  *  someone whose animal this site no longer lists. */
 export const OFFICIAL_ADOPTION_URL =
   'https://www.pet.gov.tw/AnimalApp/AnnounceMent.aspx?PageType=Adopt'
+
+/** 全國動物收容管理系統, the ministry's shelter system on pet.gov.tw, at its
+ *  收容公告 page; the page is titled with the system's name. The roster and
+ *  the photos are published through it. */
+export const SHELTER_SYSTEM_URL = 'https://www.pet.gov.tw/AnimalApp/AnnounceMent_Announce.aspx'
+
+/** Where to look for a lost pet, for the note on the find-animals page
+ *  (DESIGN.md §6). Each opened and checked 2026-10-07:
+ *  - announcements: 收容公告 in the national shelter system, the animals
+ *    just taken in, filterable by 收容所縣市 and 收容所
+ *  - report: 遺失申報, for a registered pet; asks for the owner's ID number
+ *    and the chip number, and posts the pet for a nationwide search
+ *  - counties: the two counties with a claim page of their own. */
+export const LOST_PET_LINKS = {
+  announcements: SHELTER_SYSTEM_URL,
+  report: 'https://www.pet.gov.tw/Web/O205.aspx',
+  counties: [
+    { county: '新北市', url: 'https://act-adopt.ahiqo.ntpc.gov.tw/?AdoptionOnOff=2' },
+    { county: '臺中市', url: 'https://www.animal.taichung.gov.tw/1521448/1521481/1521494' },
+  ],
+}
 
 /* ── 開放認養日 ────────────────────────────────────────────────────────────── */
 
