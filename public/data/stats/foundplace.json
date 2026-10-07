@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-10-04",
-  "generated_at_utc": "2026-10-04T04:03:47Z",
-  "rows": 8498,
+  "snapshot_date": "2026-10-06",
+  "generated_at_utc": "2026-10-06T04:36:08Z",
+  "rows": 8509,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5143,
+    "address": 5177,
     "landmark": 933,
-    "blank": 1056,
-    "district": 1250,
+    "blank": 1036,
+    "district": 1247,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1858,
-      "share": 0.2186
+      "rows": 1875,
+      "share": 0.2204
     },
     "low": {
-      "rows": 5461,
-      "share": 0.6426
+      "rows": 5475,
+      "share": 0.6434
     },
     "none": {
-      "rows": 1172,
-      "share": 0.1379
+      "rows": 1152,
+      "share": 0.1354
     }
   },
   "county_source": {
-    "text": 190,
-    "shelter": 7136,
-    "none": 1172
+    "text": 188,
+    "shelter": 7169,
+    "none": 1152
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3111,
-    "verified_against_reference": 3108,
+    "extracted": 3125,
+    "verified_against_reference": 3122,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
-      "板橋區新海路181號",
-      "板橋區光武街2巷2號",
-      "三峽區中正路一段19巷8號",
-      "中和區興南路三段",
-      "虎尾鎮虎興西七街"
+      "蘆洲區和平路116巷",
+      "五股區外寮路",
+      "新莊區西盛街",
+      "新莊區自強街",
+      "五股區五股區中興路三段45巷5-5號"
     ],
     "low": [
-      "湖田里小油坑車道口",
-      "南雅西路2段259巷4號",
-      "菁山路１０１巷４９弄",
-      "萬大路423巷",
-      "西園路315巷116號"
+      "研究院路二段(原拾獲地:三重路)",
+      "樹林頭公園",
+      "旭光路",
+      "辛亥路",
+      "南港二段"
     ],
     "none": [
       "臺北市動物之家",
