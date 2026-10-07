@@ -7,9 +7,13 @@ import {
   isNewerId,
   matchesId,
   median,
+  monthDay,
+  monthDayLong,
+  opensAfter,
   parseAnimalQuery,
   pickSiblings,
   rank,
+  rosterHint,
   searchLink,
   sumCounts,
   tally,
@@ -255,6 +259,41 @@ describe('tally', () => {
   it('breaks ties by name so the order is stable between renders', () => {
     const counts = tally(['貓', '狗'], (item) => item)
     expect(counts.map(([name]) => name)).toEqual(['狗', '貓'])
+  })
+})
+
+describe('opensAfter', () => {
+  it('flags an adoption date after the snapshot', () => {
+    expect(opensAfter('2026-10-05', '2026-10-01')).toBe(true)
+  })
+
+  it('treats the snapshot day itself as already open', () => {
+    expect(opensAfter('2026-10-01', '2026-10-01')).toBe(false)
+    expect(opensAfter('2026-09-30', '2026-10-01')).toBe(false)
+  })
+
+  it('says nothing about a blank or malformed date', () => {
+    // 1900-01-01 sentinels are already nulled to '' by the cleaner.
+    expect(opensAfter('', '2026-10-01')).toBe(false)
+    expect(opensAfter('2026/10/05', '2026-10-01')).toBe(false)
+    expect(opensAfter('2026-10-05', '')).toBe(false)
+  })
+})
+
+describe('monthDay and monthDayLong', () => {
+  it('write the date the way the card and the dialog say it', () => {
+    expect(monthDay('2026-10-05')).toBe('10/05')
+    expect(monthDayLong('2026-10-05')).toBe('10 月 5 日')
+  })
+})
+
+describe('rosterHint', () => {
+  it('states how many animals are loading', () => {
+    expect(rosterHint({ count: 8459 })).toBe('全國 8,459 隻動物的資料')
+  })
+
+  it('leaves the figures out when home.json is not there', () => {
+    expect(rosterHint()).toBe('全國動物資料')
   })
 })
 

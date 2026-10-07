@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 import LucideIcon from '@/components/LucideIcon.vue'
 import { fetchMeta } from '@/composables/useAtlasData'
+import { OFFICIAL_ADOPTION_URL } from '@/lib/animals'
+import { STALE_AFTER_DAYS, snapshotAge } from '@/lib/days'
 
 interface NavItem {
   to: string
@@ -22,6 +24,17 @@ fetchMeta()
     // Without the date the footer simply leaves the line out.
     snapshotDate.value = null
   })
+
+/** Days behind, once the snapshot is old enough to say so. The notice sits
+ *  under the date rather than in a banner: the footer is the one place the
+ *  site states the date (DESIGN.md §12.8), and the warning goes with it. It
+ *  cannot tell a frozen source from a broken schedule, since neither rebuilds
+ *  meta.json, so it names both. */
+const staleDays = computed(() => {
+  if (!snapshotDate.value) return null
+  const age = snapshotAge(snapshotDate.value)
+  return age !== null && age >= STALE_AFTER_DAYS ? age : null
+})
 
 const NAV: NavItem[] = [
   { to: '/animals', label: '找動物', names: ['animals'] },
@@ -188,6 +201,18 @@ onBeforeUnmount(() => {
       <p v-if="snapshotDate" class="snapshot">
         資料快照 <b>{{ snapshotDate }}</b>
         <span>全站的名單與數字都以這一天的資料為準。</span>
+      </p>
+      <p v-if="staleDays !== null" class="stale">
+        <LucideIcon name="clock" :size="16" />
+        <span
+          ><b>這份快照已是 {{ staleDays }} 天前的資料。</b
+          >來源可能暫停更新，或本站的每日排程出了狀況；最新名單請看<a
+            :href="OFFICIAL_ADOPTION_URL"
+            rel="noreferrer"
+            target="_blank"
+            >農業部動物認領養公告頁</a
+          >，或直接打電話問收容所。</span
+        >
       </p>
       <p>
         資料來源：農業部「動物認領養」開放資料（<a
@@ -425,5 +450,31 @@ onBeforeUnmount(() => {
 .snapshot b {
   margin-right: 0.5rem;
   color: var(--ink);
+}
+
+.footer-inner .stale {
+  display: flex;
+  gap: 0.55rem;
+  max-width: 52rem;
+  margin: -0.3rem 0 0.9rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunk);
+  color: var(--ink-secondary);
+  line-height: 1.6;
+
+  & svg {
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+    color: var(--accent-text);
+  }
+
+  & b {
+    color: var(--ink);
+  }
+
+  & a {
+    color: var(--accent-text);
+  }
 }
 </style>

@@ -34,6 +34,14 @@ export const router = createRouter({
     { path: '/quality', name: 'quality', component: () => import('@/views/QualityView.vue') },
     { path: '/analysis', name: 'analysis', component: () => import('@/views/AnalysisView.vue') },
     { path: '/about', name: 'about', component: () => import('@/views/AboutView.vue') },
+    // A share link (src/lib/share.ts). The build writes /a/<id>/ for every
+    // listed animal; once one leaves the list its page is gone, the link falls
+    // through 404.html to here, and the dialog says it is no longer listed.
+    // Also what `npm run dev` does with every share link, having no such pages.
+    {
+      path: '/a/:id',
+      redirect: (to) => ({ path: '/animals', query: { animal: String(to.params.id) } }),
+    },
     { path: '/:pathMatch(.*)*', redirect: '/' },
   ],
   // Top of the page on a new path only. A query-only change is a filter, a

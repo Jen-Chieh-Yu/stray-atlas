@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { axisTicks, labelDays } from '@/lib/days'
+import { STALE_AFTER_DAYS, axisTicks, labelDays, snapshotAge, taipeiToday } from '@/lib/days'
 
 /* Axis labels for the two charts on the analysis page.
  *
@@ -53,5 +53,33 @@ describe('axisTicks', () => {
   it('keeps the order the pipeline published', () => {
     const ticks = axisTicks('log', [30, 7])
     expect(ticks.map((tick) => tick.days)).toEqual([30, 7])
+  })
+})
+
+/* The footer's stale-snapshot notice. The day boundary is Taipei's, which is
+ * eight hours ahead of UTC: the off-by-one this guards against is a reader
+ * in Taipei after midnight, or a reader abroad, seeing the wrong age. */
+
+describe('taipeiToday', () => {
+  it('turns over at midnight Taipei time, not UTC', () => {
+    expect(taipeiToday(new Date('2026-10-03T15:59:00Z'))).toBe('2026-10-03')
+    expect(taipeiToday(new Date('2026-10-03T16:00:00Z'))).toBe('2026-10-04')
+  })
+})
+
+describe('snapshotAge', () => {
+  it('counts whole Taipei days since the snapshot', () => {
+    // 2026-10-04 01:00 in Taipei.
+    expect(snapshotAge('2026-10-01', new Date('2026-10-03T17:00:00Z'))).toBe(3)
+  })
+
+  it('reaches the warning threshold on the third day, not before', () => {
+    const now = new Date('2026-10-04T02:00:00Z') // 10:00 in Taipei
+    expect(snapshotAge('2026-10-02', now)).toBeLessThan(STALE_AFTER_DAYS)
+    expect(snapshotAge('2026-10-01', now)).toBe(STALE_AFTER_DAYS)
+  })
+
+  it('has no age for an unreadable date', () => {
+    expect(snapshotAge('', new Date())).toBeNull()
   })
 })

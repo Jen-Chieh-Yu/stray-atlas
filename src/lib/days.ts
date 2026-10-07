@@ -1,9 +1,40 @@
 import type { Scale } from '@/types'
 
-/* Day labels and axis ticks shared by the two charts on the analysis page.
+/* Day labels and axis ticks shared by the two charts on the analysis page,
+ *  the snapshot's age for the footer, and days in the shelter.
  *
- *  Used by: DistributionChart.vue and EcdfChart.vue.
+ *  Used by: DistributionChart.vue and EcdfChart.vue (labels and ticks),
+ *  App.vue (snapshotAge, STALE_AFTER_DAYS), and useAtlasData.ts, which
+ *  passes daysInShelter on to the pages, and vite.config.ts, which writes it
+ *  into the share pages.
  */
+
+/** Days in the shelter, measured against the snapshot rather than today. */
+export function daysInShelter(created: string, snapshotDate: string): number | null {
+  const from = Date.parse(created)
+  const to = Date.parse(snapshotDate)
+  if (Number.isNaN(from) || Number.isNaN(to)) return null
+  return Math.round((to - from) / 86400000)
+}
+
+/** The footer warns from this many days. The schedule stores a snapshot a
+ *  day, finishing between about 09:45 and 14:40 Taipei time, and the source
+ *  skips the odd day, so one or two days behind is normal. */
+export const STALE_AFTER_DAYS = 3
+
+/** Today in Taipei as YYYY-MM-DD: snapshots are named by Taipei days, so a
+ *  reader abroad must not see a different age for the same snapshot. */
+export function taipeiToday(now: Date = new Date()): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Taipei' }).format(now)
+}
+
+/** Whole days from the snapshot to today in Taipei; null when unreadable. */
+export function snapshotAge(snapshotDate: string, now: Date = new Date()): number | null {
+  const from = Date.parse(snapshotDate)
+  const to = Date.parse(taipeiToday(now))
+  if (Number.isNaN(from) || Number.isNaN(to)) return null
+  return Math.round((to - from) / 86400000)
+}
 
 /** Names for the log ticks the pipeline publishes (distribution.json). */
 const LOG_LABELS: Record<number, string> = {

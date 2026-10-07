@@ -489,6 +489,7 @@ const FLOW = [
                 :animal="animal"
                 :days="daysOf(animal)"
                 :place="placeOf(animal)"
+                :snapshot-date="snapshotDate"
                 @open="open"
               />
             </div>
@@ -526,6 +527,7 @@ const FLOW = [
             :animal="animal"
             :days="daysOf(animal)"
             :place="placeOf(animal)"
+            :snapshot-date="snapshotDate"
             @open="open"
           />
         </div>
