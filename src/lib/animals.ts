@@ -8,9 +8,10 @@ import type { Animal, Kind } from '@/types'
  *  and MapView.vue (link builder, formatCount, median), and AnalysisView.vue,
  *  AboutView.vue, AnimalCard.vue and ShelterSpark.vue (formatCount; SEX_LABEL
  *  on the card). The search-by-number helpers are used by HomeView.vue,
- *  AnimalsView.vue and ShelterView.vue, pickSiblings by AnimalDialog.vue, and
- *  OFFICIAL_ADOPTION_URL by AboutView.vue, AnimalsView.vue and
- *  MissingAnimalDialog.vue.
+ *  AnimalsView.vue and ShelterView.vue, pickSiblings by AnimalDialog.vue,
+ *  OFFICIAL_ADOPTION_URL by App.vue, AboutView.vue, AnimalsView.vue and
+ *  MissingAnimalDialog.vue, the 開放認養日 helpers by AnimalCard.vue and
+ *  AnimalDialog.vue, and rosterHint by AnimalsView.vue.
  */
 
 /** Display labels for the coded columns. One copy, shared by every page. */
@@ -113,6 +114,37 @@ export function animalsLink(query: AnimalQuery) {
  *  someone whose animal this site no longer lists. */
 export const OFFICIAL_ADOPTION_URL =
   'https://www.pet.gov.tw/AnimalApp/AnnounceMent.aspx?PageType=Adopt'
+
+/* ── 開放認養日 ────────────────────────────────────────────────────────────── */
+
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/
+
+/** True when the shelter's 開放認養日 falls after the snapshot. Measured
+ *  against the snapshot, never today, like 已在所: the page shows that day's
+ *  roster. Both are YYYY-MM-DD, so string order is date order. */
+export function opensAfter(opendate: string, snapshotDate: string): boolean {
+  return ISO_DATE.test(opendate) && ISO_DATE.test(snapshotDate) && opendate > snapshotDate
+}
+
+/** 2026-10-05 → 10/05, for a badge. */
+export function monthDay(date: string): string {
+  return `${date.slice(5, 7)}/${date.slice(8, 10)}`
+}
+
+/** 2026-10-05 → 10 月 5 日, for a sentence. */
+export function monthDayLong(date: string): string {
+  return `${Number(date.slice(5, 7))} 月 ${Number(date.slice(8, 10))} 日`
+}
+
+/** The loading line's hint on pages that wait for the whole roster: what is
+ *  loading, counted from home.json. Without it the line names the data and
+ *  leaves the count out, rather than showing a stale one. No size: the
+ *  compressed download depends on GitHub Pages, not on this site, and an
+ *  estimate of it was judged not worth stating (2026-10-01). */
+export function rosterHint(roster?: { count: number }): string {
+  if (!roster) return '全國動物資料'
+  return `全國 ${formatCount(roster.count)} 隻動物的資料`
+}
 
 /* ── Search by number ──────────────────────────────────────────────────────
  * Someone who saw an animal at the shelter or on pet.gov.tw has its 收容編號

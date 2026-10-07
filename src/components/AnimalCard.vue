@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import LucideIcon from '@/components/LucideIcon.vue'
-import { SEX_LABEL, formatCount } from '@/lib/animals'
+import { SEX_LABEL, formatCount, monthDay, opensAfter } from '@/lib/animals'
 import type { IconName } from '@/lib/icons'
 import type { Animal } from '@/types'
 
@@ -13,6 +13,8 @@ const props = defineProps<{
   animal: Animal
   days: number | null
   place: string
+  /** For the 開放認養 badge, which compares against the snapshot like 已在所. */
+  snapshotDate: string
 }>()
 
 const emit = defineEmits<{ open: [animal: Animal] }>()
@@ -23,14 +25,46 @@ const SEX_ICON: Record<string, IconName> = { M: 'mars', F: 'venus' }
 
 const title = computed(() => props.animal.variety || '未填品種')
 
-const badge = computed(() =>
-  props.days === null ? '天數未知' : `已在所 ${formatCount(props.days)} 天`,
+/** The date only, never a reason: a later 開放認養日 can be a claim period,
+ *  a medical hold or paperwork, and the data does not say which. */
+const opens = computed(() =>
+  opensAfter(props.animal.opendate, props.snapshotDate) ? monthDay(props.animal.opendate) : null,
 )
+
+/* ── Shelter name: one line, the full name on demand ───────────────────────
+ * Cut with an ellipsis so every card keeps the same height. The full name
+ * stays in the DOM (screen readers read it whole) and in `title`; the dark
+ * tip below repeats it for pointer and keyboard users, and only when the
+ * name was actually cut. Touch has no hover: the dialog shows it in full. */
+
+const placeEl = ref<HTMLElement | null>(null)
+const tip = ref(false)
+
+function showTip() {
+  const el = placeEl.value
+  tip.value = !!el && el.scrollWidth > el.clientWidth
+}
+
+function hideTip() {
+  tip.value = false
+}
+
+function onButtonFocus(event: FocusEvent) {
+  if ((event.target as HTMLElement).matches(':focus-visible')) showTip()
+}
 </script>
 
 <template>
   <article class="acard" @click="emit('open', animal)">
-    <span class="badge">{{ badge }}</span>
+    <!-- The words in .full drop on a narrow card, where 在所 / 開放 is all
+         that fits two to a row. -->
+    <div class="badges">
+      <span class="badge">
+        <template v-if="days === null">天數未知</template>
+        <template v-else><span class="full">已</span>在所 {{ formatCount(days) }} 天</template>
+      </span>
+      <span v-if="opens" class="badge opens">{{ opens }} 開放<span class="full">認養</span></span>
+    </div>
     <div class="avatar">
       <img
         v-if="animal.photo && !broken"
@@ -54,7 +88,17 @@ const badge = computed(() =>
         />
         {{ title }}
       </h3>
-      <span class="place">{{ place }}</span>
+      <span class="place-wrap">
+        <span
+          ref="placeEl"
+          class="place"
+          :title="place"
+          @mouseenter="showTip"
+          @mouseleave="hideTip"
+          >{{ place }}</span
+        >
+        <span v-if="tip" class="tip" aria-hidden="true">{{ place }}</span>
+      </span>
       <!-- The number the shelter knows this animal by, which is what a visitor
            quotes on the phone. The rule above it is a divider only; it used to
            be a rank bar (2026-09-29). -->
@@ -62,7 +106,13 @@ const badge = computed(() =>
         <span class="rule" />
         <span class="subid"><span class="k">收容編號</span> {{ animal.subid }}</span>
       </span>
-      <button type="button" class="detail-btn" @click.stop="emit('open', animal)">
+      <button
+        type="button"
+        class="detail-btn"
+        @click.stop="emit('open', animal)"
+        @focus="onButtonFocus"
+        @blur="hideTip"
+      >
         查看詳情
         <LucideIcon name="arrow-right" :size="16" />
       </button>
@@ -71,13 +121,19 @@ const badge = computed(() =>
 </template>
 
 <style scoped>
+/* min-width: 0 lets a grid or flex track shrink the card below its one-line
+   shelter name; without it the nowrap text widens the column instead. The
+   container is what the badges measure to decide whether two fit side by
+   side. */
 .acard {
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
   height: 100%;
+  min-width: 0;
   cursor: pointer;
+  container-type: inline-size;
 }
 
 /* The mask stays fixed and only the photo scales inside it, so hover never
@@ -112,19 +168,74 @@ const badge = computed(() =>
   font-size: 0.85rem;
 }
 
-/* On the card rather than the avatar: the round mask would clip it. */
-.badge {
+/* On the card rather than the avatar: the round mask would clip them. A wide
+   card lays the row over the photo's top edge, 已在所 at the left end and
+   開放認養 at the right. */
+.badges {
   position: absolute;
   top: 10px;
+  right: 10px;
   left: 10px;
   z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.badge {
   padding: 0.12rem 0.7rem;
   border-radius: 999px;
   background: var(--ink);
   color: var(--plane);
   font-size: 0.76rem;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
   outline: 3px solid var(--plane);
+
+  /* Light on dark the other way round, so it never reads as a second
+     已在所 figure; a step larger and bold so it is not passed over. */
+  &.opens {
+    padding: 0.16rem 0.75rem;
+    border: 1.5px solid var(--ink);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 0.84rem;
+    font-weight: 600;
+  }
+}
+
+/* Two-column phone cards: the row leaves the photo for the space above the
+   breed, centred when alone and evenly spaced when two. Both badges take the
+   same size and border so every card's row is one height and the breeds in a
+   grid row line up. The longest pair on 2026-10-04 (在所 134 天, 10/09 開放)
+   fits the 144px card of a 360px phone; a longer one wraps rather than
+   overflowing. */
+@container (max-width: 250px) {
+  .badges {
+    position: static;
+    order: 1;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 2px;
+  }
+
+  .body {
+    order: 2;
+  }
+
+  .badge,
+  .badge.opens {
+    padding: 0.08rem 0.35rem;
+    border: 1.5px solid var(--ink);
+    font-size: 0.7rem;
+    outline: 0;
+  }
+
+  .full {
+    display: none;
+  }
 }
 
 .body {
@@ -152,9 +263,39 @@ const badge = computed(() =>
   color: var(--ink-muted);
 }
 
+.place-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+
 .place {
+  overflow: hidden;
   font-size: 0.83rem;
   color: var(--ink-muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Below the name, over the divider, and no wider than the card: a card at
+   either end of the home page's scrolling strip would otherwise have it
+   clipped. */
+.tip {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  z-index: 4;
+  width: max-content;
+  max-width: 100%;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--radius-sm);
+  background: var(--ink);
+  color: var(--plane);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 
 .ident {
@@ -211,6 +352,21 @@ const badge = computed(() =>
   &:hover {
     background: var(--ink);
     color: var(--plane);
+  }
+}
+
+/* A phone card is too narrow for the wide padding that keeps the arrow clear
+   of the centred label: at 144px the label wrapped to two lines. Here the
+   arrow follows the label instead, and the pair stays on one line. */
+@container (max-width: 250px) {
+  .detail-btn {
+    gap: 0.3rem;
+    padding-inline: 0.5rem;
+    white-space: nowrap;
+
+    & svg {
+      position: static;
+    }
   }
 }
 

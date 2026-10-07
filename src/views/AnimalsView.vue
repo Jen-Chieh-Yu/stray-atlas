@@ -7,6 +7,7 @@ import LoadingSkeleton from '@/components/LoadingSkeleton.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
 import MissingAnimalDialog from '@/components/MissingAnimalDialog.vue'
 import PageHead from '@/components/PageHead.vue'
+import { fetchHome } from '@/composables/useAtlasData'
 import { useRoster } from '@/composables/useRoster'
 import { closeAnimalDialog } from '@/lib/dialogRoute'
 import { vReveal } from '@/lib/reveal'
@@ -23,6 +24,7 @@ import {
   isNewerId,
   matchesId,
   parseAnimalQuery,
+  rosterHint,
   searchLink,
   tally,
   KIND_PARAM,
@@ -35,6 +37,16 @@ const router = useRouter()
 
 const { animals, shelters, snapshotDate, loading, error, shelterById, placeOf, countyOf, daysOf } =
   useRoster()
+
+/** What the loading line says this page is waiting for. home.json is a few
+ *  kilobytes and usually lands well before the roster; until it does, or if
+ *  it fails, the line names the data without figures. */
+const loadingHint = ref(rosterHint())
+fetchHome()
+  .then((home) => {
+    loadingHint.value = rosterHint(home.roster)
+  })
+  .catch(() => undefined)
 
 /** Sixteen a page on a fixed four-column grid (two below 820px), so every
  *  full page ends on a complete row (decided 2026-09-15). */
@@ -377,7 +389,7 @@ function onSort(event: Event) {
       }}動物，狗、貓與其他動物在同一個清單裡，用下面的條件收斂。
     </PageHead>
 
-    <LoadingSkeleton v-if="loading" variant="cards" :count="4" hint="全國動物資料約 272 KB" />
+    <LoadingSkeleton v-if="loading" variant="cards" :count="4" :hint="loadingHint" />
     <p v-else-if="error" class="state">資料載入失敗（{{ error }}）。</p>
 
     <template v-else>
@@ -609,6 +621,7 @@ function onSort(event: Event) {
             :animal="animal"
             :days="daysOf(animal)"
             :place="placeOf(animal)"
+            :snapshot-date="snapshotDate"
             @open="open"
           />
         </div>

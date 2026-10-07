@@ -107,6 +107,12 @@ export const ICONS = {
     { d: 'M21 15V5a2 2 0 0 0-2-2H9' },
   ],
   clock: [{ cx: 12, cy: 12, r: 10 }, { d: 'M12 6v6l4 2' }],
+  calendar: [
+    { d: 'M8 2v4' },
+    { d: 'M16 2v4' },
+    { x: 3, y: 4, width: 18, height: 18, rx: 2 },
+    { d: 'M3 10h18' },
+  ],
   dog: [
     { d: 'M11.25 16.25h1.5L12 17z' },
     { d: 'M16 14v.5' },

@@ -91,9 +91,11 @@ let qualityOnce: Promise<QualityPayload> | null = null
 let featuresOnce: Promise<FeaturesPayload> | null = null
 
 /** Both files are fetched at most once per visit and shared by every view.
- *  animals.json is 272 KB gzipped for all 8,265 records — more than a single
- *  shelter needs, but it is fetched once and then serves the shelter page and
- *  the browse-everything page alike, with no second copy to drift. */
+ *  animals.json is the whole roster — far more than a single shelter needs,
+ *  but it is fetched once and then serves the shelter pages and the
+ *  find-animals page alike, with no second copy to drift. Its record count
+ *  is in home.json (roster), which the find-animals page states while it
+ *  loads. */
 export function fetchShelters(): Promise<ShelterPayload> {
   sheltersOnce ??= fetch(dataUrl('shelters.json')).then((response) => {
     if (!response.ok) throw new Error(`shelters.json ${response.status}`)

@@ -1,9 +1,30 @@
 import type { Scale } from '@/types'
 
-/* Day labels and axis ticks shared by the two charts on the analysis page.
+/* Day labels and axis ticks shared by the two charts on the analysis page,
+ *  and the snapshot's age for the footer.
  *
- *  Used by: DistributionChart.vue and EcdfChart.vue.
+ *  Used by: DistributionChart.vue and EcdfChart.vue (labels and ticks), and
+ *  App.vue (snapshotAge, STALE_AFTER_DAYS).
  */
+
+/** The footer warns from this many days. The schedule stores a snapshot a
+ *  day, finishing between about 09:45 and 14:40 Taipei time, and the source
+ *  skips the odd day, so one or two days behind is normal. */
+export const STALE_AFTER_DAYS = 3
+
+/** Today in Taipei as YYYY-MM-DD: snapshots are named by Taipei days, so a
+ *  reader abroad must not see a different age for the same snapshot. */
+export function taipeiToday(now: Date = new Date()): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Taipei' }).format(now)
+}
+
+/** Whole days from the snapshot to today in Taipei; null when unreadable. */
+export function snapshotAge(snapshotDate: string, now: Date = new Date()): number | null {
+  const from = Date.parse(snapshotDate)
+  const to = Date.parse(taipeiToday(now))
+  if (Number.isNaN(from) || Number.isNaN(to)) return null
+  return Math.round((to - from) / 86400000)
+}
 
 /** Names for the log ticks the pipeline publishes (distribution.json). */
 const LOG_LABELS: Record<number, string> = {

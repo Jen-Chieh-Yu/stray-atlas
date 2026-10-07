@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router'
 import DialogShell from '@/components/DialogShell.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
 import { daysInShelter } from '@/composables/useAtlasData'
-import { animalsLink, formatCount, pickSiblings } from '@/lib/animals'
+import { animalsLink, formatCount, monthDayLong, opensAfter, pickSiblings } from '@/lib/animals'
 import type { IconName } from '@/lib/icons'
 import type { Animal, Kind, Shelter } from '@/types'
 
@@ -47,6 +47,10 @@ const yearsText = computed(() => {
   return `（約 ${(value / 365).toFixed(1)} 年）`
 })
 
+/** Against the snapshot, as on the card. The notice names the date and what
+ *  to do before it, never why it is later: the data does not say. */
+const notYetOpen = computed(() => opensAfter(props.animal.opendate, props.snapshotDate))
+
 const fields = computed(() => [
   { label: '收容編號', value: props.animal.subid },
   { label: '流水號', value: props.animal.id },
@@ -55,7 +59,13 @@ const fields = computed(() => [
   { label: '年齡', value: AGE[props.animal.age] ?? '未填' },
   { label: '毛色', value: props.animal.colour || '未填' },
   { label: '絕育狀態', value: STERILIZED[props.animal.sterilized] ?? props.animal.sterilized },
-  { label: '開放認養日', value: props.animal.opendate || '未填' },
+  {
+    label: '開放認養日',
+    value: notYetOpen.value
+      ? `${props.animal.opendate}（尚未到）`
+      : props.animal.opendate || '未填',
+    marked: notYetOpen.value,
+  },
   { label: '建檔日', value: props.animal.created },
 ])
 
@@ -154,9 +164,17 @@ async function copyLink() {
         </p>
       </div>
 
+      <p v-if="notYetOpen" class="opens">
+        <LucideIcon name="calendar" :size="16" />
+        <span
+          ><b>這隻動物 {{ monthDayLong(animal.opendate) }}起開放認養。</b
+          >在這天之前收容所可能還不受理認養，想認識牠可以先打電話詢問。</span
+        >
+      </p>
+
       <p class="section">規格化資料欄位</p>
       <dl>
-        <div v-for="field in fields" :key="field.label">
+        <div v-for="field in fields" :key="field.label" :class="{ marked: field.marked }">
           <dt>{{ field.label }}</dt>
           <dd>{{ field.value }}</dd>
         </div>
@@ -331,6 +349,33 @@ async function copyLink() {
 .years {
   color: var(--ink-muted);
   font-size: 0.85rem;
+}
+
+.opens {
+  display: flex;
+  gap: 0.55rem;
+  margin: 1rem 0 0;
+  padding: 0.7rem 0.9rem;
+  border-left: 3px solid var(--ramp-4);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunk);
+  color: var(--ink-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+
+  & svg {
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+    color: var(--accent-text);
+  }
+
+  & b {
+    color: var(--ink);
+  }
+}
+
+dl > div.marked {
+  background: var(--surface-sunk);
 }
 
 .section {

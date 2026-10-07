@@ -147,6 +147,7 @@ function close() {
             :animal="animal"
             :days="daysOf(animal)"
             :place="placeOf(animal)"
+            :snapshot-date="snapshotDate"
             @open="open"
           />
         </div>
