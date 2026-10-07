@@ -1,11 +1,21 @@
 import type { Scale } from '@/types'
 
 /* Day labels and axis ticks shared by the two charts on the analysis page,
- *  and the snapshot's age for the footer.
+ *  the snapshot's age for the footer, and days in the shelter.
  *
- *  Used by: DistributionChart.vue and EcdfChart.vue (labels and ticks), and
- *  App.vue (snapshotAge, STALE_AFTER_DAYS).
+ *  Used by: DistributionChart.vue and EcdfChart.vue (labels and ticks),
+ *  App.vue (snapshotAge, STALE_AFTER_DAYS), and useAtlasData.ts, which
+ *  passes daysInShelter on to the pages, and vite.config.ts, which writes it
+ *  into the share pages.
  */
+
+/** Days in the shelter, measured against the snapshot rather than today. */
+export function daysInShelter(created: string, snapshotDate: string): number | null {
+  const from = Date.parse(created)
+  const to = Date.parse(snapshotDate)
+  if (Number.isNaN(from) || Number.isNaN(to)) return null
+  return Math.round((to - from) / 86400000)
+}
 
 /** The footer warns from this many days. The schedule stores a snapshot a
  *  day, finishing between about 09:45 and 14:40 Taipei time, and the source

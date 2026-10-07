@@ -142,11 +142,14 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
             <tr>
               <th scope="row">動物照片</th>
               <td>
-                由農業部寵物登記管理網站（<a :href="PET_SITE_URL" target="_blank" rel="noreferrer"
+                由各公立動物收容所拍攝登錄，經全國動物收容資訊網（<a
+                  :href="PET_SITE_URL"
+                  target="_blank"
+                  rel="noreferrer"
                   >pet.gov.tw</a
-                >）提供，隨原始資料一併公開
+                >）公開；本站僅以原網址連結顯示，分享連結的預覽圖也直接使用該網址
               </td>
-              <td>依來源規定</td>
+              <td>來源未另行說明</td>
             </tr>
             <tr>
               <th scope="row">首頁示意照片</th>

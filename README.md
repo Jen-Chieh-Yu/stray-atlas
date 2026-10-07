@@ -133,9 +133,11 @@ stray-atlas/
 │   ├── build_features.py    分組中位數與四分位距、收容所內毛色對照
 │   ├── build_quality.py     各縣市與各收容所的登錄完整度評分
 │   ├── build_hero.py        首頁示意照片縮圖成 WebP（需 pillow，一次性，不在 build_all 內）
+│   ├── og-image.html        分享預覽預設圖 public/og.png 的原稿（以瀏覽器截圖產生，一次性）
 │   └── build_districts.py   由內政部鄉鎮市區界 shapefile 產生對照表與界線（需 pyshp，一次性，不在 build_all 內；原始壓縮檔不進 git）
 ├── public/
 │   ├── favicon.svg
+│   ├── og.png               分享預覽的預設圖（1200×630，沒有動物照片時與其他頁面用）
 │   └── data/                產出的 JSON / GeoJSON（前端資料契約，見 CLAUDE.md §4.1）
 │       ├── meta.json        快照日期與清理摘要（頁尾日期讀這裡）
 │       ├── animals.json     全部動物
@@ -155,9 +157,9 @@ stray-atlas/
 │   ├── views/               八個頁面（Home、Animals、ShelterList、Shelter、Map、Quality、Analysis、About）
 │   ├── components/          動物卡片與詳細資料、首頁照片輪播、縣市地圖、分析圖表、載入骨架、圖示
 │   ├── composables/         資料載入（useAtlasData）與動物名冊（useRoster）
-│   └── lib/                 共用函式：動物、在所天數、收容所地址、詳細資料視窗路由、圖示資料、首頁照片與出處、捲動淡入
+│   └── lib/                 共用函式：動物、在所天數、分享文字與分享頁、收容所地址、詳細資料視窗路由、圖示資料、首頁照片與出處、捲動淡入
 ├── tests/                   建置腳本的 pytest 測試（src/lib 的 vitest 測試在 src/lib/__tests__/）
-├── index.html、vite.config.ts、vitest.config.ts、tsconfig*.json、env.d.ts
+├── index.html、vite.config.ts、vitest.config.ts、tsconfig*.json、env.d.ts   vite.config.ts 在 build 時寫出 404.html 與每隻動物的分享頁 /a/<id>/
 ├── eslint.config.js、.prettierrc、.prettierignore、.editorconfig   靜態檢查與格式設定
 ├── .git-blame-ignore-revs   只改排版的 commit，blame 時略過
 ├── .env.example             Google Maps Embed 金鑰範本（複製成 .env.local）
@@ -179,6 +181,7 @@ stray-atlas/
 | `/quality` | 資料品質：被丟掉的欄位、各欄覆蓋率、各縣市四項登錄完整度評級（不給總分）、同一件事的多種寫法 |
 | `/analysis` | 在所天數分布：長條圖＋KDE（對數／線性、三段平滑）、犬貓 ECDF、分位數表、各分組中位數與四分位距、收容所內毛色對照、各縣市排行 |
 | `/about` | 關於本站：資料來源、處理方式與限制、相關官方網站 |
+| `/a/<id>/` | 分享連結：build 時為每隻動物產生的小頁面，只帶連結預覽（品種、收容所、照片），讀者打開會立刻轉到該動物的詳細資料；動物離開名單後轉到「不在目前名單」 |
 
 頁面上的資料日期只在頁尾顯示一處，讀自 `public/data/meta.json`。
 
@@ -353,5 +356,7 @@ python scripts/fetch_snapshot.py --force    # 覆蓋當日已存在的檔案
 資料源授權與程式碼授權無關，另行標示：
 
 > `data/` 目錄下之資料來源為農業部「動物認領養」開放資料，依政府資料開放授權條款第 1 版使用。
+
+動物照片由各公立動物收容所拍攝登錄，經全國動物收容資訊網（pet.gov.tw）公開；本站僅以原網址連結顯示，不下載、不轉存，分享連結的預覽圖也直接使用該網址。資料集只提供照片網址，來源沒有說明照片本身的授權範圍（2026-10-07 查證，見 DESIGN.md §10〈分享〉）。
 
 首頁的示意照片來自 Unsplash，依 Unsplash License 使用，攝影師與出處見 `THIRD-PARTY-LICENSES` 與網站的關於本站頁。照片中的動物不在臺灣的收容所。

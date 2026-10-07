@@ -1,0 +1,142 @@
+<!doctype html>
+<!--
+  Source of public/og.png, the 1200x630 preview image for every page without
+  an animal photo of its own (see src/lib/share.ts and DESIGN.md §10).
+
+  Drawn once and committed; nothing on it changes with the data, since it is
+  never redrawn and the apps that show it cache it. The title and the site
+  name sit inside the centre 630x630, so a square crop still keeps them; the
+  circles only fill the sides. Colours are the tokens in src/style.css.
+
+  To redraw (Windows, from the repository root; any Chromium works):
+    msedge --headless=new --hide-scrollbars --force-device-scale-factor=1
+      --window-size=1200,630 --virtual-time-budget=5000
+      --screenshot=public/og.png file:///<repo>/scripts/og-image.html
+-->
+<html lang="zh-Hant-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=block"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+      }
+      body {
+        position: relative;
+        background: #fdfaf6;
+        color: #1c1917;
+        font-family: 'Noto Sans TC', sans-serif;
+      }
+      .brand {
+        position: absolute;
+        top: 92px;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 18px;
+        font-size: 40px;
+        font-weight: 700;
+      }
+      .brand svg {
+        width: 64px;
+        height: 64px;
+      }
+      h1 {
+        position: absolute;
+        top: 222px;
+        left: 0;
+        right: 0;
+        margin: 0;
+        text-align: center;
+        font-size: 58px;
+        font-weight: 700;
+        line-height: 1.35;
+      }
+      .foot {
+        position: absolute;
+        bottom: 86px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 30px;
+        color: #57534e;
+      }
+      .dot {
+        position: absolute;
+        border-radius: 999px;
+      }
+      .ramp {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 22px;
+        display: flex;
+      }
+      .ramp i {
+        flex: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <span
+      class="dot"
+      style="left: -70px; top: 60px; width: 230px; height: 230px; background: #eda17a"
+    ></span>
+    <span
+      class="dot"
+      style="left: 40px; top: 300px; width: 170px; height: 170px; background: #d66a27"
+    ></span>
+    <span
+      class="dot"
+      style="left: -60px; top: 470px; width: 150px; height: 150px; background: #f2ebe1"
+    ></span>
+    <span
+      class="dot"
+      style="left: 1050px; top: 40px; width: 180px; height: 180px; background: #984e24"
+    ></span>
+    <span
+      class="dot"
+      style="left: 990px; top: 250px; width: 240px; height: 240px; background: #e28654"
+    ></span>
+    <span
+      class="dot"
+      style="left: 1110px; top: 480px; width: 120px; height: 120px; background: #f2ebe1"
+    ></span>
+
+    <div class="brand">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="7" fill="#b85a21" />
+        <g fill="#fdfaf6">
+          <ellipse cx="10.5" cy="11" rx="2.6" ry="3.4" />
+          <ellipse cx="21.5" cy="11" rx="2.6" ry="3.4" />
+          <ellipse cx="5.6" cy="17.4" rx="2.4" ry="3" />
+          <ellipse cx="26.4" cy="17.4" rx="2.4" ry="3" />
+          <path
+            d="M16 15.4c3.9 0 7.2 3.3 7.2 6.6 0 2.6-2.2 4-4.6 4-1 0-1.8-.3-2.6-.3s-1.6.3-2.6.3c-2.4 0-4.6-1.4-4.6-4 0-3.3 3.3-6.6 7.2-6.6z"
+          />
+        </g>
+      </svg>
+      StrayAtlas 浪浪地圖
+    </div>
+    <h1>全臺公立收容所<br />目前仍開放認養的動物</h1>
+    <div class="foot">農業部開放資料 · 每日排程更新</div>
+    <div class="ramp">
+      <i style="background: #eda17a"></i><i style="background: #e28654"></i
+      ><i style="background: #d66a27"></i><i style="background: #b85a21"></i
+      ><i style="background: #984e24"></i><i style="background: #794224"></i>
+    </div>
+  </body>
+</html>

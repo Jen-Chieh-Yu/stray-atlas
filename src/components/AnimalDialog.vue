@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import DialogShell from '@/components/DialogShell.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
 import { daysInShelter } from '@/composables/useAtlasData'
 import { animalsLink, formatCount, monthDayLong, opensAfter, pickSiblings } from '@/lib/animals'
 import type { IconName } from '@/lib/icons'
+import { shareMessage } from '@/lib/share'
 import type { Animal, Kind, Shelter } from '@/types'
 
 const props = defineProps<{
@@ -22,6 +23,10 @@ const emit = defineEmits<{ close: []; open: [animal: Animal] }>()
 
 const broken = ref(false)
 const copied = ref(false)
+/** The browser refused the clipboard: the text is shown, selected, to copy
+ *  by hand. */
+const manual = ref(false)
+const manualEl = ref<HTMLTextAreaElement | null>(null)
 
 const SEX: Record<string, string> = { M: '公', F: '母', N: '未填' }
 const BODY: Record<string, string> = { SMALL: '小型', MEDIUM: '中型', BIG: '大型' }
@@ -100,6 +105,7 @@ watch(
   () => {
     broken.value = false
     copied.value = false
+    manual.value = false
   },
 )
 
@@ -108,14 +114,43 @@ function siblingDays(other: Animal): string {
   return value === null ? '天數未知' : `${formatCount(value)} 天`
 }
 
-async function copyLink() {
+/* ── Sharing ───────────────────────────────────────────────────────────────
+ * The words and the /a/<id>/ link come from src/lib/share.ts; the link is
+ * the page that gives chat apps a preview of this animal. A phone gets the
+ * system share sheet; a desktop, and a browser without one (LINE's and
+ * Facebook's in-app browsers often have none), copies the same text. Decided
+ * once, so the button never changes under a finger. Desktop browsers that do
+ * have a share sheet still copy: on a desktop, pasting is what people do. */
+
+const canShare =
+  typeof navigator !== 'undefined' &&
+  typeof navigator.share === 'function' &&
+  window.matchMedia('(pointer: coarse)').matches
+
+const message = computed(() =>
+  shareMessage(props.animal, props.shelter?.name ?? '', days.value, props.snapshotDate),
+)
+const messageText = computed(() => `${message.value.text}\n${message.value.url}`)
+
+async function share() {
   try {
-    await navigator.clipboard.writeText(window.location.href)
+    await navigator.share({ text: message.value.text, url: message.value.url })
+  } catch (error) {
+    // Closing the sheet is a choice, not a failure.
+    if ((error as Error).name !== 'AbortError') await copy()
+  }
+}
+
+async function copy() {
+  try {
+    await navigator.clipboard.writeText(messageText.value)
     copied.value = true
     window.setTimeout(() => (copied.value = false), 2000)
   } catch {
-    // Clipboard access is refused in some contexts; the URL bar already shows
-    // the link, so there is nothing to recover from.
+    // Refused, or no clipboard at all (an insecure origin): show the text.
+    manual.value = true
+    await nextTick()
+    manualEl.value?.select()
   }
 }
 </script>
@@ -237,11 +272,22 @@ async function copyLink() {
       </p>
 
       <footer class="actions">
-        <button type="button" class="chip small" @click="copyLink">
-          {{ copied ? '連結已複製' : '複製此動物頁面連結' }}
+        <button v-if="canShare" type="button" class="chip small" @click="share">
+          <LucideIcon name="share" :size="14" />
+          分享
+        </button>
+        <button v-else type="button" class="chip small" :class="{ done: copied }" @click="copy">
+          <LucideIcon v-if="copied" name="check" :size="14" />
+          <span aria-live="polite">{{ copied ? '已複製，可直接貼上' : '複製介紹與連結' }}</span>
         </button>
         <button type="button" class="chip small on" @click="emit('close')">關閉</button>
       </footer>
+      <div v-if="manual" class="manual">
+        <label for="share-text"
+          >瀏覽器沒有讓本站寫入剪貼簿，請自行複製下面這段（已全選，按 Ctrl+C 或長按）：</label
+        >
+        <textarea id="share-text" ref="manualEl" readonly rows="6" :value="messageText" />
+      </div>
     </div>
   </DialogShell>
 </template>
@@ -536,6 +582,41 @@ dd {
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
+
+  & .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  & .done {
+    border-color: var(--ramp-3);
+    color: var(--ink);
+  }
+}
+
+.manual {
+  margin-top: 0.75rem;
+
+  & label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.8rem;
+    color: var(--ink-secondary);
+  }
+
+  & textarea {
+    width: 100%;
+    padding: 0.5rem 0.65rem;
+    border: 1.5px solid var(--ramp-3);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.85rem;
+    line-height: 1.65;
+    resize: none;
+  }
 }
 
 @media (max-width: 520px) {

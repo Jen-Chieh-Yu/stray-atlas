@@ -187,10 +187,7 @@ export function fetchFeatures(): Promise<FeaturesPayload> {
   return featuresOnce
 }
 
-/** Days in the shelter, measured against the snapshot rather than today. */
-export function daysInShelter(created: string, snapshotDate: string): number | null {
-  const from = Date.parse(created)
-  const to = Date.parse(snapshotDate)
-  if (Number.isNaN(from) || Number.isNaN(to)) return null
-  return Math.round((to - from) / 86400000)
-}
+/** Days in the shelter, measured against the snapshot rather than today.
+ *  Kept in src/lib/days.ts so the build can write it into the share pages;
+ *  passed on here for the pages that already import it from this file. */
+export { daysInShelter } from '@/lib/days'
