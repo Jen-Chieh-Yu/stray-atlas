@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import LucideIcon from '@/components/LucideIcon.vue'
-import { SEX_LABEL, formatCount, monthDay, opensAfter } from '@/lib/animals'
+import { SEX_LABEL, formatCount, monthDay, monthDayLong, opensAfter } from '@/lib/animals'
 import type { IconName } from '@/lib/icons'
 import type { Animal } from '@/types'
 
@@ -63,7 +63,13 @@ function onButtonFocus(event: FocusEvent) {
         <template v-if="days === null">天數未知</template>
         <template v-else><span class="full">已</span>在所 {{ formatCount(days) }} 天</template>
       </span>
-      <span v-if="opens" class="badge opens">{{ opens }} 開放<span class="full">認養</span></span>
+      <span v-if="opens" class="badge opens">
+        <span class="sr-only">{{ monthDayLong(animal.opendate) }}起開放認養</span>
+        <span aria-hidden="true"
+          ><LucideIcon name="calendar" :size="11" class="cal" />{{ opens
+          }}<span class="word"> 開放</span><span class="full">認養</span></span
+        >
+      </span>
     </div>
     <div class="avatar">
       <img
@@ -158,6 +164,22 @@ function onButtonFocus(event: FocusEvent) {
   transform: scale(1.06);
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The calendar stands in for 開放 on the narrowest cards only. */
+.cal {
+  display: none;
+  margin-right: 2px;
+  vertical-align: -1px;
+}
+
 .fallback {
   position: absolute;
   inset: 0;
@@ -234,6 +256,19 @@ function onButtonFocus(event: FocusEvent) {
   }
 
   .full {
+    display: none;
+  }
+}
+
+/* A 320px phone leaves a 124px card, where even 在所 1 天 and 10/13 開放 need
+   two lines and push that card's breed below its neighbour's. The date with a
+   calendar fits one (chosen 2026-10-07); a reader still hears the full date. */
+@container (max-width: 135px) {
+  .cal {
+    display: inline;
+  }
+
+  .word {
     display: none;
   }
 }
