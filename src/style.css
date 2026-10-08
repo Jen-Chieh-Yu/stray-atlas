@@ -162,3 +162,40 @@ a {
     animation: none;
   }
 }
+
+/* The photo thrown into the shortlist (src/lib/motion.ts). Above the dialog's
+   backdrop and the phone menu, and it takes no clicks. */
+.shortlist-fly {
+  position: fixed;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 2px solid var(--surface);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ramp-4);
+  box-shadow: 0 4px 12px rgb(20 16 12 / 0.25);
+  pointer-events: none;
+  will-change: transform;
+
+  & img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/* Printing is offered on /shortlist only; what it needs is the list, not the
+   site's top bar and footer. */
+@media print {
+  .topbar,
+  .footer {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+  }
+}

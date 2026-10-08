@@ -4,9 +4,9 @@
  *  Kept as data rather than as the lucide package: the site uses a dozen
  *  glyphs, and a table this size is easier to audit than a dependency.
  *
- *  Used by: LucideIcon.vue (draws the shapes), and AnimalCard.vue and
- *  AnimalDialog.vue (the IconName type). Add a glyph here before using it
- *  anywhere. */
+ *  Used by: LucideIcon.vue (draws the shapes), AnimalCard.vue and
+ *  AnimalDialog.vue (the IconName type), and motion.ts (the bookmark it
+ *  throws). Add a glyph here before using it anywhere. */
 export type IconShape =
   | { d: string }
   | { cx: number; cy: number; r: number }
@@ -107,6 +107,11 @@ export const ICONS = {
     { d: 'M21 15V5a2 2 0 0 0-2-2H9' },
   ],
   clock: [{ cx: 12, cy: 12, r: 10 }, { d: 'M12 6v6l4 2' }],
+  bookmark: [{ d: 'm19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z' }],
+  'bookmark-check': [
+    { d: 'm19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z' },
+    { d: 'm9 10 2 2 4-4' },
+  ],
   share: [
     { d: 'M12 2v13' },
     { d: 'm16 6-4-4-4 4' },

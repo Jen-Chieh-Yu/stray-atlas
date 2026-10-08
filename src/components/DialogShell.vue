@@ -2,8 +2,8 @@
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 /** The frame both animal dialogs sit in: backdrop, sticky top bar with a
- *  close button, Esc, focus and the scroll lock. What goes in the bar and
- *  below it is the caller's (DESIGN.md §10).
+ *  close button, Esc, focus, the scroll lock and the fade in and out. What
+ *  goes in the bar and below it is the caller's (DESIGN.md §10).
  *
  *  Used by: AnimalDialog.vue and MissingAnimalDialog.vue. */
 const props = defineProps<{
@@ -16,8 +16,23 @@ const emit = defineEmits<{ close: [] }>()
 
 const panel = ref<HTMLElement | null>(null)
 
+/* ── Closing ───────────────────────────────────────────────────────────────
+ * A <Transition> that is itself being removed skips its leave, so when the
+ * caller's v-if takes the dialog away there is no fade. Closing from inside
+ * therefore fades first and tells the caller afterwards: Esc, the backdrop
+ * and × come here, and the dialogs' own 關閉 buttons call close() through a
+ * template ref. Leaving by the browser's Back still closes at once. */
+
+const shown = ref(true)
+
+function close() {
+  shown.value = false
+}
+
+defineExpose({ close })
+
 function onKey(event: KeyboardEvent) {
-  if (event.key === 'Escape') emit('close')
+  if (event.key === 'Escape') close()
 }
 
 onMounted(() => {
@@ -43,22 +58,24 @@ watch(
 
 <template>
   <Teleport to="body">
-    <div class="backdrop" @click.self="emit('close')">
-      <div
-        ref="panel"
-        class="dialog"
-        role="dialog"
-        aria-modal="true"
-        :aria-label="label"
-        tabindex="-1"
-      >
-        <header class="bar">
-          <slot name="bar" />
-          <button type="button" class="close" aria-label="關閉" @click="emit('close')">×</button>
-        </header>
-        <slot />
+    <Transition name="shell" appear @after-leave="emit('close')">
+      <div v-if="shown" class="backdrop" @click.self="close">
+        <div
+          ref="panel"
+          class="dialog"
+          role="dialog"
+          aria-modal="true"
+          :aria-label="label"
+          tabindex="-1"
+        >
+          <header class="bar">
+            <slot name="bar" />
+            <button type="button" class="close" aria-label="關閉" @click="close">×</button>
+          </header>
+          <slot />
+        </div>
       </div>
-    </div>
+    </Transition>
   </Teleport>
 </template>
 
@@ -82,6 +99,42 @@ watch(
   max-height: min(90vh, 860px);
   overflow: auto;
   outline: none;
+}
+
+/* Fades in and out (DESIGN.md §10), the panel growing from 96% as it comes.
+   Showing another animal keeps the frame, so nothing replays. */
+.shell-enter-active {
+  transition: opacity 200ms ease-out;
+
+  & .dialog {
+    transition: transform 200ms ease-out;
+  }
+}
+
+.shell-leave-active {
+  transition: opacity 160ms ease-in;
+
+  & .dialog {
+    transition: transform 160ms ease-in;
+  }
+}
+
+.shell-enter-from,
+.shell-leave-to {
+  opacity: 0;
+
+  & .dialog {
+    transform: scale(0.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell-enter-active,
+  .shell-leave-active,
+  .shell-enter-active .dialog,
+  .shell-leave-active .dialog {
+    transition: none;
+  }
 }
 
 .bar {

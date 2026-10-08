@@ -34,6 +34,11 @@ export const router = createRouter({
     { path: '/quality', name: 'quality', component: () => import('@/views/QualityView.vue') },
     { path: '/analysis', name: 'analysis', component: () => import('@/views/AnalysisView.vue') },
     { path: '/about', name: 'about', component: () => import('@/views/AboutView.vue') },
+    {
+      path: '/shortlist',
+      name: 'shortlist',
+      component: () => import('@/views/ShortlistView.vue'),
+    },
     // A share link (src/lib/share.ts). The build writes /a/<id>/ for every
     // listed animal; once one leaves the list its page is gone, the link falls
     // through 404.html to here, and the dialog says it is no longer listed.

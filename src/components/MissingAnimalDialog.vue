@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import DialogShell from '@/components/DialogShell.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
@@ -19,10 +20,13 @@ defineProps<{
   newer: boolean
 }>()
 const emit = defineEmits<{ close: []; browse: [] }>()
+
+/** Its close() fades the dialog out before telling the page (DialogShell.vue). */
+const shell = ref<InstanceType<typeof DialogShell> | null>(null)
 </script>
 
 <template>
-  <DialogShell label="不在目前名單裡的動物" @close="emit('close')">
+  <DialogShell ref="shell" label="不在目前名單裡的動物" @close="emit('close')">
     <template #bar>
       <span class="id">{{ /^\d+$/.test(id) ? '流水號' : '編號' }} #{{ id }}</span>
       <span class="tag">不在目前名單</span>
@@ -62,7 +66,7 @@ const emit = defineEmits<{ close: []; browse: [] }>()
       <button type="button" class="chip small" @click="emit('browse')">
         看目前仍在所的動物 <LucideIcon name="arrow-right" :size="14" />
       </button>
-      <button type="button" class="chip small on" @click="emit('close')">關閉</button>
+      <button type="button" class="chip small on" @click="shell?.close()">關閉</button>
     </footer>
   </DialogShell>
 </template>

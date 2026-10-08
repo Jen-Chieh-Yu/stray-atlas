@@ -3,8 +3,10 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 import LucideIcon from '@/components/LucideIcon.vue'
 import { fetchMeta } from '@/composables/useAtlasData'
+import { useShortlist } from '@/composables/useShortlist'
 import { OFFICIAL_ADOPTION_URL } from '@/lib/animals'
 import { STALE_AFTER_DAYS, snapshotAge } from '@/lib/days'
+import { inFlight } from '@/lib/motion'
 
 interface NavItem {
   to: string
@@ -46,6 +48,14 @@ const NAV: NavItem[] = [
   { to: '/analysis', label: '資料分析', names: ['analysis'] },
   { to: '/about', label: '關於本站', names: ['about'] },
 ]
+
+/** The shortlist sits apart from the sections: it is the visitor's own list,
+ *  not a page about the data, so it goes last on the bar and first in the
+ *  phone menu, with its count. A photo thrown at it (motion.ts) lands on the
+ *  pill, or on a phone on the menu button, which carries the count as a dot;
+ *  the number goes up as the photo lands. */
+const { count: shortlistCount } = useShortlist()
+const shownCount = computed(() => Math.max(0, shortlistCount.value - inFlight.value))
 
 /** Must match the breakpoint below where the inline nav gives way to the menu button. */
 const NARROW_QUERY = '(max-width: 820px)'
@@ -134,18 +144,31 @@ onBeforeUnmount(() => {
         >
           {{ item.label }}
         </RouterLink>
+        <RouterLink
+          to="/shortlist"
+          class="shortlist-link"
+          data-shortlist-target
+          :class="{ current: route.name === 'shortlist' }"
+          :aria-current="route.name === 'shortlist' ? 'page' : undefined"
+        >
+          <LucideIcon name="bookmark" :size="16" />
+          候選清單
+          <span v-if="shownCount" class="count">{{ shownCount }}</span>
+        </RouterLink>
       </nav>
 
       <button
         ref="toggleButton"
         type="button"
         class="nav-toggle"
-        aria-label="開啟選單"
+        data-shortlist-target
+        :aria-label="shortlistCount ? `開啟選單（候選清單 ${shortlistCount} 隻）` : '開啟選單'"
         aria-controls="navpanel"
         :aria-expanded="navOpen"
         @click="setNavOpen(true)"
       >
         <LucideIcon name="menu" :size="22" />
+        <span v-if="shownCount" class="dot" aria-hidden="true">{{ shownCount }}</span>
       </button>
     </div>
 
@@ -178,6 +201,15 @@ onBeforeUnmount(() => {
       </div>
 
       <div class="wrap navpanel-links">
+        <RouterLink
+          to="/shortlist"
+          class="shortlist-row"
+          :class="{ current: route.name === 'shortlist' }"
+          :aria-current="route.name === 'shortlist' ? 'page' : undefined"
+        >
+          <span><LucideIcon name="bookmark" :size="18" /> 候選清單（{{ shortlistCount }}）</span>
+          <LucideIcon name="chevron-right" :size="18" />
+        </RouterLink>
         <RouterLink
           v-for="item in NAV"
           :key="item.to"
@@ -289,6 +321,7 @@ onBeforeUnmount(() => {
     color: var(--ink-secondary);
     text-decoration: none;
     font-size: 0.92rem;
+    white-space: nowrap;
 
     &:hover {
       color: var(--ink);
@@ -298,6 +331,39 @@ onBeforeUnmount(() => {
       color: var(--ink);
       font-weight: 700;
     }
+  }
+}
+
+.shortlist-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.75rem;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+
+  & .count {
+    min-width: 1.3rem;
+    padding: 0 0.35rem;
+    border-radius: 999px;
+    background: var(--ramp-4);
+    color: var(--on-accent);
+    font-size: 0.74rem;
+    font-weight: 700;
+    text-align: center;
+  }
+}
+
+.navpanel-links .shortlist-row {
+  background: var(--surface-sunk);
+  margin: 0 -1rem;
+  padding-inline: 1rem;
+  font-weight: 700;
+
+  & span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
   }
 }
 
@@ -319,6 +385,23 @@ onBeforeUnmount(() => {
 
 .nav-toggle {
   display: none;
+  position: relative;
+
+  & .dot {
+    position: absolute;
+    top: 3px;
+    right: 1px;
+    min-width: 1.1rem;
+    padding: 0 0.3rem;
+    border-radius: 999px;
+    background: var(--ramp-4);
+    color: var(--on-accent);
+    box-shadow: 0 0 0 2px var(--surface);
+    font-size: 0.66rem;
+    font-weight: 700;
+    line-height: 1.1rem;
+    text-align: center;
+  }
 }
 
 .nav-close {
@@ -397,6 +480,15 @@ onBeforeUnmount(() => {
       color: var(--accent-text);
       font-weight: 700;
     }
+  }
+}
+
+/* With the shortlist pill the bar needs about 590px of links at the full gap;
+   just above the menu breakpoint that does not fit, and the labels used to
+   break inside a word. A tighter gap keeps one line down to 821px. */
+@media (max-width: 960px) {
+  .mainnav {
+    gap: 0.8rem;
   }
 }
 

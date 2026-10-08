@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import LucideIcon from '@/components/LucideIcon.vue'
+import { useShortlist } from '@/composables/useShortlist'
 import { SEX_LABEL, formatCount, monthDay, monthDayLong, opensAfter } from '@/lib/animals'
 import type { IconName } from '@/lib/icons'
+import { flyToShortlist } from '@/lib/motion'
 import type { Animal } from '@/types'
 
 /** The round-photo card from the drafts. The whole card is the click target;
@@ -30,6 +32,22 @@ const title = computed(() => props.animal.variety || '未填品種')
 const opens = computed(() =>
   opensAfter(props.animal.opendate, props.snapshotDate) ? monthDay(props.animal.opendate) : null,
 )
+
+/* ── The shortlist button ──────────────────────────────────────────────────
+ * On the photo's lower right, the one corner no badge uses at any width. It
+ * only adds or removes; the card's own click still opens the dialog. Adding
+ * throws the photo into the top bar (motion.ts); removing just removes. */
+
+const shortlist = useShortlist()
+const kept = computed(() => shortlist.has(props.animal.id))
+const avatar = ref<HTMLElement | null>(null)
+
+function toggleKept() {
+  if (!kept.value && avatar.value) {
+    flyToShortlist(avatar.value, props.animal.photo && !broken.value ? props.animal.photo : null)
+  }
+  shortlist.toggle(props.animal, props.place, props.snapshotDate)
+}
 
 /* ── Shelter name: one line, the full name on demand ───────────────────────
  * Cut with an ellipsis so every card keeps the same height. The full name
@@ -71,17 +89,30 @@ function onButtonFocus(event: FocusEvent) {
         >
       </span>
     </div>
-    <div class="avatar">
-      <img
-        v-if="animal.photo && !broken"
-        :src="animal.photo"
-        :alt="`${title}，${SEX_LABEL[animal.sex] ?? '性別未填'}`"
-        loading="lazy"
-        decoding="async"
-        referrerpolicy="no-referrer"
-        @error="broken = true"
-      />
-      <span v-else class="fallback">{{ animal.photo ? '照片無法載入' : '無照片' }}</span>
+    <div class="photo">
+      <div ref="avatar" class="avatar">
+        <img
+          v-if="animal.photo && !broken"
+          :src="animal.photo"
+          :alt="`${title}，${SEX_LABEL[animal.sex] ?? '性別未填'}`"
+          loading="lazy"
+          decoding="async"
+          referrerpolicy="no-referrer"
+          @error="broken = true"
+        />
+        <span v-else class="fallback">{{ animal.photo ? '照片無法載入' : '無照片' }}</span>
+      </div>
+      <button
+        type="button"
+        class="keep"
+        :class="{ on: kept }"
+        aria-label="加入候選清單"
+        :aria-pressed="kept"
+        :title="kept ? '已在候選清單，再按一次移除' : '加入候選清單'"
+        @click.stop="toggleKept"
+      >
+        <LucideIcon :name="kept ? 'bookmark-check' : 'bookmark'" :size="16" />
+      </button>
     </div>
 
     <div class="body">
@@ -162,6 +193,39 @@ function onButtonFocus(event: FocusEvent) {
 
 .acard:hover .avatar img {
   transform: scale(1.06);
+}
+
+.photo {
+  position: relative;
+}
+
+/* A 3px ring of the page colour keeps it legible on a dark photo. */
+.keep {
+  position: absolute;
+  right: 4%;
+  bottom: 4%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 0 0 3px var(--plane);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-sunk);
+  }
+
+  &.on {
+    border-color: var(--ramp-4);
+    background: var(--ramp-4);
+    color: var(--on-accent);
+  }
 }
 
 .sr-only {
@@ -257,6 +321,11 @@ function onButtonFocus(event: FocusEvent) {
 
   .full {
     display: none;
+  }
+
+  .keep {
+    width: 32px;
+    height: 32px;
   }
 }
 
