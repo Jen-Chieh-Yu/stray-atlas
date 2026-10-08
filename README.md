@@ -154,10 +154,10 @@ stray-atlas/
 │   ├── types.ts             資料契約的型別
 │   ├── assets/hero/         首頁示意照片（WebP，1920 與 960 寬各一份）
 │   ├── router/              路由與捲動行為
-│   ├── views/               八個頁面（Home、Animals、ShelterList、Shelter、Map、Quality、Analysis、About）
+│   ├── views/               九個頁面（Home、Animals、ShelterList、Shelter、Map、Quality、Analysis、About、Shortlist）
 │   ├── components/          動物卡片與詳細資料、首頁照片輪播、縣市地圖、分析圖表、載入骨架、圖示
-│   ├── composables/         資料載入（useAtlasData）與動物名冊（useRoster）
-│   └── lib/                 共用函式：動物、在所天數、分享文字與分享頁、收容所地址、詳細資料視窗路由、圖示資料、首頁照片與出處、捲動淡入
+│   ├── composables/         資料載入（useAtlasData）、動物名冊（useRoster）與候選清單（useShortlist）
+│   └── lib/                 共用函式：動物、在所天數、分享文字與分享頁、候選清單與它的動態、收容所地址、詳細資料視窗路由、圖示資料、首頁照片與出處、捲動淡入
 ├── tests/                   建置腳本的 pytest 測試（src/lib 的 vitest 測試在 src/lib/__tests__/）
 ├── index.html、vite.config.ts、vitest.config.ts、tsconfig*.json、env.d.ts   vite.config.ts 在 build 時寫出 404.html 與每隻動物的分享頁 /a/<id>/
 ├── eslint.config.js、.prettierrc、.prettierignore、.editorconfig   靜態檢查與格式設定
@@ -181,6 +181,7 @@ stray-atlas/
 | `/quality` | 資料品質：被丟掉的欄位、各欄覆蓋率、各縣市四項登錄完整度評級（不給總分）、同一件事的多種寫法 |
 | `/analysis` | 在所天數分布：長條圖＋KDE（對數／線性、三段平滑）、犬貓 ECDF、分位數表、各分組中位數與四分位距、收容所內毛色對照、各縣市排行 |
 | `/about` | 關於本站：資料來源、處理方式與限制、相關官方網站 |
+| `/shortlist` | 候選清單：讀者在卡片或詳細資料上標記的動物，依收容所分組附電話，可複製收容編號或列印；存在這個瀏覽器的 localStorage，不需帳號 |
 | `/a/<id>/` | 分享連結：build 時為每隻動物產生的小頁面，只帶連結預覽（品種、收容所、照片），讀者打開會立刻轉到該動物的詳細資料；動物離開名單後轉到「不在目前名單」 |
 
 頁面上的資料日期只在頁尾顯示一處，讀自 `public/data/meta.json`。

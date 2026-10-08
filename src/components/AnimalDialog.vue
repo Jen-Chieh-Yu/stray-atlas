@@ -4,8 +4,10 @@ import { RouterLink } from 'vue-router'
 import DialogShell from '@/components/DialogShell.vue'
 import LucideIcon from '@/components/LucideIcon.vue'
 import { daysInShelter } from '@/composables/useAtlasData'
+import { useShortlist } from '@/composables/useShortlist'
 import { animalsLink, formatCount, monthDayLong, opensAfter, pickSiblings } from '@/lib/animals'
 import type { IconName } from '@/lib/icons'
+import { flyToShortlist } from '@/lib/motion'
 import { shareMessage } from '@/lib/share'
 import type { Animal, Kind, Shelter } from '@/types'
 
@@ -20,6 +22,9 @@ const props = defineProps<{
   hideShelterLink?: boolean
 }>()
 const emit = defineEmits<{ close: []; open: [animal: Animal] }>()
+
+/** Its close() fades the dialog out before telling the page (DialogShell.vue). */
+const shell = ref<InstanceType<typeof DialogShell> | null>(null)
 
 const broken = ref(false)
 const copied = ref(false)
@@ -122,6 +127,20 @@ function siblingDays(other: Animal): string {
  * once, so the button never changes under a finger. Desktop browsers that do
  * have a share sheet still copy: on a desktop, pasting is what people do. */
 
+/** The same list the cards' bookmark buttons fill (useShortlist.ts). Adding
+ *  throws the photo over the backdrop into the top bar, and the dialog
+ *  stays open. */
+const shortlist = useShortlist()
+const kept = computed(() => shortlist.has(props.animal.id))
+const photoBox = ref<HTMLElement | null>(null)
+
+function toggleKept() {
+  if (!kept.value && photoBox.value) {
+    flyToShortlist(photoBox.value, props.animal.photo && !broken.value ? props.animal.photo : null)
+  }
+  shortlist.toggle(props.animal, props.shelter?.name ?? '', props.snapshotDate)
+}
+
 const canShare =
   typeof navigator !== 'undefined' &&
   typeof navigator.share === 'function' &&
@@ -157,6 +176,7 @@ async function copy() {
 
 <template>
   <DialogShell
+    ref="shell"
     :label="`${animal.variety || '未填品種'} 的詳細資料`"
     :reset-key="animal.id"
     @close="emit('close')"
@@ -166,7 +186,7 @@ async function copy() {
       <span class="tag">公立收容所資料快照</span>
     </template>
 
-    <div class="photo" :class="{ bare: !animal.photo || broken }">
+    <div ref="photoBox" class="photo" :class="{ bare: !animal.photo || broken }">
       <img
         v-if="animal.photo && !broken"
         :src="animal.photo"
@@ -272,15 +292,27 @@ async function copy() {
       </p>
 
       <footer class="actions">
-        <button v-if="canShare" type="button" class="chip small" @click="share">
-          <LucideIcon name="share" :size="14" />
-          分享
-        </button>
-        <button v-else type="button" class="chip small" :class="{ done: copied }" @click="copy">
-          <LucideIcon v-if="copied" name="check" :size="14" />
-          <span aria-live="polite">{{ copied ? '已複製，可直接貼上' : '複製介紹與連結' }}</span>
-        </button>
-        <button type="button" class="chip small on" @click="emit('close')">關閉</button>
+        <span class="left">
+          <button
+            type="button"
+            class="chip small"
+            :class="{ done: kept }"
+            :aria-pressed="kept"
+            @click="toggleKept"
+          >
+            <LucideIcon :name="kept ? 'bookmark-check' : 'bookmark'" :size="14" />
+            {{ kept ? '已在候選清單' : '加入候選清單' }}
+          </button>
+          <button v-if="canShare" type="button" class="chip small" @click="share">
+            <LucideIcon name="share" :size="14" />
+            分享
+          </button>
+          <button v-else type="button" class="chip small" :class="{ done: copied }" @click="copy">
+            <LucideIcon v-if="copied" name="check" :size="14" />
+            <span aria-live="polite">{{ copied ? '已複製，可直接貼上' : '複製介紹與連結' }}</span>
+          </button>
+        </span>
+        <button type="button" class="chip small on" @click="shell?.close()">關閉</button>
       </footer>
       <div v-if="manual" class="manual">
         <label for="share-text"
@@ -592,6 +624,12 @@ dd {
   & .done {
     border-color: var(--ramp-3);
     color: var(--ink);
+  }
+
+  & .left {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 }
 
