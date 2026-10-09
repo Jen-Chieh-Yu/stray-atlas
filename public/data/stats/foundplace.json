@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-10-08",
-  "generated_at_utc": "2026-10-08T04:14:50Z",
-  "rows": 8504,
+  "snapshot_date": "2026-10-09",
+  "generated_at_utc": "2026-10-09T04:20:20Z",
+  "rows": 8492,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5184,
-    "blank": 1021,
-    "district": 1246,
-    "landmark": 937,
+    "address": 5186,
+    "landmark": 927,
+    "blank": 1022,
+    "district": 1241,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1886,
-      "share": 0.2218
+      "rows": 1889,
+      "share": 0.2224
     },
     "low": {
-      "rows": 5474,
-      "share": 0.6437
+      "rows": 5458,
+      "share": 0.6427
     },
     "none": {
-      "rows": 1137,
-      "share": 0.1337
+      "rows": 1138,
+      "share": 0.134
     }
   },
   "county_source": {
     "text": 188,
-    "shelter": 7179,
-    "none": 1137
+    "shelter": 7166,
+    "none": 1138
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3135,
-    "verified_against_reference": 3132,
+    "extracted": 3133,
+    "verified_against_reference": 3130,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
-      "五股區六合街",
+      "麥寮鄉西濱路二段",
       "新莊區中正路",
-      "金沙鎮汶沙里勝利路",
-      "蘆洲區蘆洲區長安街164號",
-      "三重區三重區環河北路三段108號"
+      "新莊區福壽街",
+      "新店區直潭路92號",
+      "五股區六合街"
     ],
     "low": [
-      "三灣鄉內灣村",
-      "竹子湖路",
-      "中正路205-2號",
-      "復興路30號",
-      "文蘭2之3號"
+      "重慶北路一段",
+      "長安東路一段56巷",
+      "陽明山",
+      "林口街 (拾獲地為文山區老泉里)",
+      "惠安街41巷"
     ],
     "none": [
       "臺北市動物之家",

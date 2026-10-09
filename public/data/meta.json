@@ -1,8 +1,8 @@
 {
-  "snapshot_date": "2026-10-08",
-  "generated_at_utc": "2026-10-08T04:14:49Z",
-  "source_file": "data/raw/2026-10-08.csv.gz",
-  "rows": 8504,
+  "snapshot_date": "2026-10-09",
+  "generated_at_utc": "2026-10-09T04:20:20Z",
+  "source_file": "data/raw/2026-10-09.csv.gz",
+  "rows": 8492,
   "columns_in_source": 28,
   "columns_after_clean": 20,
   "fields": {
@@ -95,22 +95,22 @@
     "animal_Variety": 0.9994,
     "animal_sex": 1.0,
     "animal_bodytype": 1.0,
-    "animal_colour": 0.9702,
+    "animal_colour": 0.9706,
     "animal_age": 0.9699,
     "animal_sterilization": 1.0,
-    "animal_foundplace": 0.8799,
-    "animal_remark": 0.3003,
-    "animal_opendate": 0.9563,
-    "animal_update": 0.7997,
+    "animal_foundplace": 0.8797,
+    "animal_remark": 0.2997,
+    "animal_opendate": 0.9567,
+    "animal_update": 0.7986,
     "animal_createtime": 1.0,
     "shelter_name": 1.0,
-    "album_file": 0.8095,
+    "album_file": 0.8089,
     "shelter_address": 1.0,
     "shelter_tel": 1.0
   },
   "variety_groups": {
-    "mixed": 8031,
-    "breed": 455,
+    "mixed": 8026,
+    "breed": 448,
     "unknown": 18
   },
   "areas": 22,
@@ -169,18 +169,18 @@
     }
   ],
   "days_in_shelter": {
-    "median": 352,
-    "p75": 1228,
-    "p90": 2697,
-    "max": 4711
+    "median": 353,
+    "p75": 1232,
+    "p90": 2699,
+    "max": 4712
   },
   "foundplace": {
-    "rows": 8504,
-    "nonblank_rows": 7483,
-    "unique_values": 4812,
+    "rows": 8492,
+    "nonblank_rows": 7470,
+    "unique_values": 4799,
     "rows_with_county_name": 192,
     "share_of_all_rows_with_county_name": 0.0226,
-    "rows_with_county_or_city_character": 354,
+    "rows_with_county_or_city_character": 353,
     "share_of_nonblank_rows_with_county_or_city_character": 0.0473
   }
 }
