@@ -1,12 +1,12 @@
 {
-  "snapshot_date": "2026-10-09",
-  "generated_at_utc": "2026-10-09T04:20:20Z",
-  "rows": 8492,
+  "snapshot_date": "2026-10-10",
+  "generated_at_utc": "2026-10-10T04:05:18Z",
+  "rows": 8494,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5186,
-    "landmark": 927,
-    "blank": 1022,
+    "address": 5188,
+    "blank": 1023,
+    "landmark": 926,
     "district": 1241,
     "non_place": 116
   },
@@ -20,18 +20,18 @@
       "share": 0.2224
     },
     "low": {
-      "rows": 5458,
+      "rows": 5459,
       "share": 0.6427
     },
     "none": {
-      "rows": 1138,
-      "share": 0.134
+      "rows": 1139,
+      "share": 0.1341
     }
   },
   "county_source": {
     "text": 188,
-    "shelter": 7166,
-    "none": 1138
+    "shelter": 7167,
+    "none": 1139
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
+      "桃園區泰成路",
+      "觀音區保生里電廠二路",
       "麥寮鄉西濱路二段",
       "新莊區中正路",
-      "新莊區福壽街",
-      "新店區直潭路92號",
-      "五股區六合街"
+      "新莊區福壽街"
     ],
     "low": [
-      "重慶北路一段",
-      "長安東路一段56巷",
-      "陽明山",
-      "林口街 (拾獲地為文山區老泉里)",
-      "惠安街41巷"
+      "福星里西寧南路",
+      "文化路２段",
+      "塔腳路",
+      "興南路2段261巷",
+      "紗帽路141巷"
     ],
     "none": [
       "臺北市動物之家",
