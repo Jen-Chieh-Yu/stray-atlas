@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-10-10",
-  "generated_at_utc": "2026-10-10T04:05:18Z",
-  "rows": 8494,
+  "snapshot_date": "2026-10-11",
+  "generated_at_utc": "2026-10-11T03:41:23Z",
+  "rows": 8504,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5188,
-    "blank": 1023,
-    "landmark": 926,
-    "district": 1241,
+    "address": 5193,
+    "landmark": 924,
+    "district": 1244,
+    "blank": 1027,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1889,
-      "share": 0.2224
+      "rows": 1897,
+      "share": 0.2231
     },
     "low": {
-      "rows": 5459,
-      "share": 0.6427
+      "rows": 5457,
+      "share": 0.6417
     },
     "none": {
-      "rows": 1139,
-      "share": 0.1341
+      "rows": 1143,
+      "share": 0.1344
     }
   },
   "county_source": {
     "text": 188,
-    "shelter": 7167,
-    "none": 1139
+    "shelter": 7173,
+    "none": 1143
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3133,
-    "verified_against_reference": 3130,
+    "extracted": 3144,
+    "verified_against_reference": 3141,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
-      "桃園區泰成路",
-      "觀音區保生里電廠二路",
-      "麥寮鄉西濱路二段",
-      "新莊區中正路",
-      "新莊區福壽街"
+      "蘆洲區蘆洲區五華街326之2號",
+      "三重區:三重區大同北路71号",
+      "板橋區永豐街(公園)",
+      "金山區瑪鍊路",
+      "林口區 林口區忠福路355號"
     ],
     "low": [
-      "福星里西寧南路",
-      "文化路２段",
-      "塔腳路",
-      "興南路2段261巷",
-      "紗帽路141巷"
+      "美式咖啡民宿旁",
+      "旗楠路",
+      "西新里南港路二段",
+      "金川街",
+      "小魚的家"
     ],
     "none": [
       "臺北市動物之家",
