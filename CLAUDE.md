@@ -175,7 +175,7 @@ public/data/
 - 部署與資料管線解耦 —— 前端改版不必重跑 Python；管線壞掉（geocoder API 掛掉、套件衝突、來源改格式）時網站仍以前一份資料正常部署，只是資料舊一點，不會整站掛掉
 - diff 雜訊已由 `.gitattributes` 的 `linguist-generated=true` 處理，GitHub 上預設摺疊且不計入語言統計
 
-**配套：來源有變才重算。** 快照（`data/raw/`）每日抓取；當天存成新快照（manifest `stored`）時，同一個 workflow 以 `scripts/build_all.py` 重建 `public/data/`、一起 commit，再觸發部署。來源未變（`unchanged`）或抓取失敗時不重建，避免只有時間戳記不同的 commit。重建失敗時仍 commit 快照、`public/data/` 維持前一份，該次 run 標為失敗。每日重建在 git 裡的增量約 0.06 MB，見 README〈儲存成本（觀察用）〉。（2026-09-17 改；原規定為每週或手動重算）
+**配套：來源有變才重算。** 快照（`data/raw/`）每日抓取；當天存成新快照（manifest `stored`）時，同一個 workflow 以 `scripts/build_all.py` 重建 `public/data/`、一起 commit，再觸發部署。來源未變（`unchanged`）或抓取失敗時不重建，避免只有時間戳記不同的 commit。重建失敗時仍 commit 快照、`public/data/` 維持前一份，該次 run 標為失敗。來源連續 3 天沒有存成新快照（manifest 最新 3 列都不是 `stored`）時，`scripts/check_freshness.py` 讓當天的 run 失敗，免得來源停更而網站安靜地停在舊資料（2026-10-12 加）。每日重建在 git 裡的增量約 0.06 MB，見 README〈儲存成本（觀察用）〉。（2026-09-17 改；原規定為每週或手動重算）
 
 判斷分界：`data/raw/` **不可重現**（漏抓即永久遺失），`public/data/` **可由 `data/raw/` 完整重建**。兩者都進 git，但理由不同——前者是地基，後者是為了部署可靠性。
 
@@ -250,11 +250,15 @@ Assisted-by: Claude <noreply@anthropic.com>
 
 ### 6.3 `.gitignore`
 
-排除 `node_modules/`、`dist/`、`.venv/`、`__pycache__/`、`*.pyc`、`.env` 與 `.env.*`（`.env.example` 例外，要進版控）、`*.local`（含 `.env.local`）、`/tmp/`、`/assets-src/`（首頁照片原檔，可重新下載）。
+排除 `node_modules/`、`dist/`、`.venv/`、`__pycache__/`、`*.pyc`、`.env` 與 `.env.*`（`.env.example` 例外，要進版控）、`*.local`（含 `.env.local`）、`test-results/` 與 `playwright-report/`（Playwright 的失敗紀錄與報告）、`/tmp/`、`/assets-src/`（首頁照片原檔，可重新下載）。
 
 **絕對不可排除 `data/`。** 每日快照 workflow 需要 commit 資料檔進 repo；若被 gitignore 擋掉，workflow 會安靜地什麼都沒存，且要數日後才會發現。
 
 **暫存產物放 `.notes/`，該目錄不進版控。** 設計過程中的原型、模擬畫面、截圖放這裡；桌面用戶端預設寫入的 `Claude outputs/` 同樣排除，避免資料夾重新出現後被 `git add -A` 掃進去。值得保留的結論寫進 `DESIGN.md`，不要以圖片形式 commit。
+
+`.notes/` 另以私人 repo `stray-atlas-notes` 在多台電腦間同步：`.notes/` 底下自成一個 git repo，主 repo 的 `.gitignore` 排除整個目錄，兩邊的 git 指令互不影響。開工前在 `.notes/` 先 `git pull`。它仍是工作筆記，不是權威文件：與本檔、`DESIGN.md`、`README.md` 衝突時以後者為準，裡面的內容也不可在 commit 或 PR 中引用（§6.4）。
+
+理由：主 repo 是公開的作品集，草稿、被推翻的方案與工項清單會讓讀者分不清哪個才是現況；圖片每改一版就在 git 歷史多存一份，刪不掉，每個 clone 的人都要下載。
 
 ---
 
@@ -265,6 +269,7 @@ Assisted-by: Claude <noreply@anthropic.com>
 - 條列以 `- ` 開頭，句尾加句號；行寬 72 字元以內，換行處縮排對齊
 - 需要交代前提時，可在條列前加**一行**前言；超過一行請改寫成條列
 - 結尾空一行後加 §6.1 的 `Assisted-by: Claude <noreply@anthropic.com>`
+- 不寫 `.notes/` 工項清單裡的代號（A、F7、patch A 之類）：讀者看不到那份清單。寫改了什麼；提到之前的 PR 時寫編號（#14），GitHub 會自動連結。PR 標題與內文同樣適用（2026-10-07 起）
 
 理由：這個 repo 的 history 會被面試官掃過。條列式在 `git log` 與 GitHub commit 頁面上三秒可讀完，散文式段落會被略過。
 
@@ -318,10 +323,11 @@ git push -u origin feature/YYYYMMDD-topic
 ### 6.6 分支與 PR（2026-09-17 起）
 
 - 程式、文件、workflow 的改動一律在分支上做，命名 `feature/YYYYMMDD-topic`，從最新的 `main` 開出
-- 分支**一律經 PR 併回 `main`**，合併方式用 Create a merge commit；不在本機 merge 後直接推 `main`
+- 分支**一律經 PR 併回 `main`**，合併方式用 Create a merge commit，標題與說明沿用 GitHub 預設值；不在本機 merge 後直接推 `main`
 - 例外：每日排程機器人直接 commit 到 `main`（快照與重建後的 `public/data/`）
 - 機器人每天推 `main`，所以開分支前先 `git switch main`、`git pull --ff-only`；PR 合併後本機再 pull 一次
-- AI 協作者交付 commit message 時，一併提供 PR 標題（沿用 commit 標題）與英文 PR 內文，寫入 `.git/prNN.md`；內文含 Summary、Commits、Changes、Post-merge checks 四節
+- AI 協作者交付 commit message 時，一併提供 PR 標題（沿用該 PR 第一筆 commit 的標題）與英文 PR 內文，寫入 `.git/prNN.md`；內文含 Summary、Commits、Changes、Post-merge checks 四節，每行 80 字元以內
+- PR 內文寫到 Post-merge checks 為止，**不加**「Generated with Claude Code」之類的結尾。AI 參與只由 commit 的 `Assisted-by` 標示（§6.1），人類提交者是唯一作者
 - `schedule` 只在預設分支觸發，且本專案的 workflow 會推 `main` 或部署網站，PR 階段無法實測；驗證項目寫進 PR 內文，合併後逐項確認
 - `main` 上有名為 `main-protection` 的 ruleset（2026-09-24 起），只含兩條規則：禁止刪除分支、禁止 force push。**刻意不加「必要狀態檢查」**
 
@@ -355,6 +361,20 @@ ruleset 不加必要狀態檢查的理由（2026-09-24 實測）：該規則會�
 - `core.autocrlf` 設為 `true`，避免 CRLF/LF 差異造成雜訊 diff
 - Windows 檔案系統不區分大小寫，`core.ignorecase` 預設為 `true`。**只改大小寫的檔名變更 git 不會偵測到**，必須用 `git mv` 而非檔案總管操作
 - 所有腳本路徑用 `pathlib.Path`，不用字串拼接，避免 `\` 與 `/` 問題
+
+### 8.1 版本與本機檢查（2026-10-12 起）
+
+- **Node**：版本只寫在 `.nvmrc`（24），兩支 workflow 以 `node-version-file` 讀同一個檔。`package.json` 的 `engines` 允許 `^22.13.0 || ^24.0.0 || >=26.0.0`（直接相依套件要求的交集），`.npmrc` 設 `engine-strict=true`，版本不符時 `npm ci` 直接失敗
+- **Python**：腳本最低 3.10（`Path.write_text(newline=)` 需要），CI 用 3.12。資料管線只用標準函式庫；測試與 lint 另裝 `pip install "pytest>=9,<10" "ruff>=0.15,<0.16"`，與 CI 相同
+- **提交前的檢查**與 CI 相同，前端與 Python 各一組：
+
+```powershell
+npm run lint; npm run format:check; npm run type-check; npm test; npm run build; npm run test:e2e
+ruff check .; python -m pytest -q
+```
+
+- `npm run test:e2e` 是 Playwright 煙霧測試：把 `dist/` 掛在 `/stray-atlas/` 子路徑下，逐頁打開，抓 §2.2 那類「本機正常、部署空白」的錯誤。它只測現有的建置結果，改完程式要先 `npm run build`；新電腦第一次執行前先 `npx playwright install chromium`。新增路由時，在 `e2e/smoke.spec.ts` 的 `ROUTES` 加一行
+- **CI runner** 三支 workflow 都用 `ubuntu-latest`，刻意不釘版本（2026-09-29 決定）。GitHub 自 2026-10-19 起分批改用 Ubuntu 26.04，11-19 完成；若每日快照因此失敗，改成 `ubuntu-24.04` 並在當天重抓快照——漏抓的一天補不回來（§3 階段 0）
 
 ---
 
@@ -407,3 +427,9 @@ ruleset 不加必要狀態檢查的理由（2026-09-24 實測）：該規則會�
 - 視覺設計方向（配色、版面風格）
 - 變更授權、命名慣例、語言慣例（§2、§5、§7 皆為已定案的決定）
 - 分析結果與 §1 的約束衝突
+
+### 交付流程（2026-10-12 寫入；先前已照此執行）
+
+- **改 repo 內的檔案前，先把改動整理成 diff 給人類審核**，同意後才套用。`.notes/` 不在此限
+- **畫面上看得到的改動，先出草稿圖**：在 `.notes/drafts/` 做 HTML 草稿並輸出 PNG（`.notes/drafts/png/`），確認方向後才實作
+- **開工前先看 `git status`**：可能有其他工作階段或另一台電腦同時在改，不要覆蓋別人的未提交改動
