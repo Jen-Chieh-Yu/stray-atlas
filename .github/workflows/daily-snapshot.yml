@@ -12,8 +12,9 @@ name: Daily snapshot
 
 on:
   schedule:
-    # 00:00 UTC = 08:00 Asia/Taipei. GitHub delays scheduled runs by tens of
-    # minutes under load and may skip them entirely; the filename is derived
+    # 00:00 UTC = 08:00 Asia/Taipei. GitHub delays scheduled runs under load
+    # (in September 2026 they finished between 09:47 and 14:37 Taipei time,
+    # usually around 11:00) and may skip them entirely; the filename is derived
     # from the Taipei date at run time, so a delay never mislabels a file.
     #
     # Note: GitHub disables cron workflows in a repository with no activity for

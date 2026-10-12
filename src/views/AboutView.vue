@@ -227,7 +227,7 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
         </div>
         <div class="ubox">
           <b>每日</b>
-          <span>每天早上排程更新；來源沒有變動時沿用前一份</span>
+          <span>每天上午排程更新；來源沒有變動時沿用前一份</span>
         </div>
       </div>
       <p>
