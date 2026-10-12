@@ -12,8 +12,9 @@ name: Daily snapshot
 
 on:
   schedule:
-    # 00:00 UTC = 08:00 Asia/Taipei. GitHub delays scheduled runs by tens of
-    # minutes under load and may skip them entirely; the filename is derived
+    # 00:00 UTC = 08:00 Asia/Taipei. GitHub delays scheduled runs under load
+    # (in September 2026 they finished between 09:47 and 14:37 Taipei time,
+    # usually around 11:00) and may skip them entirely; the filename is derived
     # from the Taipei date at run time, so a delay never mislabels a file.
     #
     # Note: GitHub disables cron workflows in a repository with no activity for
@@ -158,12 +159,26 @@ jobs:
           echo "::error::build_all.py failed; the snapshot was archived without a rebuild"
           exit 1
 
+      # An unchanged day is normal; several in a row means the agency stopped
+      # updating the feed, and the site would keep showing an old list with
+      # nothing to flag it. Failing here is what sends the notification. Only
+      # on unchanged days: a stored day resets the count, and a failed fetch
+      # has already failed the run. Runs after the push so the manifest row it
+      # counts is the one committed.
+      - name: Check source freshness
+        id: freshness
+        if: always() && steps.fetch.outputs.status == 'unchanged'
+        run: python scripts/check_freshness.py --days 3
+
       # The fetch step writes the run summary itself: it is what holds the row
       # count, the digest and the manifest, and a workflow step could only echo
       # back whatever was passed through GITHUB_OUTPUT. This catches the one
       # path that leaves no summary behind, an unexpected crash.
       - name: Note an unrecorded failure
-        if: failure() && steps.rebuild.outcome != 'failure'
+        if: >-
+          failure()
+          && steps.rebuild.outcome != 'failure'
+          && steps.freshness.outcome != 'failure'
         run: |
           echo "### Snapshot" >> "${GITHUB_STEP_SUMMARY}"
           echo "" >> "${GITHUB_STEP_SUMMARY}"

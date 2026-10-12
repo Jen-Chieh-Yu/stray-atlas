@@ -1,0 +1,30 @@
+# Lint for scripts/ and tests/. Checks only; formatting is not enforced here,
+# the same split as ESLint and Prettier on the front end.
+#
+# The oldest Python the scripts run on (Path.write_text(newline=) needs 3.10).
+# Both workflows install 3.12; this keeps the rules from suggesting syntax
+# that would quietly raise the minimum, such as datetime.UTC (3.11).
+target-version = "py310"
+# Same width as .editorconfig and .prettierrc use for the front end.
+line-length = 100
+# The scripts import each other by bare name (see scripts/common.py) and the
+# tests import them the same way, so they are this project's own modules,
+# sorted after third-party ones such as pytest.
+src = [".", "scripts"]
+extend-exclude = [".notes", "tmp", "assets-src", "node_modules", "dist"]
+
+[lint]
+select = [
+  "E",  # pycodestyle errors
+  "W",  # pycodestyle warnings
+  "F",  # pyflakes: unused names, undefined names
+  "I",  # import order
+  "UP", # syntax older than the target version
+  "B",  # bugbear: likely bugs
+]
+
+[lint.per-file-ignores]
+# A one-off conversion that needs pyshp and the downloaded boundary archive,
+# so CI cannot run it to prove a change safe. Its zips pair a shape with its
+# own record; leave them until the script is next run by hand.
+"scripts/build_districts.py" = ["B905"]

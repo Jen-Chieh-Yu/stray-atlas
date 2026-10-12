@@ -95,7 +95,7 @@ def build(snapshot_date: str | None) -> dict:
     rows, clean_report = load_clean(snapshot_date)
     graded, _ = annotate(snapshot_date)
     # annotate() re-reads the same snapshot, so the two lists line up by index.
-    for row, extra in zip(rows, graded):
+    for row, extra in zip(rows, graded, strict=True):
         row["foundplace_district"] = extra["foundplace_district"]
         row["district_verified"] = extra["district_verified"]
 

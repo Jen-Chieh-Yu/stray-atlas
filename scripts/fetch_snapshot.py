@@ -228,7 +228,13 @@ def history_table(limit: int = 7) -> list[str]:
     entries = read_manifest()
     if not entries:
         return []
-    lines = ["", "#### Recent snapshots", "", "| date | status | rows | change | sha256 |", "| --- | --- | --- | --- | --- |"]
+    lines = [
+        "",
+        "#### Recent snapshots",
+        "",
+        "| date | status | rows | change | sha256 |",
+        "| --- | --- | --- | --- | --- |",
+    ]
     previous: int | None = None
     deltas: dict[str, str] = {}
     for row in entries:
@@ -332,7 +338,9 @@ def main() -> int:
             set_output(
                 status="unchanged",
                 date=date,
-                commit_message=f"data: manifest {date} (source unchanged since {previous.name[:10]})",
+                commit_message=(
+                    f"data: manifest {date} (source unchanged since {previous.name[:10]})"
+                ),
             )
             return 0
 

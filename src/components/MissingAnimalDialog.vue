@@ -49,7 +49,7 @@ const shell = ref<InstanceType<typeof DialogShell> | null>(null)
           查詢。
         </p>
         <p v-if="newer" class="newer">
-          這個編號比目前名單裡的都新，可能是剛建檔、本站還沒更新到。本站每天早上更新一次。
+          這個編號比目前名單裡的都新，可能是剛建檔、本站還沒更新到。本站每天上午更新一次。
         </p>
       </div>
     </div>

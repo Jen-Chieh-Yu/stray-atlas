@@ -4,12 +4,16 @@
   "private": true,
   "license": "UNLICENSED",
   "type": "module",
+  "engines": {
+    "node": "^22.13.0 || ^24.0.0 || >=26.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --build && vite build",
     "preview": "vite preview",
     "type-check": "vue-tsc --build",
     "test": "vitest run",
+    "test:e2e": "playwright test",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
@@ -21,6 +25,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.63.0",
     "@types/d3-geo": "^3.1.1",
     "@types/node": "^26.4.1",
     "@vitejs/plugin-vue": "^6.0.8",

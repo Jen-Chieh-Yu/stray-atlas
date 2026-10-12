@@ -34,7 +34,14 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from common import PUBLIC_DATA, RAW_DIR, STATS_DIR, latest_snapshot_date, log, relative  # noqa: E402
+from common import (  # noqa: E402
+    PUBLIC_DATA,
+    RAW_DIR,
+    STATS_DIR,
+    latest_snapshot_date,
+    log,
+    relative,
+)
 
 SCRIPTS = Path(__file__).resolve().parent
 
@@ -100,7 +107,9 @@ def main() -> int:
 
     date = args.date or latest_snapshot_date()
     if date is None:
-        raise SystemExit(f"no snapshots in {relative(RAW_DIR)}; run scripts/fetch_snapshot.py first")
+        raise SystemExit(
+            f"no snapshots in {relative(RAW_DIR)}; run scripts/fetch_snapshot.py first"
+        )
     if not (RAW_DIR / f"{date}.csv.gz").exists():
         raise SystemExit(f"no snapshot for {date} in {relative(RAW_DIR)}")
 

@@ -3,6 +3,8 @@
 node_modules
 dist
 coverage
+test-results
+playwright-report
 
 # Generated data, written by the Python pipeline.
 public/data
