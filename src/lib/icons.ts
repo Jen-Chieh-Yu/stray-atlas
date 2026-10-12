@@ -1,7 +1,9 @@
 /** Lucide icons (ISC License, https://lucide.dev), v1.43.0 as used in the
- *  drafts. Geometry is copied unmodified; see THIRD-PARTY-LICENSES.
+ *  drafts. Geometry is copied unmodified; see THIRD-PARTY-LICENSES. Every
+ *  glyph was checked against lucide-static@1.43.0 on 2026-10-12, after three
+ *  were found in their older 0.x shapes; take a new one from that release.
  *
- *  Kept as data rather than as the lucide package: the site uses a dozen
+ *  Kept as data rather than as the lucide package: the site uses three dozen
  *  glyphs, and a table this size is easier to audit than a dependency.
  *
  *  Used by: LucideIcon.vue (draws the shapes), AnimalCard.vue and
@@ -116,9 +118,15 @@ export const ICONS = {
     { d: 'M16 13H8' },
     { d: 'M16 17H8' },
   ],
-  bookmark: [{ d: 'm19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z' }],
+  bookmark: [
+    {
+      d: 'M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z',
+    },
+  ],
   'bookmark-check': [
-    { d: 'm19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z' },
+    {
+      d: 'M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z',
+    },
     { d: 'm9 10 2 2 4-4' },
   ],
   share: [
@@ -128,10 +136,10 @@ export const ICONS = {
   ],
   check: [{ d: 'M20 6 9 17l-5-5' }],
   calendar: [
-    { d: 'M8 2v4' },
-    { d: 'M16 2v4' },
-    { x: 3, y: 4, width: 18, height: 18, rx: 2 },
-    { d: 'M3 10h18' },
+    { d: 'M8 2v3' },
+    { d: 'M16 2v3' },
+    { x: 3, y: 3, width: 18, height: 18, rx: 2 },
+    { d: 'M3 9h18' },
   ],
   dog: [
     { d: 'M11.25 16.25h1.5L12 17z' },
