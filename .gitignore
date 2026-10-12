@@ -12,6 +12,10 @@ dist-ssr/
 # TypeScript incremental build info
 *.tsbuildinfo
 
+# Playwright reports and failure traces (npm run test:e2e)
+test-results/
+playwright-report/
+
 # Logs
 npm-debug.log*
 yarn-error.log*

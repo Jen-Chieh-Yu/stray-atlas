@@ -16,6 +16,9 @@ export default withVueTs(
     ignores: [
       'dist/**',
       'coverage/**',
+      // Playwright's reports and failure traces.
+      'test-results/**',
+      'playwright-report/**',
       // Generated JSON written by the Python pipeline, not code.
       'public/data/**',
       // Scratch prototypes and drafts, kept out of version control.
@@ -41,9 +44,9 @@ export default withVueTs(
     languageOptions: { globals: globals.browser },
   },
 
-  // Build and tool configs run in Node.
+  // Build and tool configs, and the Playwright tests, run in Node.
   {
-    files: ['*.{js,ts}'],
+    files: ['*.{js,ts}', 'e2e/**/*.ts'],
     languageOptions: { globals: globals.node },
   },
 

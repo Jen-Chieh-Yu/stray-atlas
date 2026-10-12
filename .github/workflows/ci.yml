@@ -24,7 +24,8 @@ permissions:
 jobs:
   frontend:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # 15 rather than 10: the Playwright browser install adds a minute or two.
+    timeout-minutes: 15
 
     steps:
       - name: Check out repository
@@ -60,6 +61,26 @@ jobs:
       # same problem.
       - name: Build
         run: npm run build
+
+      # The built site under its /stray-atlas/ sub-path, in a real browser:
+      # the one check that sees a blank deployed page (CLAUDE.md 2.2).
+      # Chromium only; the other browsers would triple the install for a
+      # check about paths, not rendering.
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Smoke tests
+        run: npm run test:e2e
+
+      - name: Keep the Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
 
   pipeline:
     runs-on: ubuntu-latest
