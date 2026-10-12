@@ -27,6 +27,11 @@ silently merge them. The public id is a short hash of the name, which stays
 stable as a shelter is added or removed — a positional index would not, and
 every saved link would shift.
 
+Each shelter also carries `info` from data/reference/shelter-info.json: opening
+hours, how to visit and the adoption notice, kept by hand from the shelters'
+own websites because the open data has none of it. A shelter the file does not
+cover simply has no `info`; a file that does not check out stops the build.
+
 Standard library only.
 """
 
@@ -34,6 +39,8 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -42,11 +49,29 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from build_stats import BUCKETS, KINDS, summarise  # noqa: E402
 from clean import load_clean  # noqa: E402
-from common import PUBLIC_DATA, relative, utc_now, write_json  # noqa: E402
+from common import PUBLIC_DATA, REFERENCE_DIR, relative, utc_now, write_json  # noqa: E402
 
 SHELTERS_PATH = PUBLIC_DATA / "shelters.json"
 ANIMALS_PATH = PUBLIC_DATA / "animals.json"
 LEGACY_ANIMALS_DIR = PUBLIC_DATA / "animals"
+INFO_PATH = REFERENCE_DIR / "shelter-info.json"
+
+# walk-in: the shelter says to come during opening hours; appointment: it says
+# to book first; unstated: it says neither, and the page does not guess.
+VISIT_MODES = ("walk-in", "appointment", "unstated")
+INFO_FIELDS = (
+    "hours",
+    "visit",
+    "visit_note",
+    "caution",
+    "note",
+    "see",
+    "official",
+    "adoption",
+    "sources",
+    "checked",
+)
+DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 # Fields the pages actually render. Everything else stays out of a file that is
 # downloaded by every visitor who opens an animal list.
@@ -71,8 +96,61 @@ def shelter_id(name: str) -> str:
     return hashlib.sha256(name.encode("utf-8")).hexdigest()[:10]
 
 
+def check_info(entries: dict[str, dict]) -> list[str]:
+    """Every way a hand-kept entry can be wrong without anyone noticing."""
+    problems = []
+    for key, entry in entries.items():
+        where = f"{key} {entry.get('name', '?')}"
+        if shelter_id(entry.get("name", "")) != key:
+            problems.append(f"{where}: the key is not the id of this name")
+        if not DATE.fullmatch(entry.get("checked", "")):
+            problems.append(f"{where}: checked must be YYYY-MM-DD")
+        if "same_as" in entry:
+            target = entries.get(entry["same_as"])
+            if target is None or "same_as" in target:
+                problems.append(f"{where}: same_as must name an entry that has its own data")
+            if not entry.get("note"):
+                problems.append(f"{where}: same_as needs a note saying why")
+            continue
+        if entry.get("visit") not in (*VISIT_MODES, None):
+            problems.append(f"{where}: visit must be one of {', '.join(VISIT_MODES)} or null")
+        if not entry.get("hours") and not entry.get("note"):
+            problems.append(f"{where}: without hours, a note must say why")
+        if entry.get("see") is not None and entry["see"] not in entries:
+            problems.append(f"{where}: see must name another entry")
+        links = [source.get("url", "") for source in entry.get("sources", [])]
+        if not links:
+            problems.append(f"{where}: at least one source")
+        if entry.get("adoption"):
+            links.append(entry["adoption"].get("url", ""))
+        if entry.get("official"):
+            links.append(entry["official"].get("source", {}).get("url", ""))
+        problems.extend(f"{where}: {link!r} is not an https link"
+                        for link in links if not link.startswith("https://"))
+    return problems
+
+
+def load_info(path: Path = INFO_PATH) -> dict[str, dict]:
+    """The hand-kept entries by shelter id, with same_as followed: a shelter
+    listed twice in the open data shows the other entry's details under its
+    own note."""
+    entries = json.loads(path.read_text(encoding="utf-8"))["shelters"]
+    problems = check_info(entries)
+    if problems:
+        raise ValueError(f"{relative(path)}:\n  " + "\n  ".join(problems))
+    resolved = {}
+    for key, entry in entries.items():
+        base = entries[entry["same_as"]] if "same_as" in entry else entry
+        info = {field: base[field] for field in INFO_FIELDS if base.get(field) is not None}
+        if "same_as" in entry:
+            info["note"] = entry["note"]
+        resolved[key] = info
+    return resolved
+
+
 def build(snapshot_date: str | None) -> tuple[dict, list[dict]]:
     rows, report = load_clean(snapshot_date)
+    info = load_info()
 
     grouped: dict[str, list[dict]] = {}
     for row in rows:
@@ -98,6 +176,8 @@ def build(snapshot_date: str | None) -> tuple[dict, list[dict]]:
         }
         for kind in KINDS:
             entry[kind] = summarise([row for row in members if row["animal_kind"] == kind])
+        if identifier in info:
+            entry["info"] = info[identifier]
         shelters.append(entry)
 
         animals.extend(
@@ -135,6 +215,12 @@ def main() -> int:
     for shelter in payload["shelters"][:5]:
         print(f"  {shelter['county']:5s} {shelter['name']:28s} {shelter['all']['count']:5d}")
     print("  ...")
+    missing = [shelter["name"] for shelter in payload["shelters"] if "info" not in shelter]
+    print(f"visitor info for {len(payload['shelters']) - len(missing)} shelters")
+    if missing:
+        # A new shelter in the feed: the page still works, it just has no
+        # hours yet. Say so in the log rather than fail the daily build.
+        print(f"::warning::no entry in {relative(INFO_PATH)} for: {', '.join(missing)}")
 
     if args.dry_run:
         print("dry run, nothing written")

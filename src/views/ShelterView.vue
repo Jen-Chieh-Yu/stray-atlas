@@ -10,7 +10,16 @@ import ShelterSpark from '@/components/ShelterSpark.vue'
 import { useRoster } from '@/composables/useRoster'
 import { animalsLink, formatCount, isNewerId, median } from '@/lib/animals'
 import { closeAnimalDialog } from '@/lib/dialogRoute'
-import { addressesOf, mapEmbedUrl, mapOpenUrl, phoneOf } from '@/lib/shelters'
+import {
+  VISIT_LABEL,
+  addressesOf,
+  dialHref,
+  infoIsStale,
+  INFO_STALE_AFTER_DAYS,
+  mapEmbedUrl,
+  mapOpenUrl,
+  phoneOf,
+} from '@/lib/shelters'
 import type { Animal, Kind } from '@/types'
 
 /* The shelter introduction page (.notes/drafts/shelter-detail.html): its
@@ -57,6 +66,17 @@ const addresses = computed(() => (shelter.value ? addressesOf(shelter.value) : [
 const phone = computed(() => (shelter.value ? phoneOf(shelter.value) : null))
 const primary = computed(() => addresses.value[0] ?? null)
 const embed = computed(() => (primary.value ? mapEmbedUrl(primary.value) : null))
+
+/* ── Hours and how to visit (data/reference/shelter-info.json) ─────────────
+ * Kept by hand from the shelter's own site, so each line says where it came
+ * from and when it was last read. Where the open data's phone or address
+ * looks wrong, the site's own is listed under it, never in its place. */
+
+const info = computed(() => shelter.value?.info ?? null)
+const stale = computed(() => (info.value ? infoIsStale(info.value) : false))
+const see = computed(() =>
+  info.value?.see ? (shelterById.value.get(info.value.see) ?? null) : null,
+)
 
 function share(count: number): string {
   const total = shelter.value?.all.count ?? 0
@@ -187,12 +207,64 @@ function close() {
           /></span>
           <div class="sect-title">
             <h2 id="s-contact">聯絡與位置</h2>
-            <p>地址與電話來自原始資料；地圖由 Google 依地址定位，入口請以現場指標為準。</p>
+            <p>
+              開放時間與參觀方式由本站整理自收容所官網；地址與電話來自原始資料；地圖由 Google
+              依地址定位，入口請以現場指標為準。
+            </p>
           </div>
         </div>
 
         <div class="intro">
           <section class="panel contact" aria-label="聯絡方式">
+            <template v-if="info">
+              <div class="crow">
+                <LucideIcon name="clock" :size="18" />
+                <div>
+                  <span class="k">開放時間</span>
+                  <span v-if="info.hours" class="v" :class="{ faded: stale }">{{
+                    info.hours
+                  }}</span>
+                  <span v-else class="v missing">
+                    {{ info.note ?? '官方網站沒有公布開放時間，請先來電詢問。' }}
+                  </span>
+                  <span v-if="info.hours && info.note" class="sub">{{ info.note }}</span>
+                  <RouterLink v-if="see" :to="`/shelters/${see.id}`" class="see">
+                    前往「{{ see.name }}」 <LucideIcon name="arrow-right" :size="14" />
+                  </RouterLink>
+                  <p v-if="info.caution" class="caution">
+                    <LucideIcon name="triangle-alert" :size="14" />
+                    <span>{{ info.caution }}</span>
+                  </p>
+                  <p v-if="stale" class="caution">
+                    <LucideIcon name="triangle-alert" :size="14" />
+                    <span
+                      >資訊可能過時：本站最後確認是 {{ info.checked }}，已超過
+                      {{ INFO_STALE_AFTER_DAYS }} 天。請以收容所官網或電話為準。</span
+                    >
+                  </p>
+                </div>
+              </div>
+              <div v-if="info.visit" class="crow">
+                <LucideIcon name="calendar" :size="18" />
+                <div>
+                  <span class="k">參觀方式</span>
+                  <span class="v">
+                    <span class="visit" :class="info.visit">{{ VISIT_LABEL[info.visit] }}</span>
+                    {{ info.visit_note }}
+                  </span>
+                </div>
+              </div>
+              <div v-if="info.adoption" class="crow">
+                <LucideIcon name="file-text" :size="18" />
+                <div>
+                  <span class="k">認養須知</span>
+                  <a :href="info.adoption.url" class="ext" target="_blank" rel="noreferrer">
+                    {{ info.adoption.title }} <LucideIcon name="external-link" :size="14" />
+                  </a>
+                  <span class="sub">本站只連結，不轉抄規定；條件以收容所公告為準。</span>
+                </div>
+              </div>
+            </template>
             <div class="crow">
               <LucideIcon name="map-pin" :size="18" />
               <div>
@@ -209,6 +281,14 @@ function close() {
                 >
                   {{ address.text }}
                 </span>
+                <span v-if="info?.official?.address" class="sub official">
+                  官網寫的地址：{{ info.official.address }}（<a
+                    :href="info.official.source.url"
+                    target="_blank"
+                    rel="noreferrer"
+                    >{{ info.official.source.title }}</a
+                  >）
+                </span>
               </div>
             </div>
             <div class="crow">
@@ -218,8 +298,30 @@ function close() {
                 <a v-if="phone?.href" class="tel" :href="phone.href">{{ phone.text }}</a>
                 <span v-else class="v missing">電話欄位不完整（原始資料：{{ shelter.tel }}）</span>
                 <span v-if="phone?.href" class="sub">手機點一下即可撥號</span>
+                <span v-if="info?.official?.tel" class="sub official">
+                  官網寫的電話：<a
+                    v-if="dialHref(info.official.tel)"
+                    :href="dialHref(info.official.tel) ?? undefined"
+                    class="tel small"
+                    >{{ info.official.tel }}</a
+                  ><template v-else>{{ info.official.tel }}</template
+                  >（<a :href="info.official.source.url" target="_blank" rel="noreferrer">{{
+                    info.official.source.title
+                  }}</a
+                  >）
+                </span>
               </div>
             </div>
+            <p v-if="info" class="src">
+              開放時間與參觀方式整理自<template
+                v-for="(source, index) in info.sources"
+                :key="source.url"
+                >{{ index ? '、' : ' '
+                }}<a :href="source.url" target="_blank" rel="noreferrer">{{
+                  source.title
+                }}</a></template
+              >，最後確認 {{ info.checked }}。
+            </p>
             <div class="callout">
               <b>本站不辦理認養。</b
               >名單以頁尾的快照日期為準，上面的動物可能已經被認養；開放時間、預約方式與認養規定，請以收容所現場公告為準。
@@ -586,6 +688,91 @@ a.sect-link:hover {
   text-decoration: none;
 
   &:hover {
+    color: var(--accent-text);
+  }
+}
+
+/* ── Hours and how to visit ── */
+.faded {
+  color: var(--ink-muted);
+}
+
+.see,
+.ext {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.3rem;
+  color: var(--accent-text);
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.ext {
+  margin-top: 0;
+}
+
+/* Disputed or old hours: worth a call before setting out. */
+.caution {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  margin: 0.45rem 0 0;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--ramp-2);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunk);
+  color: var(--ink-secondary);
+  font-size: 0.8rem;
+  line-height: 1.6;
+
+  & svg {
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+    color: var(--accent-text);
+  }
+}
+
+/* 須先預約 is the one a visitor must act on, so only it is filled. */
+.visit {
+  display: inline-block;
+  margin-right: 0.35rem;
+  padding: 0 0.55rem;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+
+  &.appointment {
+    border-color: var(--ramp-4);
+    background: var(--ramp-4);
+    color: var(--on-accent);
+  }
+
+  &.unstated {
+    border-color: var(--hairline);
+    color: var(--ink-muted);
+    font-weight: 400;
+  }
+}
+
+.official a {
+  color: var(--accent-text);
+}
+
+.tel.small {
+  font-size: 0.95rem;
+}
+
+.src {
+  margin: 0;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--hairline);
+  color: var(--ink-muted);
+  font-size: 0.78rem;
+  line-height: 1.6;
+
+  & a {
     color: var(--accent-text);
   }
 }

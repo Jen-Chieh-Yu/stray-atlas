@@ -1,6 +1,6 @@
 {
  "snapshot_date": "2026-10-11",
- "generated_at_utc": "2026-10-11T03:41:24Z",
+ "generated_at_utc": "2026-10-12T01:36:52Z",
  "buckets": [
   {
    "label": "30 天內",
@@ -116,6 +116,22 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週二至週日 10:00–12:30、13:30–16:00；週一僅受理寵物屍體委託焚化；國定假日不提供服務",
+    "visit": "unstated",
+    "visit_note": "認養時於服務時間參訪犬舍、挑選狗卡；團體參訪另有預約制。",
+    "adoption": {
+     "url": "https://www.tcapo.gov.taipei/cp.aspx?n=540601EBB8FD4066",
+     "title": "臺北市動物保護處〈認養步驟／須知〉"
+    },
+    "sources": [
+     {
+      "url": "https://www.tcapo.gov.taipei/cp.aspx?n=540601EBB8FD4066",
+      "title": "臺北市動物保護處〈認養步驟／須知〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -190,6 +206,26 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週二至週日 10:00–12:00、14:00–16:00（週一閉館消毒）",
+    "visit": "unstated",
+    "visit_note": "認養前須完成線上生命教育課程、訪談評估，並加入動物之家 LINE 群組。",
+    "adoption": {
+     "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/4482",
+     "title": "新北市動物保護防疫處〈民眾認養動物辦理流程〉"
+    },
+    "sources": [
+     {
+      "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/4253",
+      "title": "新北市動物保護防疫處〈五股區公立動物之家〉"
+     },
+     {
+      "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/92782",
+      "title": "新北市動物保護防疫處新聞稿（2026-07-17，每週一閉館消毒）"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -264,6 +300,22 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週二至週六 10:00–12:00、14:00–16:00（週日、週一不開放）",
+    "visit": "unstated",
+    "visit_note": "認養前須完成線上生命教育課程、訪談評估，並加入動物之家 LINE 群組。",
+    "adoption": {
+     "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/4482",
+     "title": "新北市動物保護防疫處〈民眾認養動物辦理流程〉"
+    },
+    "sources": [
+     {
+      "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/4247",
+      "title": "新北市動物保護防疫處〈新店區公立動物之家〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -338,6 +390,27 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週一至週五 10:00–12:00、14:00–16:00",
+    "visit": "unstated",
+    "visit_note": "認養前須完成線上生命教育課程、訪談評估，並加入動物之家 LINE 群組。",
+    "caution": "官方公告不一致：動物之家頁面寫週一開放，2026-07 的新聞稿寫新北各動物之家每週一閉館消毒。請先來電確認。",
+    "adoption": {
+     "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/4482",
+     "title": "新北市動物保護防疫處〈民眾認養動物辦理流程〉"
+    },
+    "sources": [
+     {
+      "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/4252",
+      "title": "新北市動物保護防疫處〈八里區公立動物之家〉"
+     },
+     {
+      "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/92782",
+      "title": "新北市動物保護防疫處新聞稿（2026-07-17，每週一閉館消毒）"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -412,6 +485,26 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週二至週日 10:00–12:00、14:00–16:00（週一閉館消毒）",
+    "visit": "unstated",
+    "visit_note": "認養前須完成線上生命教育課程、訪談評估，並加入動物之家 LINE 群組。",
+    "adoption": {
+     "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/4482",
+     "title": "新北市動物保護防疫處〈民眾認養動物辦理流程〉"
+    },
+    "sources": [
+     {
+      "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/4246",
+      "title": "新北市動物保護防疫處〈中和區公立動物之家〉"
+     },
+     {
+      "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/92782",
+      "title": "新北市動物保護防疫處新聞稿（2026-07-17，每週一閉館消毒）"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -486,6 +579,34 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週一至週五 10:00–12:00、14:00–16:00",
+    "visit": "unstated",
+    "visit_note": "認養前須完成線上生命教育課程、訪談評估，並加入動物之家 LINE 群組。",
+    "caution": "官方公告不一致：動物之家頁面寫週一開放，2026-07 的新聞稿寫新北各動物之家每週一閉館消毒。請先來電確認。",
+    "official": {
+     "address": "新北市三芝區圓山里4鄰木屐寮38之9號",
+     "source": {
+      "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/4270",
+      "title": "新北市動物保護防疫處〈三芝區公立動物之家〉"
+     }
+    },
+    "adoption": {
+     "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/4482",
+     "title": "新北市動物保護防疫處〈民眾認養動物辦理流程〉"
+    },
+    "sources": [
+     {
+      "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/4270",
+      "title": "新北市動物保護防疫處〈三芝區公立動物之家〉"
+     },
+     {
+      "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/92782",
+      "title": "新北市動物保護防疫處新聞稿（2026-07-17，每週一閉館消毒）"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -560,6 +681,26 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週二至週日 10:00–12:00、14:00–16:00（週一閉館消毒）",
+    "visit": "unstated",
+    "visit_note": "認養前須完成線上生命教育課程、訪談評估，並加入動物之家 LINE 群組。",
+    "adoption": {
+     "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/4482",
+     "title": "新北市動物保護防疫處〈民眾認養動物辦理流程〉"
+    },
+    "sources": [
+     {
+      "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/4245",
+      "title": "新北市動物保護防疫處〈板橋區公立動物之家〉"
+     },
+     {
+      "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/92782",
+      "title": "新北市動物保護防疫處新聞稿（2026-07-17，每週一閉館消毒）"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -634,6 +775,27 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週一至週五 10:00–12:00、14:00–16:00",
+    "visit": "unstated",
+    "visit_note": "認養前須完成線上生命教育課程、訪談評估，並加入動物之家 LINE 群組。",
+    "caution": "官方公告不一致：動物之家頁面寫週一開放，2026-07 的新聞稿寫新北各動物之家每週一閉館消毒。請先來電確認。",
+    "adoption": {
+     "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/4482",
+     "title": "新北市動物保護防疫處〈民眾認養動物辦理流程〉"
+    },
+    "sources": [
+     {
+      "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/4265",
+      "title": "新北市動物保護防疫處〈淡水區公立動物之家〉"
+     },
+     {
+      "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/92782",
+      "title": "新北市動物保護防疫處新聞稿（2026-07-17，每週一閉館消毒）"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -709,6 +871,31 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週一至週五 10:00–12:00、14:00–16:00",
+    "visit": "unstated",
+    "visit_note": "有免費接駁計程車，從瑞芳火車站直達，須提前兩天預約（0932-924-672）。",
+    "caution": "官方公告不一致：動物之家頁面寫週一開放，2026-07 的新聞稿寫新北各動物之家每週一閉館消毒。請先來電確認。",
+    "adoption": {
+     "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/4482",
+     "title": "新北市動物保護防疫處〈民眾認養動物辦理流程〉"
+    },
+    "sources": [
+     {
+      "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/4244",
+      "title": "新北市動物保護防疫處〈瑞芳區公立動物之家〉"
+     },
+     {
+      "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/92696",
+      "title": "新北市動物保護防疫處新聞稿（2026-04-16，免費接駁）"
+     },
+     {
+      "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/92782",
+      "title": "新北市動物保護防疫處新聞稿（2026-07-17，每週一閉館消毒）"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -783,6 +970,20 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "這裡是機關辦公室，不開放認養，請到新北市各區公立動物之家。機關上班時間：週一至週五 8:00–12:00、13:30–17:30",
+    "adoption": {
+     "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/4482",
+     "title": "新北市動物保護防疫處〈民眾認養動物辦理流程〉"
+    },
+    "sources": [
+     {
+      "url": "https://www.ahiqo.ntpc.gov.tw/#/Post/4141",
+      "title": "新北市動物保護防疫處〈本處位置〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -857,6 +1058,21 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週二至週六 10:00–12:00、13:00–16:00（週日、週一、國定假日及連續假日不開放）",
+    "visit": "unstated",
+    "adoption": {
+     "url": "https://www.klaphio.klcg.gov.tw/tw/klaphio/1342-104329.html",
+     "title": "基隆市動物保護防疫所〈寵物銀行動物收容所認養寵物程序〉"
+    },
+    "sources": [
+     {
+      "url": "https://www.klaphio.klcg.gov.tw/tw/klaphio/1339-301206.html",
+      "title": "基隆市動物保護防疫所〈基隆市寵物銀行管理作業規範〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -931,6 +1147,33 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週一、二、四、五 10:00–12:00、13:00–16:00（週三辦理絕育，暫停開放）；週六 10:30–14:30 彈性開放，以臉書粉專公告為準",
+    "visit": "walk-in",
+    "visit_note": "民眾自行前往辦理領養，須攜帶身分證件並簽切結書。",
+    "official": {
+     "tel": "(03)9602350 分機 620",
+     "source": {
+      "url": "https://animal.moa.gov.tw/Frontend/PublicShelter/Detail/PS00000019",
+      "title": "農業部動物保護資訊網〈宜蘭縣流浪動物中途之家〉"
+     }
+    },
+    "adoption": {
+     "url": "https://animal.e-land.gov.tw/cp.aspx?n=5909",
+     "title": "宜蘭縣動植物防疫所〈收容處理作業〉"
+    },
+    "sources": [
+     {
+      "url": "https://animal.moa.gov.tw/Frontend/PublicShelter/Detail/PS00000019",
+      "title": "農業部動物保護資訊網〈宜蘭縣流浪動物中途之家〉"
+     },
+     {
+      "url": "https://animal.e-land.gov.tw/cp.aspx?n=5909",
+      "title": "宜蘭縣動植物防疫所〈收容處理作業〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -1005,6 +1248,22 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週二、四、五、六、日 09:30–12:00、13:00–16:00（週一、週三及國定假日連假休園）",
+    "visit": "walk-in",
+    "visit_note": "開放日可直接入園參觀與認養；休園日仍受理指定認養，但不開放進入動物舍。",
+    "adoption": {
+     "url": "https://taw.tycg.gov.tw/X10_QandA.aspx",
+     "title": "桃園市動物保護教育園區〈常見問答〉"
+    },
+    "sources": [
+     {
+      "url": "https://animal.tycg.gov.tw/News_Content.aspx?n=8558&sms=12551&s=873136",
+      "title": "桃園市動物保護處〈園區開放時間〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -1079,6 +1338,21 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週二至週五 09:00–11:30、13:00–16:00；週六 10:00–12:00、13:00–15:00（週日、週一及國定假日不開放）",
+    "visit": "unstated",
+    "adoption": {
+     "url": "https://apc.hsinchu.gov.tw/%e6%94%b6%e5%ae%b9%e6%89%80%e8%aa%8d%e9%a0%98%e9%a4%8a%e6%b5%81%e7%a8%8b/",
+     "title": "新竹縣動物保護防疫所〈收容所認領養流程〉"
+    },
+    "sources": [
+     {
+      "url": "https://apc.hsinchu.gov.tw/",
+      "title": "新竹縣動物保護防疫所"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -1153,6 +1427,22 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週二至週五 09:00–11:30、13:00–16:00；週六 10:00–12:00、13:00–15:00（週日、週一及國定假日不開放）",
+    "visit": "unstated",
+    "adoption": {
+     "url": "https://apc.hsinchu.gov.tw/%e6%94%b6%e5%ae%b9%e6%89%80%e8%aa%8d%e9%a0%98%e9%a4%8a%e6%b5%81%e7%a8%8b/",
+     "title": "新竹縣動物保護防疫所〈收容所認領養流程〉"
+    },
+    "sources": [
+     {
+      "url": "https://apc.hsinchu.gov.tw/",
+      "title": "新竹縣動物保護防疫所"
+     }
+    ],
+    "checked": "2026-10-12",
+    "note": "這是主管機關，與「新竹縣動物保護教育園區」同一個地址與電話，開放資料分成兩筆登錄，這裡顯示的是園區的資訊。"
    }
   },
   {
@@ -1227,6 +1517,23 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週一至週五 10:00–12:00、14:00–16:00；週六 10:00–12:00（週日及國定假日休息）",
+    "visit": "appointment",
+    "visit_note": "須先上完飼主責任教育課程，經動保所評估後，再通知到園區領養。",
+    "caution": "官方公告不一致：認養流程頁寫上午 10:00–12:00；較新的作業規範寫上午 10:00–11:30，且沒有列週六。請先來電確認。",
+    "adoption": {
+     "url": "https://puppy.hccg.gov.tw/ch/home.jsp?id=20049&parentpath=0,6",
+     "title": "新竹市動物保護及防疫所〈認養動物流程〉"
+    },
+    "sources": [
+     {
+      "url": "https://puppy.hccg.gov.tw/ch/home.jsp?id=20049&parentpath=0,6",
+      "title": "新竹市動物保護及防疫所〈認養動物流程〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -1301,6 +1608,17 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週二至週六 10:00–12:00、13:00–16:00（週日、週一、例假日、國定假日及連續假日不開放）",
+    "visit": "unstated",
+    "sources": [
+     {
+      "url": "https://animal.miaoli.gov.tw/News_Content.aspx?n=2186&s=260018",
+      "title": "苗栗縣動物保護防疫所〈開放參觀認養時間〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -1376,6 +1694,18 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週二至週六 10:00–12:00、13:00–16:00（週日、週一、例假日、國定假日及連續假日不開放）",
+    "visit": "unstated",
+    "sources": [
+     {
+      "url": "https://animal.miaoli.gov.tw/News_Content.aspx?n=2186&s=260018",
+      "title": "苗栗縣動物保護防疫所〈開放參觀認養時間〉"
+     }
+    ],
+    "checked": "2026-10-12",
+    "note": "與「苗栗縣動物保護教育園區」是同一處：地址、電話相同，官方公告的標題已改用新名稱。開放資料分成兩筆登錄，這裡顯示的是園區的資訊。"
    }
   },
   {
@@ -1450,6 +1780,23 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週一、二、四、六 13:30–16:00（最後入園 15:30；週三、五、日休園消毒；國定假日依公告）",
+    "visit": "walk-in",
+    "visit_note": "開放時間內直接到園區參觀、挑選犬貓；團體另有預約導覽。",
+    "caution": "官方公告不一致：同一頁的參觀時間是週一、二、四、六，犬貓認養作業時間卻是週一至週六。請先來電確認。",
+    "adoption": {
+     "url": "https://www.animal.taichung.gov.tw/2931792/Lpsimplelist",
+     "title": "臺中市動物保護防疫處〈認領養前注意事項及流程〉"
+    },
+    "sources": [
+     {
+      "url": "https://www.animal.taichung.gov.tw/1521448/1521481/2483316/2483328/post",
+      "title": "臺中市動物保護防疫處〈園區介紹〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -1524,6 +1871,30 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週一、二、四、六 13:30–16:00（最後入園 15:30；週三、五、日休園消毒；國定假日依公告）",
+    "visit": "walk-in",
+    "visit_note": "開放時間內直接到園區參觀、挑選犬貓；團體另有預約導覽。",
+    "caution": "官方公告不一致：同一頁的參觀時間是週一、二、四、六，犬貓認養作業時間卻是週一至週六。請先來電確認。",
+    "official": {
+     "tel": "(04)23850949",
+     "source": {
+      "url": "https://www.animal.taichung.gov.tw/1521448/1521481/2483316/2483328/post",
+      "title": "臺中市動物保護防疫處〈園區介紹〉"
+     }
+    },
+    "adoption": {
+     "url": "https://www.animal.taichung.gov.tw/2931792/Lpsimplelist",
+     "title": "臺中市動物保護防疫處〈認領養前注意事項及流程〉"
+    },
+    "sources": [
+     {
+      "url": "https://www.animal.taichung.gov.tw/1521448/1521481/2483316/2483328/post",
+      "title": "臺中市動物保護防疫處〈園區介紹〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -1598,6 +1969,29 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週二至週五 10:30–12:00、14:00–15:30（最後入園 15:00）；週六採預約制；週日、週一及國定連續假日不開放",
+    "visit": "walk-in",
+    "visit_note": "週二至週五可直接前往；週六須在週四 15:30 前電話預約。",
+    "official": {
+     "tel": "0972-821052",
+     "source": {
+      "url": "https://www.chcgadcc.gov.tw/?aid=501&page_name=detail&iid=453",
+      "title": "彰化縣動物防疫所公告（2026-09-22）"
+     }
+    },
+    "sources": [
+     {
+      "url": "https://animal.moa.gov.tw/Frontend/PublicShelter/Detail/PS00000032",
+      "title": "農業部動物保護資訊網〈彰化縣流浪狗中途之家臨時收容所〉"
+     },
+     {
+      "url": "https://www.chcgadcc.gov.tw/?aid=501&page_name=detail&iid=453",
+      "title": "彰化縣動物防疫所公告（2026-09-22）"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -1672,6 +2066,17 @@
      0,
      0
     ]
+   },
+   "info": {
+    "note": "農業部的公立收容所名錄只列芳苑的臨時收容所；新聞報導（工商時報 2026-06-12）說這裡的原址正改建為動物保護教育園區。",
+    "see": "ad3f398c00",
+    "sources": [
+     {
+      "url": "https://animal.moa.gov.tw/Frontend/PublicShelter",
+      "title": "農業部動物保護資訊網〈公立動物收容所〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -1746,6 +2151,21 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "認養：週一至週五 9:00–11:30、13:30–16:00，週六 9:00–11:30；參觀：每天 9:00–11:30、13:30–16:00（國定假日不開放認養）",
+    "visit": "unstated",
+    "adoption": {
+     "url": "https://adcc.nantou.gov.tw/1482/44",
+     "title": "南投縣家畜疾病防治所〈領回領養流浪犬須知〉"
+    },
+    "sources": [
+     {
+      "url": "https://animal.moa.gov.tw/Frontend/PublicShelter/Detail/PS00000018",
+      "title": "農業部動物保護資訊網〈南投縣公立動物收容所〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -1820,6 +2240,16 @@
      0,
      0
     ]
+   },
+   "info": {
+    "note": "農業部的公立收容所名錄寫雲林縣沒有公立收容所；動物由代收容的動物醫院或代養場照顧，這個地址是雲林縣動植物防疫所。請先來電詢問要到哪裡看動物。",
+    "sources": [
+     {
+      "url": "https://animal.moa.gov.tw/Frontend/PublicShelter",
+      "title": "農業部動物保護資訊網〈公立動物收容所〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -1894,6 +2324,22 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週二至週五 9:00–11:30、13:30–16:00；週六 9:00–11:30（週日、週一及國定連續假日休園）",
+    "visit": "unstated",
+    "caution": "官方公告不一致：縣府頁面寫國定連續假日休園，農業部頁面寫國定假日休園。請先來電確認。",
+    "adoption": {
+     "url": "https://ldcc.cyhg.gov.tw/cp.aspx?n=4772",
+     "title": "嘉義縣家畜疾病防治所〈認領養須知〉"
+    },
+    "sources": [
+     {
+      "url": "https://ldcc.cyhg.gov.tw/cp.aspx?n=11689",
+      "title": "嘉義縣家畜疾病防治所〈園區簡介〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -1968,6 +2414,17 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週二至週六 9:00–11:30、14:00–16:30",
+    "visit": "unstated",
+    "sources": [
+     {
+      "url": "https://animal.moa.gov.tw/Frontend/PublicShelter/Detail/PS00000022",
+      "title": "農業部動物保護資訊網〈嘉義市動物保護教育園區〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -2043,6 +2500,21 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週二至週六 09:00–12:00、13:30–16:30（週日、週一及國定例假日不開放）",
+    "visit": "unstated",
+    "adoption": {
+     "url": "https://ahipo.tainan.gov.tw/cp.aspx?n=5392",
+     "title": "臺南市動物防疫保護處〈認養手續〉"
+    },
+    "sources": [
+     {
+      "url": "https://ahipo.tainan.gov.tw/cp.aspx?n=5395",
+      "title": "臺南市動物防疫保護處〈各站位置〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -2117,6 +2589,21 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週二至週六 09:00–12:00、13:30–16:30（週日、週一及國定例假日不開放）",
+    "visit": "unstated",
+    "adoption": {
+     "url": "https://ahipo.tainan.gov.tw/cp.aspx?n=5392",
+     "title": "臺南市動物防疫保護處〈認養手續〉"
+    },
+    "sources": [
+     {
+      "url": "https://ahipo.tainan.gov.tw/cp.aspx?n=5395",
+      "title": "臺南市動物防疫保護處〈各站位置〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -2191,6 +2678,23 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週二至週日 09:30–12:00、13:30–17:00（週一及國定假日休園）",
+    "visit": "walk-in",
+    "visit_note": "開園時間內現場與動物互動後，到櫃檯辦理認養。",
+    "caution": "官方公告不一致：認養須知頁寫週二至週日，較舊的交通資訊頁寫週日也休園。請先來電確認。",
+    "adoption": {
+     "url": "https://livestock.kcg.gov.tw/Pets/DongwuShourong/RenyangChengxu.htm",
+     "title": "高雄市動物保護處〈認領養程序及須知〉"
+    },
+    "sources": [
+     {
+      "url": "https://livestock.kcg.gov.tw/Pets/DongwuShourong/RenyangChengxu.htm",
+      "title": "高雄市動物保護處〈認領養程序及須知〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -2265,6 +2769,22 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週二至週日 09:30–12:00、13:30–17:00（週一及國定假日休園）",
+    "visit": "walk-in",
+    "visit_note": "開園時間內現場與動物互動後，到櫃檯辦理認養。",
+    "adoption": {
+     "url": "https://livestock.kcg.gov.tw/Pets/DongwuShourong/RenyangChengxu.htm",
+     "title": "高雄市動物保護處〈認領養程序及須知〉"
+    },
+    "sources": [
+     {
+      "url": "https://livestock.kcg.gov.tw/Pets/DongwuShourong/RenyangChengxu.htm",
+      "title": "高雄市動物保護處〈認領養程序及須知〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -2339,6 +2859,16 @@
      0,
      0
     ]
+   },
+   "info": {
+    "note": "官方網站沒有列出這裡的開放時間與電話，可洽屏東縣政府農業處。",
+    "sources": [
+     {
+      "url": "https://www.pthg.gov.tw/plancib/Photo.aspx?n=B01AA4D38E103E2A&sms=4C4B9756C103EDDE",
+      "title": "屏東縣政府〈犬貓認養〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -2413,6 +2943,22 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週二至週六，預約時段 10:00–11:00、11:00–12:00、14:00–15:00、15:00–16:00",
+    "visit": "appointment",
+    "visit_note": "不開放隨到隨辦，參觀認養請先來電預約時段。",
+    "adoption": {
+     "url": "https://acdc.hl.gov.tw/cp.aspx?n=27059",
+     "title": "花蓮縣動植物防疫所〈收容犬隻認養〉"
+    },
+    "sources": [
+     {
+      "url": "https://acdc.hl.gov.tw/cp.aspx?n=27059",
+      "title": "花蓮縣動植物防疫所〈收容犬隻認養〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -2487,6 +3033,20 @@
      0,
      0
     ]
+   },
+   "info": {
+    "note": "管理要點只寫開放時間由臺東縣動物防疫所「另行公布」，本站找不到公布的頁面。",
+    "adoption": {
+     "url": "https://law.taitung.gov.tw/LawContent.aspx?id=GL000070",
+     "title": "臺東縣流浪動物收容中心管理要點（含認養規定）"
+    },
+    "sources": [
+     {
+      "url": "https://law.taitung.gov.tw/LawContent.aspx?id=GL000070",
+      "title": "臺東縣流浪動物收容中心管理要點"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -2561,6 +3121,25 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "週二至週六 10:00–12:00、14:00–16:00（週日、週一不開放）",
+    "visit": "unstated",
+    "adoption": {
+     "url": "https://www.phldcc.gov.tw/home.jsp?id=26&act=view&dataserno=201402210013",
+     "title": "澎湖縣家畜疾病防治所〈常見問答：收容中心犬貓認養〉"
+    },
+    "sources": [
+     {
+      "url": "https://animal.moa.gov.tw/Frontend/PublicShelter/Detail/PS00000031",
+      "title": "農業部動物保護資訊網〈澎湖縣流浪動物收容中心〉"
+     },
+     {
+      "url": "https://www.phldcc.gov.tw/home.jsp?id=26&act=view&dataserno=201402210013",
+      "title": "澎湖縣家畜疾病防治所〈常見問答〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -2635,6 +3214,22 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "每天 09:00–12:00、14:00–17:00 開放參觀（週六、週日認領養採預約制）",
+    "visit": "walk-in",
+    "visit_note": "每天開放參觀；週六、週日辦理認領養須先預約。",
+    "adoption": {
+     "url": "https://aphin.kinmen.gov.tw/Content_List.aspx?n=15D48F970143A047",
+     "title": "金門縣動植物防疫所〈便民服務標準處理流程〉"
+    },
+    "sources": [
+     {
+      "url": "https://animal.moa.gov.tw/Frontend/PublicShelter/Detail/PS00000030",
+      "title": "農業部動物保護資訊網〈金門縣動物收容中心〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -2709,6 +3304,17 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "每天 08:00–12:00、13:30–17:30",
+    "visit": "unstated",
+    "sources": [
+     {
+      "url": "https://animal.moa.gov.tw/Frontend/PublicShelter/Detail/PS00000029",
+      "title": "農業部動物保護資訊網〈連江縣流浪犬收容中心〉"
+     }
+    ],
+    "checked": "2026-10-12"
    }
   },
   {
@@ -2783,6 +3389,18 @@
      0,
      0
     ]
+   },
+   "info": {
+    "hours": "每天 08:00–12:00、13:30–17:30",
+    "visit": "unstated",
+    "sources": [
+     {
+      "url": "https://animal.moa.gov.tw/Frontend/PublicShelter/Detail/PS00000029",
+      "title": "農業部動物保護資訊網〈連江縣流浪犬收容中心〉"
+     }
+    ],
+    "checked": "2026-10-12",
+    "note": "農業部的公立收容所名錄只列「連江縣流浪犬收容中心」；這筆的地址、電話與它相同，本站視為同一處，這裡顯示的是收容中心的資訊。"
    }
   }
  ]

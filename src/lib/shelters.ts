@@ -1,11 +1,13 @@
 import { ref } from 'vue'
-import type { Shelter } from '@/types'
+import { snapshotAge } from '@/lib/days'
+import type { Shelter, ShelterInfo } from '@/types'
 
 /* Shelter helpers: tidy the address and phone fields the source hands over,
- * build the Google Maps links for the shelter introduction page, and hold
- * the shelter list's view choice.
+ * build the Google Maps links for the shelter introduction page, read the
+ * hand-kept visitor information, and hold the shelter list's view choice.
  *
- *  Used by: MapView.vue, ShelterListView.vue and ShelterView.vue.
+ *  Used by: MapView.vue, ShelterListView.vue, ShelterView.vue and
+ *  ShortlistView.vue.
  */
 
 /** The shelter list's layout: card grid or full-width rows. It lives here,
@@ -71,11 +73,45 @@ export function hasMachineField(shelter: Shelter): boolean {
   return shelter.addresses.some((raw) => cleanAddress(raw).text !== raw.trim())
 }
 
+/** A tel: link, or null when there are too few digits to dial. An extension
+ *  written 分機 or 轉 follows a comma, which phones dial after a pause. */
+export function dialHref(text: string): string | null {
+  const [main, extension = ''] = text.split(/分機|轉/)
+  const digits = main.replace(/[^0-9]/g, '')
+  if (digits.length < 7) return null
+  const ext = extension.replace(/[^0-9]/g, '')
+  return `tel:${digits}${ext ? `,${ext}` : ''}`
+}
+
 /** A number is usable when it has enough digits to dial. Two records carry a
  *  bare area code, "(09)" and "(72)"; those are shown as incomplete. */
 export function phoneOf(shelter: Pick<Shelter, 'tel'>): { text: string; href: string | null } {
-  const digits = shelter.tel.replace(/[^0-9]/g, '')
-  return { text: shelter.tel, href: digits.length >= 7 ? `tel:${digits}` : null }
+  return { text: shelter.tel, href: dialHref(shelter.tel) }
+}
+
+/* ── Visitor information (data/reference/shelter-info.json) ────────────── */
+
+/** After this long without anyone reading the sources again, the page says
+ *  the hours may be out of date. Measured from the reader's today, not the
+ *  snapshot: this file does not change with the feed. */
+export const INFO_STALE_AFTER_DAYS = 180
+
+export function infoIsStale(info: Pick<ShelterInfo, 'checked'>, now: Date = new Date()): boolean {
+  const age = snapshotAge(info.checked, now)
+  return age !== null && age > INFO_STALE_AFTER_DAYS
+}
+
+export const VISIT_LABEL: Record<NonNullable<ShelterInfo['visit']>, string> = {
+  appointment: '須先預約',
+  'walk-in': '可直接前往',
+  unstated: '官方未說明',
+}
+
+/** Whether a shortlist row should send the visitor to the shelter page
+ *  before phoning: the hours are disputed, missing or old. */
+export function infoNeedsCall(info: ShelterInfo | undefined, now: Date = new Date()): boolean {
+  if (!info) return false
+  return Boolean(info.caution) || !info.hours || infoIsStale(info, now)
 }
 
 /** Coordinates when the source has them; otherwise the address without its

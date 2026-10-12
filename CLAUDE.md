@@ -158,7 +158,7 @@ public/data/
   areas.json              # 縣市代碼與名稱對照
   counties.geojson        # 縣市界，由鄉鎮區界溶合而成（RFC 7946 繞向）
   districts.geojson       # 鄉鎮區界（368 個），保留供之後的區級圖層使用
-  shelters.json           # 37 處收容所：在所數、滯留分布、地址、電話
+  shelters.json           # 37 處收容所：在所數、滯留分布、地址、電話，以及人工整理的開放時間（info）
   shelter-points.json     # 收容所定位（行政區形心）＋地圖面板要顯示的欄位
   animals.json            # 全部動物名冊，8,000 餘筆，供找動物／收容所頁共用
   home.json               # 首頁的計數與 18 張卡片，首頁畫完後才在背景載入 animals.json
@@ -374,6 +374,8 @@ ruleset 不加必要狀態檢查的理由（2026-09-24 實測）：該規則會�
 評估時以 README〈儲存成本（觀察用）〉的實測數字為比較基準。
 
 **首頁示意照片**（2026-09-17 起）：Unsplash，依 Unsplash License 使用，由人類手動下載（雲端環境無法連線 Unsplash 圖片網址）。新增或更換前先確認照片頁標示 Unsplash License 而非 Unsplash+；照片只能用在首頁 Hero 並標示為示意，出處同步更新 `src/lib/heroPhotos.ts`、`THIRD-PARTY-LICENSES`。
+
+**收容所實用資訊**（2026-10-12 起）：開放時間、參觀方式、認養須知連結，人工整理自各收容所與主管機關官網，存 `data/reference/shelter-info.json`，由 `build_shelters.py` 併進 `shelters.json`。每筆附來源網址與最後確認日；只連結認養須知、不轉抄規定；官網沒寫的不推論。原始資料的電話、地址不被取代，官網的值不同時另列並附出處。重新確認時改 `checked`，規則見 `DESIGN.md` §7〈開放時間與參觀方式〉。
 
 **爬蟲禮儀**：若執行影像模組，下載 `album_file` 圖片時必須限速並建立本機快取，不可重複打政府網站。同時確認圖片授權範圍。
 
