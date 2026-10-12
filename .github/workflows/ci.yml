@@ -76,11 +76,16 @@ jobs:
         with:
           python-version: "3.12"
 
-      # The scripts are standard library only; pytest is a dependency of the
-      # tests, not of the pipeline. Nothing else is installed here, which is
-      # itself the check: if a script ever grows an import, this job fails.
-      - name: Install pytest
-        run: pip install "pytest>=9,<10"
+      # The scripts are standard library only; pytest and ruff are tools for
+      # checking them, not dependencies of the pipeline. Nothing else is
+      # installed here, which is itself the check: if a script ever grows an
+      # import, this job fails.
+      - name: Install pytest and ruff
+        run: pip install "pytest>=9,<10" "ruff>=0.15,<0.16"
+
+      # Settings in ruff.toml. Lint only; formatting is not enforced.
+      - name: Lint scripts
+        run: ruff check .
 
       - name: Pipeline tests
         run: python -m pytest -q

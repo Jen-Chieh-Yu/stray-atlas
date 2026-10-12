@@ -145,7 +145,7 @@ def build(snapshot_date: str | None) -> dict:
     annotated, _ = annotate(snapshot_date)
     # annotate() re-reads the same snapshot, so the two lists line up by index
     # — the same pairing build_stats.py relies on.
-    for row, extra in zip(rows, annotated):
+    for row, extra in zip(rows, annotated, strict=True):
         row["district_verified"] = extra["district_verified"]
 
     snapshot = report["snapshot_date"]

@@ -67,7 +67,8 @@ def main() -> int:
             target = OUTPUT_DIR / f"{slug}-{width}.webp"
             # method=6: slowest, smallest; exif=b"" drops camera metadata.
             resized.save(target, "WEBP", quality=QUALITY, method=6, exif=b"")
-            print(f"{target.relative_to(ROOT)}  {width}x{height}  {target.stat().st_size / 1024:.0f} KB")
+            size_kb = target.stat().st_size / 1024
+            print(f"{target.relative_to(ROOT)}  {width}x{height}  {size_kb:.0f} KB")
     return 0
 
 

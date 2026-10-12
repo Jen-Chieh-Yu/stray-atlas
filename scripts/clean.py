@@ -418,7 +418,7 @@ def load_clean(snapshot_date: str | None = None) -> tuple[list[dict], dict]:
         "areas": len(areas),
         "shelters": len({row["shelter_name"] for row in rows}),
         "shelter_pkid_collisions": collisions,
-        "shelter_address_variants": shelter_address_variants(rows),
+        "shelter_address_variants": address_variants,
         "days_in_shelter": {
             "median": percentile(durations, 0.50),
             "p75": percentile(durations, 0.75),
