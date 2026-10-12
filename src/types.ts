@@ -53,6 +53,36 @@ export interface Shelter extends Record<Kind, Summary> {
   addresses: string[]
   tel: string
   all: Summary
+  /** Hand-kept from the shelter's own website (data/reference/shelter-info.json);
+   *  absent for a shelter the file does not cover yet. */
+  info?: ShelterInfo
+}
+
+export interface InfoLink {
+  url: string
+  title: string
+}
+
+/** Visitor information the open data does not have. Every field is as the
+ *  shelter's own site says it, never inferred: `unstated` means the site says
+ *  nothing about booking, not that there is no need to. */
+export interface ShelterInfo {
+  /** One line, in the site's own terms; absent when the site gives none. */
+  hours?: string
+  visit?: 'walk-in' | 'appointment' | 'unstated'
+  visit_note?: string
+  /** The shelter's own pages disagree; says how. */
+  caution?: string
+  /** Why there are no hours, or that this record is another's twin. */
+  note?: string
+  /** Another shelter to send the visitor to. */
+  see?: string
+  /** What the shelter's site says where the open data looks wrong. */
+  official?: { tel?: string; address?: string; source: InfoLink }
+  adoption?: InfoLink
+  sources: InfoLink[]
+  /** YYYY-MM-DD, the day someone last read the sources. */
+  checked: string
 }
 
 export interface ShelterPayload {

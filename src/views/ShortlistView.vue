@@ -11,7 +11,7 @@ import { SEX_LABEL, formatCount, isNewerId, monthDay, opensAfter } from '@/lib/a
 import { closeAnimalDialog } from '@/lib/dialogRoute'
 import type { IconName } from '@/lib/icons'
 import { fadeIn, fadeOut, foldAway, unfold } from '@/lib/motion'
-import { addressesOf, phoneOf } from '@/lib/shelters'
+import { addressesOf, infoNeedsCall, phoneOf } from '@/lib/shelters'
 import { groupByShelter, shortlistText } from '@/lib/shortlist'
 import type { ShortlistEntry } from '@/lib/shortlist'
 import type { Animal } from '@/types'
@@ -65,6 +65,11 @@ const view = computed(() =>
       ...group,
       address: shelter ? (addressesOf(shelter)[0]?.text ?? '') : '',
       phone: shelter ? phoneOf(shelter) : null,
+      // The hours, so the call is made when someone answers. Only 須先預約
+      // is marked here; disputed, missing or old hours send the visitor to
+      // the shelter page, which says why.
+      info: shelter?.info ?? null,
+      needsCall: infoNeedsCall(shelter?.info),
       rows: group.entries.map((entry) => ({ entry, animal: current(entry.id) })),
     }
   }),
@@ -228,6 +233,14 @@ function close() {
               </a>
               <span v-else-if="group.phone" class="addr">{{ group.phone.text }}</span>
               <span class="n">{{ group.entries.length }} 隻</span>
+              <p v-if="group.info" class="hours">
+                <LucideIcon name="clock" :size="14" />
+                <span>{{ group.info.hours ?? '開放時間未公布' }}</span>
+                <span v-if="group.info.visit === 'appointment'" class="appt">須先預約</span>
+                <RouterLink v-if="group.needsCall" :to="`/shelters/${group.shelter}`" class="call">
+                  <LucideIcon name="triangle-alert" :size="14" />請先來電確認
+                </RouterLink>
+              </p>
             </header>
 
             <TransitionGroup tag="ul" class="rows" :css="false" @enter="unfold" @leave="foldAway">
@@ -291,9 +304,14 @@ function close() {
           </section>
         </TransitionGroup>
 
-        <p class="foot">
-          前往收容所前，請先致電確認動物仍在所內，並依各收容所的規定辦理認養。本站不辦理認養。
-        </p>
+        <div class="foot">
+          <p>
+            有些收容所須先預約才能參觀，標題列會標出「須先預約」。開放時間由本站整理自各收容所官網，來源與最後確認日見各收容所的介紹頁。
+          </p>
+          <p>
+            前往收容所前，請先致電確認動物仍在所內，並依各收容所的規定辦理認養。本站不辦理認養。
+          </p>
+        </div>
       </div>
     </Transition>
 
@@ -529,10 +547,63 @@ function close() {
   gap: 0.4rem;
 }
 
+.hours {
+  display: flex;
+  flex-basis: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem 0.45rem;
+  margin: 0.15rem 0 0;
+  color: var(--ink-secondary);
+  font-size: 0.82rem;
+
+  & svg {
+    flex-shrink: 0;
+    color: var(--ink-muted);
+  }
+
+  & .appt {
+    padding: 0 0.5rem;
+    border-radius: 999px;
+    background: var(--ramp-4);
+    color: var(--on-accent);
+    font-size: 0.74rem;
+    font-weight: 700;
+  }
+
+  & .call {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    color: var(--accent-text);
+    font-weight: 700;
+
+    & svg {
+      color: var(--accent-text);
+    }
+  }
+}
+
+/* Boxed, so the two things to know before setting out read as one note
+   rather than as fine print under the list. The sunk ground is the same as
+   the shelter page's 本站不辦理認養 note, so the site's reminders match. */
 .foot {
   margin-top: 1rem;
-  color: var(--ink-muted);
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunk);
+  color: var(--ink-secondary);
   font-size: 0.82rem;
+  line-height: 1.7;
+
+  & p {
+    margin: 0;
+  }
+
+  & p + p {
+    margin-top: 0.35rem;
+  }
 }
 
 .print-only {
