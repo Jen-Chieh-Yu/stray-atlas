@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-10-12",
-  "generated_at_utc": "2026-10-12T04:04:38Z",
-  "rows": 8493,
+  "snapshot_date": "2026-10-13",
+  "generated_at_utc": "2026-10-13T05:13:49Z",
+  "rows": 8438,
   "district_reference": "loaded",
   "place_kinds": {
-    "district": 1243,
-    "address": 5187,
-    "landmark": 922,
-    "blank": 1025,
+    "address": 5171,
+    "blank": 1012,
+    "landmark": 920,
+    "district": 1219,
     "non_place": 116
   },
   "confidence": {
@@ -17,26 +17,26 @@
     },
     "medium": {
       "rows": 1895,
-      "share": 0.2231
+      "share": 0.2246
     },
     "low": {
-      "rows": 5450,
-      "share": 0.6417
+      "rows": 5408,
+      "share": 0.6409
     },
     "none": {
-      "rows": 1141,
-      "share": 0.1343
+      "rows": 1128,
+      "share": 0.1337
     }
   },
   "county_source": {
     "text": 188,
-    "shelter": 7164,
-    "none": 1141
+    "shelter": 7122,
+    "none": 1128
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3141,
-    "verified_against_reference": 3138,
+    "extracted": 3117,
+    "verified_against_reference": 3114,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市淡水區埤島里65號"
     ],
     "medium": [
-      "林口區林口文化三路八德路口",
-      "蘆洲區蘆洲區五華街326之2號",
-      "三重區:三重區大同北路71号",
-      "金山區瑪鍊路",
-      "林口區 林口區忠福路355號"
+      "三重區三重區仁愛街55號",
+      "板橋區大觀路二段20巷13號",
+      "西螺鎮延平路",
+      "三芝區長春街",
+      "金沙鎮汶沙里博愛街"
     ],
     "low": [
-      "通霄鎮通灣里",
-      "富美路",
-      "稻香里稻香路",
-      "平東路四段",
-      "東湖樂湖公園"
+      "新民路",
+      "環北路",
+      "文林里文林北路",
+      "三重路",
+      "福州二街47之2"
     ],
     "none": [
       "臺北市動物之家",
