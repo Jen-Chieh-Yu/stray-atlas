@@ -10,6 +10,8 @@ Home page hero photos (Unsplash)
 https://unsplash.com  -  license: https://unsplash.com/license
 Used in: src/assets/hero/ (resized to WebP by scripts/build_hero.py;
 credited on the home and about pages from src/lib/heroPhotos.ts).
+Also seen in docs/images/home.webp, the README's screenshot of the home
+page, with the photo's credit as the site shows it (Andrew S).
 Illustrative only: the animals shown are not in any Taiwanese shelter.
 License checked on each photo page on 2026-09-17.
 ------------------------------------------------------------------------
