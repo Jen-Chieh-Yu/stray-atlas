@@ -325,6 +325,7 @@ git push -u origin feature/YYYYMMDD-topic
 - 程式、文件、workflow 的改動一律在分支上做，命名 `feature/YYYYMMDD-topic`，從最新的 `main` 開出
 - 分支**一律經 PR 併回 `main`**，合併方式用 Create a merge commit，標題與說明沿用 GitHub 預設值；不在本機 merge 後直接推 `main`
 - 例外：每日排程機器人直接 commit 到 `main`（快照與重建後的 `public/data/`）
+- 例外：Dependabot 的 PR（2026-10-13 起，設定在 `.github/dependabot.yml`）。分支名稱 `dependabot/...`、commit 與 PR 內文都由 GitHub 產生，不套用 §6.4 的條列格式、本節的四節內文，也沒有 `Assisted-by`；標題前綴設成 npm 用 `chore(deps)`、Actions 用 `ci`。每月 1 日檢查一次，npm 的 minor／patch 合併成一個 PR、major 各自一個，Actions 合併成一個；新版本發布未滿 7 天不提出。同樣經 PR、由人類合併：CI 全綠才合併，major 更新先讀 changelog，需要改程式時另開 `feature/` 分支處理。另在 repo 設定開啟 security updates，有安全通報且有修補版時會立即開 PR
 - 機器人每天推 `main`，所以開分支前先 `git switch main`、`git pull --ff-only`；PR 合併後本機再 pull 一次
 - AI 協作者交付 commit message 時，一併提供 PR 標題（沿用該 PR 第一筆 commit 的標題）與英文 PR 內文，寫入 `.git/prNN.md`；內文含 Summary、Commits、Changes、Post-merge checks 四節，每行 80 字元以內
 - PR 內文寫到 Post-merge checks 為止，**不加**「Generated with Claude Code」之類的結尾。AI 參與只由 commit 的 `Assisted-by` 標示（§6.1），人類提交者是唯一作者

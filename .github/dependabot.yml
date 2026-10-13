@@ -1,0 +1,43 @@
+# Version updates, once a month (CLAUDE.md 6.6). This is a portfolio site,
+# not a service: staying current matters less than a quiet PR list, so each
+# ecosystem gets one grouped PR a month instead of one PR per package.
+#
+# Security updates are separate: they are switched on in the repository
+# settings (Code security) and open a PR as soon as an advisory has a fix,
+# whatever this schedule says.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+      time: "09:00"
+      timezone: Asia/Taipei
+    # Skip releases younger than a week: most bad or hijacked versions are
+    # pulled within days, and nothing here needs a release on its first day.
+    cooldown:
+      default-days: 7
+    # Minor and patch releases in one PR. A major release still gets a PR of
+    # its own, so one breaking change cannot hold back everything else.
+    groups:
+      npm-minor-and-patch:
+        patterns: ["*"]
+        update-types: [minor, patch]
+    commit-message:
+      prefix: "chore(deps)"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+      time: "09:00"
+      timezone: Asia/Taipei
+    cooldown:
+      default-days: 7
+    # The actions only move in major versions (@v7), and they all come from
+    # actions/*, so one PR covers them.
+    groups:
+      actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: ci
