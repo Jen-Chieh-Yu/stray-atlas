@@ -243,7 +243,7 @@ geocoder 能拉高區級覆蓋率，但拉不高可信度：「忠孝東路」�
 
 ---
 
-## 6. 已識別的統計陷阱（必須寫入 README）
+## 6. 已識別的統計陷阱（必須寫入 `docs/METHODOLOGY.md`）
 
 ### 6.1 長度偏誤（length-biased sampling）
 

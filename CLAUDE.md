@@ -13,7 +13,7 @@
 判斷任何取捨時，請以此為準：
 
 - **可 demo > 完整**。面試現場能點擊操作的東西，勝過功能齊全但只能看截圖的東西。
-- **展現判斷力 > 展現結論**。在 README 與網頁上主動說明資料限制、已識別的統計陷阱、以及為何選擇某方法而非另一種，比端出漂亮結論更有價值。
+- **展現判斷力 > 展現結論**。在網頁與說明文件（README 連到的 `docs/`）上主動說明資料限制、已識別的統計陷阱、以及為何選擇某方法而非另一種，比端出漂亮結論更有價值。
 - **可獨立成立**。依賴長期資料累積的模組不能是專案主體。
 
 **不要**把這個專案做成需要長篇說明才看得懂的東西。面試官只會看三分鐘。
@@ -93,7 +93,7 @@ Project site 掛在 `/stray-atlas/` 子路徑下。以下三處只要漏一個�
   - 非地點值分類（建立關鍵詞黑名單）
   - 縣市補全（以收容所縣市為前綴）
   - 信心分級：`high`（原文含縣市＋完整門牌）/ `medium`（含區＋路名）/ `low`（僅路名，靠收容所推斷）/ `none`
-  - geocode 結果快取到本機，**不可每次重跑都打外部 API**（現行 `geocode.py` 只分級、不呼叫 geocoder，見 README〈尋獲地：為什麼沒有熱區圖〉）
+  - geocode 結果快取到本機，**不可每次重跑都打外部 API**（現行 `geocode.py` 只分級、不呼叫 geocoder，見 `docs/METHODOLOGY.md`〈尋獲地：為什麼沒有熱區圖〉）
 
 ### 階段 1（主力）
 
@@ -165,9 +165,11 @@ public/data/
   stats/counties.json     # 縣市層級統計，地圖染色的依據
   stats/foundplace.json   # 尋獲地分級結果（不含座標，見下）
   stats/distribution.json # 在所天數分布：直方圖、三段頻寬 KDE、ECDF
+  stats/features.json     # 分組中位數與四分位距、收容所內毛色對照（分析頁）
+  stats/quality.json      # 各縣市與各收容所的登錄完整度評分（資料品質頁）
 ```
 
-原規劃的 `points.geojson`（高信心尋獲點位）**未產出，也不會產出**：達到 high 信心的僅 10 筆（0.1%），畫出來是編碼品質的地圖而不是動物的地圖。相關判斷見 README〈尋獲地：為什麼沒有熱區圖〉。
+原規劃的 `points.geojson`（高信心尋獲點位）**未產出，也不會產出**：達到 high 信心的僅 10 筆（0.1%），畫出來是編碼品質的地圖而不是動物的地圖。相關判斷見 `docs/METHODOLOGY.md`〈尋獲地：為什麼沒有熱區圖〉。
 
 **`public/data/` 進 git（2026-09-01 決定）。** 理由：
 
@@ -175,7 +177,7 @@ public/data/
 - 部署與資料管線解耦 —— 前端改版不必重跑 Python；管線壞掉（geocoder API 掛掉、套件衝突、來源改格式）時網站仍以前一份資料正常部署，只是資料舊一點，不會整站掛掉
 - diff 雜訊已由 `.gitattributes` 的 `linguist-generated=true` 處理，GitHub 上預設摺疊且不計入語言統計
 
-**配套：來源有變才重算。** 快照（`data/raw/`）每日抓取；當天存成新快照（manifest `stored`）時，同一個 workflow 以 `scripts/build_all.py` 重建 `public/data/`、一起 commit，再觸發部署。來源未變（`unchanged`）或抓取失敗時不重建，避免只有時間戳記不同的 commit。重建失敗時仍 commit 快照、`public/data/` 維持前一份，該次 run 標為失敗。來源連續 3 天沒有存成新快照（manifest 最新 3 列都不是 `stored`）時，`scripts/check_freshness.py` 讓當天的 run 失敗，免得來源停更而網站安靜地停在舊資料（2026-10-12 加）。每日重建在 git 裡的增量約 0.06 MB，見 README〈儲存成本（觀察用）〉。（2026-09-17 改；原規定為每週或手動重算）
+**配套：來源有變才重算。** 快照（`data/raw/`）每日抓取；當天存成新快照（manifest `stored`）時，同一個 workflow 以 `scripts/build_all.py` 重建 `public/data/`、一起 commit，再觸發部署。來源未變（`unchanged`）或抓取失敗時不重建，避免只有時間戳記不同的 commit。重建失敗時仍 commit 快照、`public/data/` 維持前一份，該次 run 標為失敗。來源連續 3 天沒有存成新快照（manifest 最新 3 列都不是 `stored`）時，`scripts/check_freshness.py` 讓當天的 run 失敗，免得來源停更而網站安靜地停在舊資料（2026-10-12 加）。每日重建在 git 裡的增量約 0.06 MB，見 `docs/DATA-PIPELINE.md`〈儲存成本（觀察用）〉。（2026-09-17 改；原規定為每週或手動重算）
 
 判斷分界：`data/raw/` **不可重現**（漏抓即永久遺失），`public/data/` **可由 `data/raw/` 完整重建**。兩者都進 git，但理由不同——前者是地基，後者是為了部署可靠性。
 
@@ -254,9 +256,9 @@ Assisted-by: Claude <noreply@anthropic.com>
 
 **絕對不可排除 `data/`。** 每日快照 workflow 需要 commit 資料檔進 repo；若被 gitignore 擋掉，workflow 會安靜地什麼都沒存，且要數日後才會發現。
 
-**暫存產物放 `.notes/`，該目錄不進版控。** 設計過程中的原型、模擬畫面、截圖放這裡；桌面用戶端預設寫入的 `Claude outputs/` 同樣排除，避免資料夾重新出現後被 `git add -A` 掃進去。值得保留的結論寫進 `DESIGN.md`，不要以圖片形式 commit。
+**暫存產物放 `.notes/`，該目錄不進版控。** 設計過程中的原型、模擬畫面、截圖放這裡；桌面用戶端預設寫入的 `Claude outputs/` 同樣排除，避免資料夾重新出現後被 `git add -A` 掃進去。值得保留的結論寫進 `DESIGN.md`，不要以圖片形式 commit。唯一的例外是 README 的網站截圖，放在 `docs/images/`（§10）。
 
-`.notes/` 另以私人 repo `stray-atlas-notes` 在多台電腦間同步：`.notes/` 底下自成一個 git repo，主 repo 的 `.gitignore` 排除整個目錄，兩邊的 git 指令互不影響。開工前在 `.notes/` 先 `git pull`。它仍是工作筆記，不是權威文件：與本檔、`DESIGN.md`、`README.md` 衝突時以後者為準，裡面的內容也不可在 commit 或 PR 中引用（§6.4）。
+`.notes/` 另以私人 repo `stray-atlas-notes` 在多台電腦間同步：`.notes/` 底下自成一個 git repo，主 repo 的 `.gitignore` 排除整個目錄，兩邊的 git 指令互不影響。開工前在 `.notes/` 先 `git pull`。它仍是工作筆記，不是權威文件：與本檔、`DESIGN.md`、`README.md`、`docs/` 衝突時以後者為準，裡面的內容也不可在 commit 或 PR 中引用（§6.4）。
 
 理由：主 repo 是公開的作品集，草稿、被推翻的方案與工項清單會讓讀者分不清哪個才是現況；圖片每改一版就在 git 歷史多存一份，刪不掉，每個 clone 的人都要下載。
 
@@ -392,7 +394,7 @@ ruff check .; python -m pytest -q
 `scripts/fetch_snapshot.py` 以同一端點加上 `&FOTT=CSV&IsTransData=1` 取得 CSV。
 官方亦提供 JSON；是否改為介接 JSON 尚未決定，改動前先問。若切換，`clean.py`
 必須能同時讀取既有的 CSV 快照與新格式，`data/raw/` 已存的快照不可改寫。
-評估時以 README〈儲存成本（觀察用）〉的實測數字為比較基準。
+評估時以 `docs/DATA-PIPELINE.md`〈儲存成本（觀察用）〉的實測數字為比較基準。
 
 **首頁示意照片**（2026-09-17 起）：Unsplash，依 Unsplash License 使用，由人類手動下載（雲端環境無法連線 Unsplash 圖片網址）。新增或更換前先確認照片頁標示 Unsplash License 而非 Unsplash+；照片只能用在首頁 Hero 並標示為示意，出處同步更新 `src/lib/heroPhotos.ts`、`THIRD-PARTY-LICENSES`。
 
@@ -402,17 +404,21 @@ ruff check .; python -m pytest -q
 
 ---
 
-## 10. README 必須包含的內容
+## 10. README 與說明文件
 
-這是專案的門面，面試官第一眼看的就是它。除了常規說明外，**必須**包含：
+README 是專案的門面，面試官第一眼看的就是它。**README 只放網站的功能介紹**（2026-10-13 起）：專案在做什麼、Demo 連結、各頁截圖與說明、文件索引、資料來源與授權。開發、資料管線、資料判讀與架構決策放在 `docs/`，README 第一段要連過去。
 
-1. **資料限制章節** — 明確寫出 §1 的六條約束
-2. **「我踩過的統計陷阱」章節** — 至少包含月份分布的 survivorship bias 案例（見 `PROJECT_BRIEF.md` §6.2）。敘事格式：「我原本這樣算 → 發現是 X 偏誤 → 因此改用 Y 方法」
-3. **尋獲地覆蓋率與信心分級的說明** — 誠實標示有多少比例無法可靠定位，以及因此**不畫**哪一張圖
-4. **架構決策理由** — 為何選 GitHub Actions 而非本地手動、為何輸出 JSON 而非 PNG
-5. **授權說明** — 見 §7，程式碼與資料分開標示
+下列內容**必須**寫在指定的文件裡，不因為不在 README 就省略：
 
-主動揭露限制不是弱點，是這個專案最有說服力的部分。
+1. **資料限制章節**（`docs/METHODOLOGY.md`）— 明確寫出 §1 的六條約束
+2. **「我踩過的統計陷阱」章節**（`docs/METHODOLOGY.md`）— 至少包含月份分布的 survivorship bias 案例（見 `PROJECT_BRIEF.md` §6.2）。敘事格式：「我原本這樣算 → 發現是 X 偏誤 → 因此改用 Y 方法」
+3. **尋獲地覆蓋率與信心分級的說明**（`docs/METHODOLOGY.md`）— 誠實標示有多少比例無法可靠定位，以及因此**不畫**哪一張圖
+4. **架構決策理由**（`docs/ARCHITECTURE.md`）— 為何選 GitHub Actions 而非本地手動、為何輸出 JSON 而非 PNG
+5. **授權說明**（README）— 見 §7，程式碼與資料分開標示
+
+主動揭露限制不是弱點，是這個專案最有說服力的部分，所以 README 第一段保留一句話點出它，並連到 `docs/METHODOLOGY.md`。
+
+README 的截圖放在 `docs/images/`，從線上網站拍攝。動物照片的權利屬於各收容所，本站只連結不轉存，所以截圖裡的動物照片一律換成替代圖示，不把照片存進 repo。
 
 ---
 
