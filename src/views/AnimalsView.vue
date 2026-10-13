@@ -251,6 +251,7 @@ const colourOptions = computed(() => {
 const colourKinds = computed(
   () => colourOptions.value.filter(([name]) => name !== NO_COLOUR).length,
 )
+const hasBlankColour = computed(() => colourOptions.value.some(([name]) => name === NO_COLOUR))
 
 const sexCounts = computed(() => countBy('sex', (animal) => animal.sex))
 const bodyCounts = computed(() => countBy('body', (animal) => animal.body))
@@ -564,9 +565,7 @@ function onSort(event: Event) {
                 @change="onSelect('colour', $event)"
               >
                 <option value="">
-                  全部（{{ colourKinds }} 種{{
-                    colourOptions.some(([name]) => name === NO_COLOUR) ? '＋未填' : ''
-                  }}）
+                  全部（{{ colourKinds }} 種{{ hasBlankColour ? '＋未填' : '' }}）
                 </option>
                 <option v-for="[name, count] in colourOptions" :key="name" :value="name">
                   {{ name }}（{{ formatCount(count) }}）
