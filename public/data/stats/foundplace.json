@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-10-13",
-  "generated_at_utc": "2026-10-13T05:13:49Z",
-  "rows": 8438,
+  "snapshot_date": "2026-10-14",
+  "generated_at_utc": "2026-10-14T03:19:51Z",
+  "rows": 8456,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5171,
-    "blank": 1012,
-    "landmark": 920,
     "district": 1219,
+    "blank": 1032,
+    "address": 5161,
+    "landmark": 928,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0008
     },
     "medium": {
-      "rows": 1895,
-      "share": 0.2246
+      "rows": 1893,
+      "share": 0.2239
     },
     "low": {
       "rows": 5408,
-      "share": 0.6409
+      "share": 0.6395
     },
     "none": {
-      "rows": 1128,
-      "share": 0.1337
+      "rows": 1148,
+      "share": 0.1358
     }
   },
   "county_source": {
-    "text": 188,
-    "shelter": 7122,
-    "none": 1128
+    "text": 187,
+    "shelter": 7121,
+    "none": 1148
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3117,
-    "verified_against_reference": 3114,
+    "extracted": 3115,
+    "verified_against_reference": 3112,
     "not_in_that_county": 3
   },
   "samples": {
@@ -55,11 +55,11 @@
       "金沙鎮汶沙里博愛街"
     ],
     "low": [
-      "新民路",
-      "環北路",
-      "文林里文林北路",
-      "三重路",
-      "福州二街47之2"
+      "後龍鎮南港里",
+      "塩安路28號",
+      "碧園路二段337巷18號",
+      "中山路",
+      "行義路(龍鳳谷公園)"
     ],
     "none": [
       "臺北市動物之家",
