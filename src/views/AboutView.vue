@@ -152,6 +152,16 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
               <td>政府資料開放授權條款第 1 版</td>
             </tr>
             <tr>
+              <th scope="row">收容所開放時間</th>
+              <td>
+                本站人工整理自各收容所與主管機關官網，含開放時間、參觀方式與認養須知連結；每間的來源網址與最後確認日列在<RouterLink
+                  to="/shelters"
+                  >各收容所的介紹頁</RouterLink
+                >
+              </td>
+              <td>只記錄事實並附出處；認養規定只連結、不轉抄</td>
+            </tr>
+            <tr>
               <th scope="row">動物照片</th>
               <td>
                 由各公立動物收容所拍攝登錄，經<a
