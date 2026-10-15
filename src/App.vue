@@ -42,11 +42,10 @@ const NAV: NavItem[] = [
   { to: '/animals', label: '找動物', names: ['animals'] },
   { to: '/shelters', label: '收容所', names: ['shelters', 'shelter'] },
   { to: '/map', label: '縣市地圖', names: ['map'] },
-  // Before 資料分析, not after: the quality page states what the data can
-  // carry, and the analysis page spends it. The order is the argument.
-  { to: '/quality', label: '資料品質', names: ['quality'] },
-  { to: '/analysis', label: '資料分析', names: ['analysis'] },
-  { to: '/about', label: '關於本站', names: ['about'] },
+  // 資料品質 and 資料分析 are about the data, not about finding an animal, so
+  // they are not on the bar. Their entrance is a section of the about page
+  // (and a footer line), which is why that item lights up on them.
+  { to: '/about', label: '關於本站', names: ['about', 'quality', 'analysis'] },
 ]
 
 /** The shortlist sits apart from the sections: it is the visitor's own list,
@@ -245,6 +244,12 @@ onBeforeUnmount(() => {
             >農業部動物認領養公告頁</a
           >，或直接打電話問收容所。</span
         >
+      </p>
+      <!-- Next to the date: that line says which day the data is from, this
+           one where the data itself is described. -->
+      <p class="datalinks">
+        <RouterLink to="/quality">資料品質</RouterLink>（欄位內容完整性）·
+        <RouterLink to="/analysis">資料分析</RouterLink>（已在所天數的分布）
       </p>
       <p>
         資料來源：農業部「動物認領養」開放資料（<a
@@ -483,15 +488,6 @@ onBeforeUnmount(() => {
   }
 }
 
-/* With the shortlist pill the bar needs about 590px of links at the full gap;
-   just above the menu breakpoint that does not fit, and the labels used to
-   break inside a word. A tighter gap keeps one line down to 821px. */
-@media (max-width: 960px) {
-  .mainnav {
-    gap: 0.8rem;
-  }
-}
-
 @media (max-width: 820px) {
   .mainnav {
     display: none;
@@ -536,6 +532,12 @@ onBeforeUnmount(() => {
     margin-bottom: 0.8rem;
     color: var(--ink-secondary);
     font-variant-numeric: tabular-nums;
+  }
+
+  /* Reads as part of the date's group, not the licence lines below it. */
+  & .datalinks {
+    margin: -0.4rem 0 0.8rem;
+    color: var(--ink-secondary);
   }
 }
 

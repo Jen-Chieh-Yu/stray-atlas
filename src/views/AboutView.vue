@@ -1,12 +1,14 @@
 <script setup lang="ts">
 /** About: what the site is for, where the data comes from, how fresh it is,
- *  the technical choices, and the disclaimer.
+ *  the way into the two pages about the data itself, the technical choices,
+ *  and the disclaimer.
  *
  *  Every figure is read from the data files, so the page follows the snapshot
  *  it describes.
  */
 import { computed, onMounted, ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
+import LucideIcon from '@/components/LucideIcon.vue'
 import PageHead from '@/components/PageHead.vue'
 import { fetchDistribution, useAtlasData } from '@/composables/useAtlasData'
 import {
@@ -26,12 +28,21 @@ const PET_SITE_URL = 'https://www.pet.gov.tw/'
 const { stats } = useAtlasData()
 const distribution = ref<DistributionPayload | null>(null)
 
+const route = useRoute()
+
 onMounted(async () => {
   // One sentence reads this; a failed fetch drops the sentence, not the page.
   try {
     distribution.value = await fetchDistribution()
   } catch {
     distribution.value = null
+  }
+  // The data pages link back to #ab-data, and the router leaves hash scrolls
+  // to the page. After the fetch, so the sentence it adds above cannot push
+  // the section back down once the page has scrolled to it.
+  if (route.hash === '#ab-data') {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    document.getElementById('ab-data')?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' })
   }
 })
 
@@ -100,7 +111,7 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
         農業部的寵物登記管理資訊網（<a :href="PET_SITE_URL" target="_blank" rel="noreferrer"
           >pet.gov.tw</a
         >）上，已經有<a :href="OFFICIAL_URL" target="_blank" rel="noreferrer">動物認領養公告頁</a
-        >提供全國收容動物的查詢，本站用的是同一份開放資料，差別在於讀法：<strong>找動物</strong>用地區、種類、性別、體型與已在所時間收斂清單；<strong>收容所</strong>看每一間現在收了多少、狗貓各佔多少；<strong>縣市地圖</strong>看全臺的分布；<strong>資料分析</strong>看在所天數的整體樣貌。
+        >提供全國收容動物的查詢，本站用的是同一份開放資料，差別在於讀法：<strong>找動物</strong>用地區、種類、性別、體型與已在所時間收斂清單；<strong>收容所</strong>看每一間現在收了多少、狗貓各佔多少；<strong>縣市地圖</strong>看全臺的分布。
       </p>
       <p>
         這個站把「已在所多久」直接算出來，放到和照片一樣顯眼的位置，也能跨收容所比較。<template
@@ -253,6 +264,28 @@ const TECH: { topic: string; choice: string; reason: string }[] = [
       </p>
     </section>
 
+    <!-- The two pages left off the top bar start here. The cards carry no
+         figures, so nothing in them can fall behind the snapshot. -->
+    <section id="ab-data" v-reveal aria-labelledby="ab-data-title">
+      <h2 id="ab-data-title">資料品質與分析</h2>
+      <p>
+        找動物用不到這兩頁。它們談的是資料本身：這份名冊記錄得多完整、從中算得出什麼、算不出什麼。
+      </p>
+      <div class="datacards">
+        <RouterLink to="/quality" class="datacard">
+          <span class="dh">資料品質<LucideIcon name="arrow-right" :size="18" /></span>
+          <span class="dd"
+            >各縣市的照片、尋獲地、絕育與開放認養日填得多完整，以及本站因此不畫哪些圖。</span
+          >
+        </RouterLink>
+        <RouterLink to="/analysis" class="datacard">
+          <span class="dh">資料分析<LucideIcon name="arrow-right" :size="18" /></span>
+          <span class="dd"
+            >動物已在所多久的整體分布、狗和貓的差別、深色犬在同一間收容所裡是否待得比較久，以及這些數字不能拿來說什麼。</span
+          >
+        </RouterLink>
+      </div>
+    </section>
     <section v-reveal aria-labelledby="ab-tech">
       <h2 id="ab-tech">技術選擇</h2>
       <p>每一列寫的是為什麼這樣選，不是版本號。</p>
@@ -449,6 +482,52 @@ section > p.stack {
   }
 }
 
+/* ── Pages about the data ── */
+#ab-data {
+  scroll-margin-top: 80px;
+}
+
+.datacards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 46rem;
+  margin-top: 1rem;
+}
+
+.datacard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  background: var(--surface);
+  text-decoration: none;
+
+  &:hover {
+    border-color: var(--ramp-2);
+  }
+
+  & .dh {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  & svg {
+    color: var(--accent-text);
+  }
+
+  & .dd {
+    color: var(--ink-secondary);
+    font-size: 0.86rem;
+    line-height: 1.75;
+  }
+}
+
 /* ── Disclaimer ── */
 .disclaimer {
   margin-top: 0.5rem;
@@ -475,6 +554,7 @@ section > p.stack {
 
 @media (max-width: 700px) {
   .updatebox,
+  .datacards,
   .photo-credits {
     grid-template-columns: minmax(0, 1fr);
   }
