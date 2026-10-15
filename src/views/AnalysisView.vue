@@ -289,7 +289,10 @@ const shelterRange = computed(() => {
 
 <template>
   <div class="page">
-    <PageHead title="資料分析">
+    <PageHead
+      title="資料分析"
+      :back="{ to: { path: '/about', hash: '#ab-data' }, label: '關於本站 · 資料品質與分析' }"
+    >
       地圖答不了的那個問題：在所天數的分布長什麼樣。這頁只有在下面那張警語卡先被讀過之後才是誠實的，所以它放在圖表上面，不是放在註腳。
     </PageHead>
 

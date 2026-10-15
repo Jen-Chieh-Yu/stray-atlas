@@ -61,6 +61,23 @@ for (const route of ROUTES) {
   })
 }
 
+test('the data pages are entered from the about page, not the top bar', async ({ page }) => {
+  const problems = await watch(page)
+  await page.goto('about')
+  const bar = page.getByRole('navigation', { name: '主要導覽', exact: true })
+  await expect(bar.getByRole('link', { name: '關於本站' })).toBeVisible()
+  await expect(bar.getByRole('link', { name: '資料品質' })).toHaveCount(0)
+  await expect(bar.getByRole('link', { name: '資料分析' })).toHaveCount(0)
+  await page
+    .locator('#ab-data')
+    .getByRole('link', { name: /資料分析/ })
+    .click()
+  await expect(page.locator('h1')).toHaveText('資料分析')
+  // The bar marks the entrance, since it has no item of its own to mark.
+  await expect(bar.getByRole('link', { name: '關於本站' })).toHaveAttribute('aria-current', 'page')
+  expect(problems).toEqual([])
+})
+
 test('a shared animal link opens that animal', async ({ page }) => {
   const problems = await watch(page)
   const animal = animals[0]!

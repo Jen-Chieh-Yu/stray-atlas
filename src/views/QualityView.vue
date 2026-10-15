@@ -129,7 +129,10 @@ function grades(row: QualityRow, key: string): string {
 
 <template>
   <div class="page">
-    <PageHead title="資料品質">
+    <PageHead
+      title="資料品質"
+      :back="{ to: { path: '/about', hash: '#ab-data' }, label: '關於本站 · 資料品質與分析' }"
+    >
       同一份開放資料，22
       個縣市有二十二種填法。這頁把欄位的完整度攤開來看：哪些欄位整欄是空的、哪些縣市的紀錄補不齊，以及本站因此不敢畫哪一張圖。
     </PageHead>
