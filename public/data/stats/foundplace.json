@@ -1,65 +1,65 @@
 {
-  "snapshot_date": "2026-10-14",
-  "generated_at_utc": "2026-10-14T03:19:51Z",
-  "rows": 8456,
+  "snapshot_date": "2026-10-15",
+  "generated_at_utc": "2026-10-15T02:58:15Z",
+  "rows": 8499,
   "district_reference": "loaded",
   "place_kinds": {
-    "district": 1219,
-    "blank": 1032,
-    "address": 5161,
-    "landmark": 928,
+    "blank": 1037,
+    "landmark": 929,
+    "address": 5186,
+    "district": 1231,
     "non_place": 116
   },
   "confidence": {
     "high": {
-      "rows": 7,
-      "share": 0.0008
+      "rows": 8,
+      "share": 0.0009
     },
     "medium": {
-      "rows": 1893,
-      "share": 0.2239
+      "rows": 1899,
+      "share": 0.2234
     },
     "low": {
-      "rows": 5408,
-      "share": 0.6395
+      "rows": 5439,
+      "share": 0.64
     },
     "none": {
-      "rows": 1148,
-      "share": 0.1358
+      "rows": 1153,
+      "share": 0.1357
     }
   },
   "county_source": {
-    "text": 187,
-    "shelter": 7121,
-    "none": 1148
+    "text": 188,
+    "shelter": 7158,
+    "none": 1153
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3115,
-    "verified_against_reference": 3112,
+    "extracted": 3134,
+    "verified_against_reference": 3131,
     "not_in_that_county": 3
   },
   "samples": {
     "high": [
+      "林口區新北市林口區湖南里０３１鄰文林六街６２巷１７號",
       "新北市三峽區中山路365-13號",
       "基隆市安樂區崇德路18號1樓",
       "桃園市平鎮區龍南路244號",
-      "新北市糞箕湖95號",
-      "新北市淡水區埤島里65號"
+      "新北市糞箕湖95號"
     ],
     "medium": [
-      "三重區三重區仁愛街55號",
-      "板橋區大觀路二段20巷13號",
-      "西螺鎮延平路",
-      "三芝區長春街",
-      "金沙鎮汶沙里博愛街"
+      "土城區三民路4號",
+      "八里區忠四街43號",
+      "汐止區茄苳瀑布產業道路",
+      "金城鎮北門里民生路",
+      "蘆洲區蘆洲區長安街164號"
     ],
     "low": [
-      "後龍鎮南港里",
-      "塩安路28號",
-      "碧園路二段337巷18號",
-      "中山路",
-      "行義路(龍鳳谷公園)"
+      "衛武營",
+      "永樂里延平北路一段(原拾獲地:塔城街)",
+      "金華街",
+      "至誠路一段６２巷",
+      "環鎮東路二段"
     ],
     "none": [
       "臺北市動物之家",
