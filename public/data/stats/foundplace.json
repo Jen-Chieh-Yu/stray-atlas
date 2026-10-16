@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-10-15",
-  "generated_at_utc": "2026-10-15T02:58:15Z",
-  "rows": 8499,
+  "snapshot_date": "2026-10-16",
+  "generated_at_utc": "2026-10-16T02:55:46Z",
+  "rows": 8524,
   "district_reference": "loaded",
   "place_kinds": {
-    "blank": 1037,
-    "landmark": 929,
     "address": 5186,
-    "district": 1231,
+    "blank": 1049,
+    "landmark": 928,
+    "district": 1245,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0009
     },
     "medium": {
-      "rows": 1899,
-      "share": 0.2234
+      "rows": 1905,
+      "share": 0.2235
     },
     "low": {
-      "rows": 5439,
-      "share": 0.64
+      "rows": 5446,
+      "share": 0.6389
     },
     "none": {
-      "rows": 1153,
-      "share": 0.1357
+      "rows": 1165,
+      "share": 0.1367
     }
   },
   "county_source": {
     "text": 188,
-    "shelter": 7158,
-    "none": 1153
+    "shelter": 7171,
+    "none": 1165
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3134,
-    "verified_against_reference": 3131,
+    "extracted": 3154,
+    "verified_against_reference": 3151,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市糞箕湖95號"
     ],
     "medium": [
-      "土城區三民路4號",
-      "八里區忠四街43號",
-      "汐止區茄苳瀑布產業道路",
-      "金城鎮北門里民生路",
-      "蘆洲區蘆洲區長安街164號"
+      "烏來區溫泉街71號",
+      "金城鎮東門里民族路",
+      "新店區北宜路一段39巷6號",
+      "新店區錦秀路11巷",
+      "新店區安忠路25號"
     ],
     "low": [
-      "衛武營",
-      "永樂里延平北路一段(原拾獲地:塔城街)",
-      "金華街",
-      "至誠路一段６２巷",
-      "環鎮東路二段"
+      "中清西二街45巷",
+      "石岡街下坑巷119號",
+      "田中高鐵特區",
+      "埔新路359-2號",
+      "泉源路 少帥禪園往第一公墓方向"
     ],
     "none": [
       "臺北市動物之家",
