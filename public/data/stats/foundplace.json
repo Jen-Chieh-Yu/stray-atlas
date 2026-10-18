@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-10-17",
-  "generated_at_utc": "2026-10-17T02:47:03Z",
-  "rows": 8537,
+  "snapshot_date": "2026-10-18",
+  "generated_at_utc": "2026-10-18T02:48:54Z",
+  "rows": 8535,
   "district_reference": "loaded",
   "place_kinds": {
     "address": 5194,
-    "landmark": 939,
-    "blank": 1033,
-    "district": 1255,
+    "blank": 1031,
+    "landmark": 940,
+    "district": 1254,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0009
     },
     "medium": {
-      "rows": 1912,
-      "share": 0.224
+      "rows": 1918,
+      "share": 0.2247
     },
     "low": {
-      "rows": 5468,
-      "share": 0.6405
+      "rows": 5462,
+      "share": 0.64
     },
     "none": {
-      "rows": 1149,
-      "share": 0.1346
+      "rows": 1147,
+      "share": 0.1344
     }
   },
   "county_source": {
     "text": 188,
     "shelter": 7200,
-    "none": 1149
+    "none": 1147
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3171,
-    "verified_against_reference": 3168,
+    "extracted": 3176,
+    "verified_against_reference": 3173,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "新北市糞箕湖95號"
     ],
     "medium": [
-      "蘆洲區蘆洲區光復路43號",
-      "五股區民義路二段42巷20號",
-      "泰山區明志路一段",
-      "新莊區中華路",
-      "烏來區溫泉街71號"
+      "林口區林口粉寮路一段149號",
+      "八里區中山路一段",
+      "八里區中山路二段",
+      "八里區商港路",
+      "八里區中華路"
     ],
     "low": [
-      "和平東路三段",
-      "成功路四段(原北投 光明路)",
-      "政大里萬壽路",
-      "關渡里大度路三段",
-      "龍山巷"
+      "指南路三段34巷靠近老泉街45巷交叉口",
+      "平等里平菁街93巷",
+      "三重路",
+      "綠堤里雙園街106巷",
+      "中民路"
     ],
     "none": [
       "臺北市動物之家",
