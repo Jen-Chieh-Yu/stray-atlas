@@ -1,65 +1,65 @@
 {
-  "snapshot_date": "2026-10-18",
-  "generated_at_utc": "2026-10-18T02:48:54Z",
-  "rows": 8535,
+  "snapshot_date": "2026-10-19",
+  "generated_at_utc": "2026-10-19T03:01:49Z",
+  "rows": 8530,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5194,
-    "blank": 1031,
+    "district": 1255,
+    "address": 5190,
+    "blank": 1029,
     "landmark": 940,
-    "district": 1254,
     "non_place": 116
   },
   "confidence": {
     "high": {
-      "rows": 8,
-      "share": 0.0009
+      "rows": 9,
+      "share": 0.0011
     },
     "medium": {
       "rows": 1918,
-      "share": 0.2247
+      "share": 0.2249
     },
     "low": {
-      "rows": 5462,
-      "share": 0.64
+      "rows": 5458,
+      "share": 0.6399
     },
     "none": {
-      "rows": 1147,
-      "share": 0.1344
+      "rows": 1145,
+      "share": 0.1342
     }
   },
   "county_source": {
-    "text": 188,
-    "shelter": 7200,
-    "none": 1147
+    "text": 189,
+    "shelter": 7196,
+    "none": 1145
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3176,
-    "verified_against_reference": 3173,
+    "extracted": 3178,
+    "verified_against_reference": 3175,
     "not_in_that_county": 3
   },
   "samples": {
     "high": [
+      "三重區新北市三重區溪尾街293號旁",
       "林口區新北市林口區湖南里０３１鄰文林六街６２巷１７號",
       "新北市三峽區中山路365-13號",
       "基隆市安樂區崇德路18號1樓",
-      "桃園市平鎮區龍南路244號",
-      "新北市糞箕湖95號"
+      "桃園市平鎮區龍南路244號"
     ],
     "medium": [
+      "三重區三重五華街89_1號",
       "林口區林口粉寮路一段149號",
       "八里區中山路一段",
       "八里區中山路二段",
-      "八里區商港路",
-      "八里區中華路"
+      "八里區商港路"
     ],
     "low": [
-      "指南路三段34巷靠近老泉街45巷交叉口",
-      "平等里平菁街93巷",
-      "三重路",
-      "綠堤里雙園街106巷",
-      "中民路"
+      "頭份市興隆里",
+      "新安里永公路",
+      "新芳路國基漁場",
+      "至善街31巷",
+      "民生十二街59巷10號"
     ],
     "none": [
       "臺北市動物之家",
