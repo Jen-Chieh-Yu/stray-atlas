@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-10-19",
-  "generated_at_utc": "2026-10-19T03:01:49Z",
-  "rows": 8530,
+  "snapshot_date": "2026-10-20",
+  "generated_at_utc": "2026-10-20T03:11:21Z",
+  "rows": 8553,
   "district_reference": "loaded",
   "place_kinds": {
-    "district": 1255,
-    "address": 5190,
-    "blank": 1029,
-    "landmark": 940,
+    "address": 5222,
+    "landmark": 943,
+    "blank": 1021,
+    "district": 1251,
     "non_place": 116
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.0011
     },
     "medium": {
-      "rows": 1918,
-      "share": 0.2249
+      "rows": 1929,
+      "share": 0.2255
     },
     "low": {
-      "rows": 5458,
-      "share": 0.6399
+      "rows": 5478,
+      "share": 0.6405
     },
     "none": {
-      "rows": 1145,
-      "share": 0.1342
+      "rows": 1137,
+      "share": 0.1329
     }
   },
   "county_source": {
     "text": 189,
-    "shelter": 7196,
-    "none": 1145
+    "shelter": 7227,
+    "none": 1137
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3178,
-    "verified_against_reference": 3175,
+    "extracted": 3185,
+    "verified_against_reference": 3182,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,22 +48,22 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
-      "三重區三重五華街89_1號",
-      "林口區林口粉寮路一段149號",
-      "八里區中山路一段",
-      "八里區中山路二段",
-      "八里區商港路"
+      "西螺鎮延平路",
+      "金城鎮賢庵里西海路三段水試所",
+      "金城鎮北門里中興路",
+      "新店區直潭路十街",
+      "三重區三重五華街89_1號"
     ],
     "low": [
-      "頭份市興隆里",
-      "新安里永公路",
-      "新芳路國基漁場",
-      "至善街31巷",
-      "民生十二街59巷10號"
+      "中央路",
+      "雙澳",
+      "新康街",
+      "行善路",
+      "民生街81巷26號"
     ],
     "none": [
-      "臺北市動物之家",
       "民眾不擬續養",
+      "臺北市動物之家",
       "動物之家",
       "所內生產，媽媽1110241",
       "所內出生"
