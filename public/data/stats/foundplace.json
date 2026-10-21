@@ -1,42 +1,42 @@
 {
-  "snapshot_date": "2026-10-20",
-  "generated_at_utc": "2026-10-20T03:11:21Z",
-  "rows": 8553,
+  "snapshot_date": "2026-10-21",
+  "generated_at_utc": "2026-10-21T03:06:25Z",
+  "rows": 8594,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5222,
-    "landmark": 943,
-    "blank": 1021,
-    "district": 1251,
+    "blank": 1016,
+    "address": 5242,
+    "district": 1276,
+    "landmark": 944,
     "non_place": 116
   },
   "confidence": {
     "high": {
       "rows": 9,
-      "share": 0.0011
+      "share": 0.001
     },
     "medium": {
-      "rows": 1929,
-      "share": 0.2255
+      "rows": 1941,
+      "share": 0.2259
     },
     "low": {
-      "rows": 5478,
-      "share": 0.6405
+      "rows": 5512,
+      "share": 0.6414
     },
     "none": {
-      "rows": 1137,
-      "share": 0.1329
+      "rows": 1132,
+      "share": 0.1317
     }
   },
   "county_source": {
     "text": 189,
-    "shelter": 7227,
-    "none": 1137
+    "shelter": 7273,
+    "none": 1132
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3185,
-    "verified_against_reference": 3182,
+    "extracted": 3222,
+    "verified_against_reference": 3219,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
-      "西螺鎮延平路",
-      "金城鎮賢庵里西海路三段水試所",
-      "金城鎮北門里中興路",
-      "新店區直潭路十街",
-      "三重區三重五華街89_1號"
+      "五股區五股區中興路三段21-2號",
+      "大埤鄉中正路",
+      "四湖鄉中正路",
+      "三重區三和路四段",
+      "五股區外寮路"
     ],
     "low": [
-      "中央路",
-      "雙澳",
-      "新康街",
-      "行善路",
-      "民生街81巷26號"
+      "復興三路",
+      "自強路",
+      "再連路",
+      "合興路",
+      "健康路"
     ],
     "none": [
       "民眾不擬續養",
