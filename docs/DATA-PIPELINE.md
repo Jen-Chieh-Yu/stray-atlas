@@ -19,13 +19,44 @@
 
 ## 每日快照機制
 
-`.github/workflows/daily-snapshot.yml` 每日執行 `scripts/fetch_snapshot.py`（排程設在臺灣時間 08:00，但 GitHub 會延後排程工作，2026 年 9 月實際在 09:47–14:37 之間完成，多半在 11 點前後）：下載當日 CSV、驗證必要欄位與筆數下限、以固定 mtime 壓成 `data/raw/YYYY-MM-DD.csv.gz`，再 commit 回 repo。下載失敗重試 4 次（5／15／45 秒退避），當日檔案已存在則直接跳過、不打來源網站。
+`.github/workflows/daily-snapshot.yml` 每日執行 `scripts/fetch_snapshot.py`：下載當日 CSV、驗證必要欄位與筆數下限、以固定 mtime 壓成 `data/raw/YYYY-MM-DD.csv.gz`，再 commit 回 repo。下載失敗重試 4 次（5／15／45 秒退避），當日檔案已存在則直接跳過、不打來源網站。
+
+每天臺灣時間 21:00 由桌機觸發一次，抓取經由 Tailscale 出口節點從臺灣連線，原因與做法見下節。2026-10-21 以前排程設在 08:00，GitHub 延後排程後實際多在 11 點前後完成；改到 21:00 後，每份快照的時點從上午移到晚上，交接那天與前一份快照相隔約一天半。`fetched_at_utc` 記錄每次的實際時間。
 
 `data/raw/` 保存的是**來源的原始位元組**（含 UTF-8 BOM 與 CRLF），刻意不做正規化——這個目錄的用途是可稽核的存檔，若在寫入時改寫編碼，日後就無法分辨變動來自來源還是本專案。讀取時請用 `encoding='utf-8-sig'`。
 
 `data/raw/_manifest.csv` 逐日記錄 `date,status,rows,bytes,sha256,fetched_at_utc`。當日內容與前一份快照完全相同時不重複存檔，只在 manifest 記一列 `unchanged`；抓取失敗記 `failed`。**因此 `data/raw/` 出現缺日不等於當天沒有資料**，manifest 才是判斷依據——階段 3 以「消失的 `animal_id`」建構離所標籤時必須以它為準，否則會把「來源沒變」誤讀成「全部動物同時離所」。
 
 當天存成新快照時，同一個 workflow 接著以 `scripts/build_all.py --date <當日>` 重建 `public/data/`，與快照一起 commit，再以 `workflow_dispatch` 觸發部署（`GITHUB_TOKEN` 的推送不會觸發其他 workflow，所以必須明確呼叫）。來源與前一天相同（`unchanged`）或抓取失敗時不重建、不部署。重建失敗時快照照樣 commit，`public/data/` 維持前一份，該次 run 標為失敗——存檔永遠優先於網站。
+
+### 來源封鎖海外連線（2026-10-22 起）
+
+2026-10-22 起，GitHub Actions 連 `data.moa.gov.tw` 一律 TCP 連線逾時，改用出口節點前的快照因此遺失（manifest 記為 `failed`）。10-27 以 check-host.net 從 40 個海外節點測試，39 個逾時；同時間同屬農業部的 `www.moa.gov.tw` 與 `data.gov.tw` 全部連得上，從臺灣的住宅網路則 4 秒內抓完。可見是開放資料這台主機只接受臺灣來源的連線，不是來源停擺。
+
+因應方式是讓 GitHub 的 runner 以臨時節點加入 Tailscale 網路，只在抓取那一步改走一台在臺灣、晚上開機的桌機出口，其餘步驟（push、部署）仍走 GitHub 自己的網路。tailnet 的存取規則只允許 `tag:ci` 經出口節點連外，碰不到桌機與其他裝置。正式抓取前先經出口節點連一次來源首頁，連不上就立刻切回，不必等抓取重試十分鐘才失敗。
+
+每天的執行由三個來源觸發：
+
+| 觸發 | 時間（臺灣） | 做什麼 |
+|---|---|---|
+| 桌機的 Windows 工作排程器執行 `scripts/trigger_snapshot.ps1` | 21:00 | 以 GitHub API 觸發 `workflow_dispatch`，主要的抓取 |
+| cron `17 13 * * *` | 21:17，實際常延後 | 備援：當天還沒存檔、且實際執行時仍在 21:00–23:59 才抓；出口節點不在線就安靜結束 |
+| cron `17 0 * * *` | 08:17，實際常延後 | 檢查前一天：manifest 沒有紀錄就以 `fetch_snapshot.py --mark-failed` 記一列 `failed`，run 失敗、寄出通知 |
+
+主要的抓取不交給 cron，是因為 GitHub 會把排程延後 2–4 小時：21:00 的排程常會拖過午夜，檔名變成隔天、桌機也已關機。備援只在 23:59 前動作，是同一個理由。來源是即時的，沒抓到的那天事後補不回來，所以由隔天早上的檢查補記 `failed`，讓 manifest 每天都有一列。
+
+所需設定：
+
+| 位置 | 名稱 | 內容 |
+|---|---|---|
+| repo secret | `TS_OAUTH_CLIENT_ID`、`TS_OAUTH_SECRET` | Tailscale OAuth client，權限為可寫入的 Auth Keys，標籤 `tag:ci` |
+| repo variable | `TS_EXIT_NODE` | 出口節點（桌機）的 Tailscale IP（`100.x.y.z`） |
+| 桌機的使用者環境變數 | `STRAY_ATLAS_DISPATCH_TOKEN` | fine-grained personal access token，只限本 repo，權限 Actions: Read and write |
+| 桌機的工作排程器 | 每天 21:00 | `powershell.exe -NoProfile -ExecutionPolicy Bypass -File <repo>\scripts\trigger_snapshot.ps1` |
+
+token 有到期日，到期後 21:00 的觸發會失敗，只剩備援的 cron。
+
+為什麼排在晚上：來源是即時介接，收容所改一筆、CSV 就變一筆，任何時間抓到的都是當下狀態。比對 2026-09 到 10 月相鄰兩天的快照，平日上午 11 點時當天的修改只出現約 30%、新上架的動物約 22%，其餘發生在之後。晚上抓取更接近當天收盤的狀態。
 
 ### 手動補抓
 
@@ -34,7 +65,7 @@ python scripts/fetch_snapshot.py            # 抓當日快照
 python scripts/fetch_snapshot.py --force    # 覆蓋當日已存在的檔案
 ```
 
-`data/raw/` 由排程負責寫入並推上 `main`。本機抓的快照只供測試，不要 commit，否則會和機器人當天推上的同名檔案衝突。來源網址若變更，設定 repo variable `SNAPSHOT_URL` 即可覆寫，不需改程式。
+補抓請在 Actions 頁面手動執行 Daily snapshot（`workflow_dispatch`），桌機要開著；當天臺灣時間午夜前都來得及，manifest 裡當天的 `failed` 會被覆蓋。`data/raw/` 由排程負責寫入並推上 `main`。本機抓的快照只供測試，不要 commit，否則會和機器人當天推上的同名檔案衝突。來源網址若變更，設定 repo variable `SNAPSHOT_URL` 即可覆寫，不需改程式。
 
 ### 稽核
 
