@@ -283,7 +283,16 @@ def main() -> int:
         action="store_true",
         help="Re-download and overwrite even if today's snapshot already exists.",
     )
+    parser.add_argument(
+        "--mark-failed",
+        metavar="REASON",
+        help="Record --date as failed without fetching. For a day that has passed "
+        "with no run reaching the source: the feed is live, so it cannot be "
+        "fetched afterwards.",
+    )
     args = parser.parse_args()
+    if args.mark_failed and not args.date:
+        parser.error("--mark-failed needs --date")
 
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     backfill_manifest()
@@ -300,6 +309,17 @@ def main() -> int:
         )
         set_output(status="skipped", date=date, commit_message="")
         return 0
+
+    if args.mark_failed:
+        log(f"::error::snapshot {date} missed: {args.mark_failed}")
+        record(date, "failed", 0, 0, "")
+        write_step_summary(date, "failed", error=args.mark_failed)
+        set_output(
+            status="failed",
+            date=date,
+            commit_message=f"data: manifest {date} (fetch failed)",
+        )
+        return 1
 
     log(f"fetching {args.url}")
     try:

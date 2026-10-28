@@ -12,15 +12,28 @@ name: Daily snapshot
 
 on:
   schedule:
-    # 00:00 UTC = 08:00 Asia/Taipei. GitHub delays scheduled runs under load
-    # (in September 2026 they finished between 09:47 and 14:37 Taipei time,
-    # usually around 11:00) and may skip them entirely; the filename is derived
-    # from the Taipei date at run time, so a delay never mislabels a file.
+    # Since 2026-10-22 the source drops connections from outside Taiwan, so the
+    # fetch goes out through a Tailscale exit node on a desktop in Taiwan that
+    # is on in the evening. The daily run is started by that desktop at 21:00
+    # Taipei time (scripts/trigger_snapshot.ps1, a workflow_dispatch): GitHub
+    # delays scheduled runs by two to four hours, which in the evening would
+    # carry them past midnight, onto the next day's date and past the time the
+    # desktop is off. The crons here only cover for it:
+    #
+    # - 21:17, a backup in case the desktop's trigger did not fire. It fetches
+    #   only while it is still 21:00-23:59 in Taipei; a run delayed past
+    #   midnight would archive the next day's date at the wrong time of day.
+    # - 08:17, the check on the day before (WATCHDOG). The feed is live, so a
+    #   missed day cannot be fetched afterwards; this records it as failed,
+    #   which also fails the run and sends the notification.
+    #
+    # Minute 17 avoids the top-of-hour queue.
     #
     # Note: GitHub disables cron workflows in a repository with no activity for
     # 60 days. The daily commit this job makes counts as activity, so the
     # schedule sustains itself as long as it keeps succeeding.
-    - cron: "0 0 * * *"
+    - cron: "17 13 * * *" # 21:17 Asia/Taipei
+    - cron: "17 0 * * *" # 08:17, see WATCHDOG
   workflow_dispatch:
     inputs:
       force:
@@ -41,6 +54,10 @@ concurrency:
   group: daily-snapshot
   cancel-in-progress: false
 
+env:
+  # The morning cron; must match its cron string exactly.
+  WATCHDOG: "17 0 * * *"
+
 jobs:
   snapshot:
     runs-on: ubuntu-latest
@@ -55,21 +72,117 @@ jobs:
         with:
           python-version: "3.12"
 
+      # mode=fetch: archive today. mode=mark-failed: the watchdog found no
+      # manifest row for yesterday. mode=none: nothing to do.
+      #
+      # A day already archived needs nothing more. fetch_snapshot.py skips a
+      # day whose file exists, but an "unchanged" day has no file, so read the
+      # manifest row instead.
+      - name: Decide what this run does
+        id: plan
+        env:
+          FORCE: ${{ inputs.force }}
+          EVENT: ${{ github.event_name }}
+          SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          status_of() { awk -F, -v d="$1" '$1 == d { print $2 }' data/raw/_manifest.csv; }
+          today="$(TZ=Asia/Taipei date +%F)"
+          hour="$(TZ=Asia/Taipei date +%H)"
+          if [ "${SCHEDULE}" = "${WATCHDOG}" ]; then
+            yesterday="$(TZ=Asia/Taipei date -d yesterday +%F)"
+            if [ -z "$(status_of "${yesterday}")" ]; then
+              echo "mode=mark-failed" >> "${GITHUB_OUTPUT}"
+              echo "date=${yesterday}" >> "${GITHUB_OUTPUT}"
+            else
+              echo "${yesterday} is recorded as $(status_of "${yesterday}")"
+              echo "mode=none" >> "${GITHUB_OUTPUT}"
+            fi
+            exit 0
+          fi
+          status="$(status_of "${today}")"
+          if [ "${FORCE}" != "true" ] && { [ "${status}" = "stored" ] || [ "${status}" = "unchanged" ]; }; then
+            echo "${today} is already ${status}, nothing to do"
+            echo "mode=none" >> "${GITHUB_OUTPUT}"
+          elif [ "${EVENT}" = "schedule" ] && (( 10#${hour} < 21 )); then
+            echo "the backup ran at ${hour}:00 Taipei time, outside 21:00-23:59; skipping"
+            echo "mode=none" >> "${GITHUB_OUTPUT}"
+          else
+            echo "mode=fetch" >> "${GITHUB_OUTPUT}"
+            echo "date=${today}" >> "${GITHUB_OUTPUT}"
+          fi
+
+      # Joins as an ephemeral node, removed once the run ends. The tailnet policy
+      # lets tag:ci use the exit node for the internet and reach nothing else.
+      - name: Join the tailnet
+        if: steps.plan.outputs.mode == 'fetch'
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+
+      # Probe the source through the exit node before the real fetch, so an
+      # offline desktop costs seconds rather than the fetch's ten minutes of
+      # retries. On failure the exit node is cleared at once: with it set and
+      # offline, the push later in the job would have no route either.
+      - name: Route through the exit node
+        id: route
+        if: steps.plan.outputs.mode == 'fetch'
+        env:
+          EXIT_NODE: ${{ vars.TS_EXIT_NODE }}
+          SOURCE_HOST: data.moa.gov.tw
+        run: |
+          # Resolve the source first: the runner's DNS server may not be
+          # reachable once all traffic leaves through the exit node.
+          ip="$(getent ahostsv4 "${SOURCE_HOST}" | awk 'NR == 1 { print $1 }')" || true
+          if [ -n "${ip}" ]; then
+            echo "${ip} ${SOURCE_HOST}" | sudo tee -a /etc/hosts > /dev/null
+          fi
+          if sudo tailscale set --exit-node="${EXIT_NODE}" \
+            && curl -sS -o /dev/null --connect-timeout 20 --max-time 60 "https://${SOURCE_HOST}/"; then
+            echo "online=true" >> "${GITHUB_OUTPUT}"
+          else
+            sudo tailscale set --exit-node= || true
+            echo "::notice::exit node ${EXIT_NODE} is offline or cannot reach ${SOURCE_HOST}"
+            echo "online=false" >> "${GITHUB_OUTPUT}"
+          fi
+
       # No dependency install step: the script is standard library only, which
       # keeps the daily job immune to package resolution breaking.
+      #
+      #
+      # Without the exit node the backup cron stops quietly, leaving the day to
+      # the watchdog. A dispatched run goes ahead and fails as the source blocks
+      # the runner, recording the day as failed; a later run that day can still
+      # overwrite that row.
       - name: Fetch snapshot
         id: fetch
+        if: >-
+          steps.plan.outputs.mode == 'mark-failed'
+          || (steps.plan.outputs.mode == 'fetch'
+            && (steps.route.outputs.online == 'true'
+              || github.event_name == 'workflow_dispatch'))
         env:
           # Optional repository variable; the script falls back to the URL
           # published on https://data.gov.tw/dataset/85903 when unset.
           SNAPSHOT_URL: ${{ vars.SNAPSHOT_URL }}
           FORCE: ${{ inputs.force }}
+          MODE: ${{ steps.plan.outputs.mode }}
+          DATE: ${{ steps.plan.outputs.date }}
         run: |
-          if [ "${FORCE}" = "true" ]; then
+          if [ "${MODE}" = "mark-failed" ]; then
+            python scripts/fetch_snapshot.py --date "${DATE}" \
+              --mark-failed "no run archived ${DATE}; was the exit node offline all evening?"
+          elif [ "${FORCE}" = "true" ]; then
             python scripts/fetch_snapshot.py --force
           else
             python scripts/fetch_snapshot.py
           fi
+
+      # Everything after the fetch, the push included, goes out directly.
+      - name: Leave the exit node
+        if: always() && steps.route.outputs.online == 'true'
+        run: sudo tailscale set --exit-node=
 
       # Only a newly stored snapshot is worth rebuilding. "unchanged" means the
       # source repeated yesterday's file, so the site data would differ only in
