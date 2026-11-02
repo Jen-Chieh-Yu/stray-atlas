@@ -1,0 +1,75 @@
+# One-off probe: can a GitHub-hosted runner reach the data source, directly
+# and through the Tailscale exit node? See docs/DATA-PIPELINE.md, "來源封鎖
+# 海外連線".
+#
+# Runs on push to its own branch only. The branch is never merged, and the run
+# writes nothing to the repo: no snapshot, no manifest row. Every probe reports
+# its result rather than failing, so one blocked host does not hide the rest.
+name: Source reachability probe
+
+on:
+  push:
+    branches: [feature/20261102-source-probe]
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Runner egress
+        run: curl -sS --max-time 10 https://ipinfo.io/json || true
+
+      # data.moa.gov.tw is the source; the other two are controls, run by the
+      # same ministry and by the open data portal. curl exit 28 is a timeout
+      # (packets dropped), 7 a refused connection.
+      - name: Direct
+        run: |
+          probe() {
+            curl -sS -o /dev/null --connect-timeout 15 --max-time "$2" \
+              -w "connect=%{time_connect}s total=%{time_total}s http=%{http_code} size=%{size_download}\n" \
+              "$1" || echo "curl exit $?"
+          }
+          for host in data.moa.gov.tw www.moa.gov.tw data.gov.tw; do
+            echo "== ${host} $(getent ahostsv4 "${host}" | awk 'NR == 1 { print $1 }')"
+            probe "https://${host}/" 30
+          done
+          # The endpoint fetch_snapshot.py uses, once: a WAF may treat it
+          # differently from the home page.
+          echo "== snapshot endpoint"
+          probe "https://data.moa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL&FOTT=CSV&IsTransData=1" 120
+
+      - name: Where packets stop
+        run: |
+          sudo apt-get update -qq > /dev/null && sudo apt-get install -y -qq mtr-tiny > /dev/null
+          sudo mtr -T -P 443 -c 5 -r -w data.moa.gov.tw || true
+
+      - name: Join the tailnet
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+
+      # Resolve first: the runner's DNS server may not be reachable once all
+      # traffic leaves through the exit node.
+      - name: Through the exit node
+        env:
+          EXIT_NODE: ${{ vars.TS_EXIT_NODE }}
+        run: |
+          for host in data.moa.gov.tw ipinfo.io; do
+            echo "$(getent ahostsv4 "${host}" | awk 'NR == 1 { print $1 }') ${host}" \
+              | sudo tee -a /etc/hosts > /dev/null
+          done
+          if sudo tailscale set --exit-node="${EXIT_NODE}"; then
+            curl -sS --max-time 10 https://ipinfo.io/json || true
+            curl -sS -o /dev/null --connect-timeout 20 --max-time 60 \
+              -w "connect=%{time_connect}s total=%{time_total}s http=%{http_code}\n" \
+              https://data.moa.gov.tw/ || echo "curl exit $?"
+            sudo tailscale set --exit-node=
+          else
+            echo "could not set exit node ${EXIT_NODE}; is the desktop online and approved?"
+          fi
