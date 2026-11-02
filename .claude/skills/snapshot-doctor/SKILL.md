@@ -15,7 +15,7 @@ repo 外的元件：在臺灣的桌機、Tailscale 出口節點、桌機上的�
 | 時間（臺灣） | 誰 | 做什麼 |
 |---|---|---|
 | 21:00 | 桌機的工作排程器執行 `scripts/trigger_snapshot.ps1` | 以 GitHub API 觸發 `workflow_dispatch`，主要的抓取 |
-| 21:17，常延後數小時 | cron 備援 | 當天還沒存檔、且仍在 21:00–23:59 才抓；出口節點不在線就安靜結束 |
+| 21:17，常延後數小時 | cron 備援 | 當天還沒存檔、且仍在 21:00–23:59 才抓；直連與出口節點都連不上就安靜結束 |
 | 08:17，常延後到中午前後 | cron 檢查 | 前一天沒有任何紀錄 → 記一列 `failed`，run 失敗並寄出通知 |
 
 manifest 每天一列：`stored`（新快照，同時重建 `public/data/` 並部署）、`unchanged`（與前一份
@@ -50,7 +50,8 @@ manifest 每天一列：`stored`（新快照，同時重建 `public/data/` 並�
 | 看到的 | 最可能的原因 | 請人類確認 |
 |---|---|---|
 | `failed`，由 `watchdog` 補記 | 21:00 沒有觸發，備援也沒在午夜前跑到 | 桌機那晚是否開機、是否在 21:00 前睡著；工作排程器「上次執行結果」是否為 `0x0`；`STRAY_ATLAS_DISPATCH_TOKEN` 是否過期（fine-grained token 有到期日） |
-| `failed`，由 `run` 記錄，摘要有 `exit node … is offline` | run 有啟動，但出口節點不在線 | 桌機的 Tailscale 是否連線、Run exit node 是否開著；管理後台的出口節點是否仍核准、節點金鑰是否過期（key expiry）；repo variable `TS_EXIT_NODE` 是否為桌機目前的 Tailscale IP |
+| `failed`，由 `run` 記錄，摘要有 `Tailscale secrets are not set` | 直連被擋，repo 又沒有 Tailscale 的 secret | repo 的 Settings → Secrets and variables → Actions 是否有 `TS_OAUTH_CLIENT_ID`／`TS_OAUTH_SECRET`（要放在 Repository secrets，不是 Environment 或 Dependabot）；再用 check-host.net 確認封鎖是否回來了 |
+| `failed`，由 `run` 記錄，摘要有 `source unreachable directly and through exit node` | 直連被擋，出口節點也不在線 | 桌機的 Tailscale 是否連線、Run exit node 是否開著；管理後台的出口節點是否仍核准、節點金鑰是否過期（key expiry）；repo variable `TS_EXIT_NODE` 是否為桌機目前的 Tailscale IP |
 | run 停在 **Join the tailnet** | OAuth client 有問題 | repo secret `TS_OAUTH_CLIENT_ID`／`TS_OAUTH_SECRET` 是否存在且正確；OAuth client 是否有 Auth Keys 寫入權限與 `tag:ci`；tailnet 規則的 `tagOwners` 是否宣告 `tag:ci` |
 | `failed`，由 `run` 記錄，出口節點在線 | 來源本身出問題，或來源連臺灣家用網路也擋了 | 從桌機瀏覽器開來源網址（`docs/DATA-PIPELINE.md` 的介接網址）；`data.gov.tw` 資料集頁面是否有公告 |
 | 連續 3 列以上 `unchanged`，run 因 freshness 失敗 | 來源停止更新 | `data.gov.tw` 資料集頁面的更新時間；不是本專案的錯，記錄即可 |

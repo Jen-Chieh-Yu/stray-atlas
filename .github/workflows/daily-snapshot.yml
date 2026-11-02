@@ -12,9 +12,11 @@ name: Daily snapshot
 
 on:
   schedule:
-    # Since 2026-10-22 the source drops connections from outside Taiwan, so the
-    # fetch goes out through a Tailscale exit node on a desktop in Taiwan that
-    # is on in the evening. The daily run is started by that desktop at 21:00
+    # From 2026-10-22 the source dropped connections from outside Taiwan; by
+    # 11-02 a runner could fetch directly again. The run tries the source
+    # directly first and falls back to a Tailscale exit node on a desktop in
+    # Taiwan that is on in the evening, in case the block returns. The daily
+    # run is started by that desktop at 21:00
     # Taipei time (scripts/trigger_snapshot.ps1, a workflow_dispatch): GitHub
     # delays scheduled runs by two to four hours, which in the evening would
     # carry them past midnight, onto the next day's date and past the time the
@@ -62,6 +64,10 @@ jobs:
   snapshot:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Without these the tailnet join fails the whole job before the fetch
+    # step can record anything, so the exit node is skipped instead.
+    env:
+      HAS_TS_SECRETS: ${{ secrets.TS_OAUTH_CLIENT_ID != '' && secrets.TS_OAUTH_SECRET != '' }}
 
     steps:
       - name: Check out repository
@@ -111,10 +117,25 @@ jobs:
             echo "date=${today}" >> "${GITHUB_OUTPUT}"
           fi
 
+      # A quick probe, so a blocked source costs seconds rather than the
+      # fetch's ten minutes of retries.
+      - name: Try the source directly
+        id: direct
+        if: steps.plan.outputs.mode == 'fetch'
+        env:
+          SOURCE_HOST: data.moa.gov.tw
+        run: |
+          if curl -sS -o /dev/null --connect-timeout 20 --max-time 60 "https://${SOURCE_HOST}/"; then
+            echo "online=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "::notice::${SOURCE_HOST} is not reachable directly; trying the exit node"
+            echo "online=false" >> "${GITHUB_OUTPUT}"
+          fi
+
       # Joins as an ephemeral node, removed once the run ends. The tailnet policy
       # lets tag:ci use the exit node for the internet and reach nothing else.
       - name: Join the tailnet
-        if: steps.plan.outputs.mode == 'fetch'
+        if: steps.direct.outputs.online == 'false' && env.HAS_TS_SECRETS == 'true'
         uses: tailscale/github-action@v4
         with:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
@@ -127,7 +148,7 @@ jobs:
       # offline, the push later in the job would have no route either.
       - name: Route through the exit node
         id: route
-        if: steps.plan.outputs.mode == 'fetch'
+        if: steps.direct.outputs.online == 'false' && env.HAS_TS_SECRETS == 'true'
         env:
           EXIT_NODE: ${{ vars.TS_EXIT_NODE }}
           SOURCE_HOST: data.moa.gov.tw
@@ -150,19 +171,20 @@ jobs:
       # No dependency install step: the script is standard library only, which
       # keeps the daily job immune to package resolution breaking.
       #
-      # Without the exit node the backup cron stops quietly, leaving the day to
-      # the watchdog. A dispatched run records the day as failed at once,
-      # without contacting the source: it drops packets from outside Taiwan, so
-      # a direct fetch would wait out every retry, about 13 minutes against the
-      # job's 15-minute limit. A later run that day can still overwrite that
-      # row. A forced run records nothing, so an archived or unchanged day is
-      # never turned into a failed one.
+      # When neither path reaches the source, the backup cron stops quietly,
+      # leaving the day to the watchdog. A dispatched run records the day as
+      # failed at once instead of fetching: against a source that drops
+      # packets, the fetch would wait out every retry, about 13 minutes
+      # against the job's 15-minute limit. A later run that day can still
+      # overwrite that row. A forced run records nothing, so an archived or
+      # unchanged day is never turned into a failed one.
       - name: Fetch snapshot
         id: fetch
         if: >-
           steps.plan.outputs.mode == 'mark-failed'
           || (steps.plan.outputs.mode == 'fetch'
-            && (steps.route.outputs.online == 'true'
+            && (steps.direct.outputs.online == 'true'
+              || steps.route.outputs.online == 'true'
               || github.event_name == 'workflow_dispatch'))
         env:
           # Optional repository variable; the script falls back to the URL
@@ -171,18 +193,22 @@ jobs:
           FORCE: ${{ inputs.force }}
           MODE: ${{ steps.plan.outputs.mode }}
           DATE: ${{ steps.plan.outputs.date }}
-          ONLINE: ${{ steps.route.outputs.online }}
+          ONLINE: ${{ steps.direct.outputs.online == 'true' || steps.route.outputs.online == 'true' }}
           EXIT_NODE: ${{ vars.TS_EXIT_NODE }}
         run: |
+          if [ "${HAS_TS_SECRETS}" = "true" ]; then
+            why="source unreachable directly and through exit node ${EXIT_NODE}"
+          else
+            why="source unreachable directly; Tailscale secrets are not set"
+          fi
           if [ "${MODE}" = "mark-failed" ]; then
             python scripts/fetch_snapshot.py --date "${DATE}" \
-              --mark-failed "no run archived ${DATE}; was the exit node offline all evening?"
+              --mark-failed "no run archived ${DATE}; did the 21:00 trigger fire?"
           elif [ "${ONLINE}" != "true" ] && [ "${FORCE}" = "true" ]; then
-            echo "::error::exit node ${EXIT_NODE} is offline; nothing was fetched or overwritten"
+            echo "::error::${why}; nothing was fetched or overwritten"
             exit 1
           elif [ "${ONLINE}" != "true" ]; then
-            python scripts/fetch_snapshot.py --date "${DATE}" \
-              --mark-failed "exit node ${EXIT_NODE} was offline"
+            python scripts/fetch_snapshot.py --date "${DATE}" --mark-failed "${why}"
           elif [ "${FORCE}" = "true" ]; then
             python scripts/fetch_snapshot.py --force
           else
