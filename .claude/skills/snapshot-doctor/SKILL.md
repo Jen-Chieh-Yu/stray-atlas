@@ -1,12 +1,12 @@
 ---
 name: snapshot-doctor
-description: 檢查 StrayAtlas 每日快照排程是否正常：讀 origin/main 的 `data/raw/_manifest.csv`、資料 commit 與網站目前的資料日期，算出最後一次成功抓取、連續失敗或未更新幾天、有沒有缺日，判斷可能原因（桌機關機、Tailscale 出口節點離線、觸發 token 到期、secret 設錯、來源停更、重建或部署失敗），並列出人類要去哪裡確認。使用時機：使用者問「排程有沒有跑」「資料有更新嗎」「今天有抓到嗎」「網站資料是幾號的」「Daily snapshot 失敗了」「收到 Actions 失敗通知」，或貼上 Daily snapshot 的 log，即使沒提到 skill 名稱也要用。只讀不寫：不抓快照、不 commit、不觸發 workflow。
+description: 檢查 StrayAtlas 每日快照排程是否正常：讀 origin/main 的 `data/raw/_manifest.csv`、資料 commit 與網站目前的資料日期，算出最後一次成功抓取、連續失敗或未更新幾天、有沒有缺日，判斷可能原因（筆電關機、Tailscale 出口節點離線、觸發 token 到期、secret 設錯、來源停更、重建或部署失敗），並列出人類要去哪裡確認。使用時機：使用者問「排程有沒有跑」「資料有更新嗎」「今天有抓到嗎」「網站資料是幾號的」「Daily snapshot 失敗了」「收到 Actions 失敗通知」，或貼上 Daily snapshot 的 log，即使沒提到 skill 名稱也要用。只讀不寫：不抓快照、不 commit、不觸發 workflow。
 ---
 
 # 每日快照健康檢查（snapshot-doctor）
 
 目的：快照漏抓一天就永久補不回來（CLAUDE.md §3 階段 0），而 2026-10-22 起抓取依賴三個
-repo 外的元件：在臺灣的桌機、Tailscale 出口節點、桌機上的觸發 token。這個 skill 從 repo
+repo 外的元件：在臺灣的筆電、Tailscale 出口節點、筆電上的觸發 token。這個 skill 從 repo
 裡看得到的紀錄推斷哪一段壞了，再告訴人類去哪裡確認。機制見 `docs/DATA-PIPELINE.md`
 〈每日快照機制〉與〈來源封鎖海外連線〉。
 
@@ -14,9 +14,9 @@ repo 外的元件：在臺灣的桌機、Tailscale 出口節點、桌機上的�
 
 | 時間（臺灣） | 誰 | 做什麼 |
 |---|---|---|
-| 21:00 | 桌機的工作排程器執行 `scripts/trigger_snapshot.ps1` | 以 GitHub API 觸發 `workflow_dispatch`，主要的抓取 |
-| 21:17，常延後數小時 | cron 備援 | 當天還沒存檔、且仍在 21:00–23:59 才抓；直連與出口節點都連不上就安靜結束 |
-| 08:17，常延後到中午前後 | cron 檢查 | 前一天沒有任何紀錄 → 記一列 `failed`，run 失敗並寄出通知 |
+| 09:00 | 筆電的工作排程器執行 `scripts/trigger_snapshot.ps1` | 以 GitHub API 觸發 `workflow_dispatch`，主要的抓取；只在 09:00–12:59 觸發 |
+| 06:17／07:17，常延後 3–6 小時 | cron 備援 | 當天還沒存檔、且在 09:00–12:59 才抓；直連與出口節點都連不上就安靜結束 |
+| 10:17，常延後到 13–16 點 | cron 檢查 | 當天沒有任何紀錄 → 記一列 `failed`，run 失敗並寄出通知 |
 
 manifest 每天一列：`stored`（新快照，同時重建 `public/data/` 並部署）、`unchanged`（與前一份
 相同）、`failed`。
@@ -31,7 +31,7 @@ manifest 每天一列：`stored`（新快照，同時重建 `public/data/` 並�
    腳本列出：最後一次 `stored`、連續沒有新快照的天數、缺日、最近 10 列，以及每一列
    `failed` 是誰寫的：
    - `run`：當天有 run 走到抓取那一步，抓取失敗。
-   - `watchdog`：隔天早上才補記，代表當晚**沒有任何 run 走到抓取**。
+   - `watchdog`：抓取時段結束後才記（11-03 起是當天 13 點後，之前是隔天），代表那天**沒有任何 run 走到抓取**。
 
 2. **對照 commit 與網站資料**
    ```powershell
@@ -49,18 +49,17 @@ manifest 每天一列：`stored`（新快照，同時重建 `public/data/` 並�
 
 | 看到的 | 最可能的原因 | 請人類確認 |
 |---|---|---|
-| `failed`，由 `watchdog` 補記 | 21:00 沒有觸發，備援也沒在午夜前跑到 | 桌機那晚是否開機、是否在 21:00 前睡著；工作排程器「上次執行結果」是否為 `0x0`；`STRAY_ATLAS_DISPATCH_TOKEN` 是否過期（fine-grained token 有到期日） |
+| `failed`，由 `watchdog` 補記 | 09:00 沒有觸發，備援也沒在 13:00 前跑到 | 筆電那天上午是否開機並登入；Actions 頁面當天上午有沒有 scheduled run（GitHub 偶爾整個略過排程）；工作排程器「上次執行結果」是否為 `0x0`；`STRAY_ATLAS_DISPATCH_TOKEN` 是否過期（fine-grained token 有到期日） |
 | `failed`，由 `run` 記錄，摘要有 `Tailscale secrets are not set` | 直連被擋，repo 又沒有 Tailscale 的 secret | repo 的 Settings → Secrets and variables → Actions 是否有 `TS_OAUTH_CLIENT_ID`／`TS_OAUTH_SECRET`（要放在 Repository secrets，不是 Environment 或 Dependabot）；再用 check-host.net 確認封鎖是否回來了 |
-| `failed`，由 `run` 記錄，摘要有 `source unreachable directly and through exit node` | 直連被擋，出口節點也不在線 | 桌機的 Tailscale 是否連線、Run exit node 是否開著；管理後台的出口節點是否仍核准、節點金鑰是否過期（key expiry）；repo variable `TS_EXIT_NODE` 是否為桌機目前的 Tailscale IP |
+| `failed`，由 `run` 記錄，摘要有 `source unreachable directly and through exit node` | 直連被擋，出口節點也不在線 | 筆電的 Tailscale 是否連線、Run exit node 是否開著；管理後台的出口節點是否仍核准、節點金鑰是否過期（key expiry）；repo variable `TS_EXIT_NODE` 是否為筆電目前的 Tailscale IP |
 | run 停在 **Join the tailnet** | OAuth client 有問題 | repo secret `TS_OAUTH_CLIENT_ID`／`TS_OAUTH_SECRET` 是否存在且正確；OAuth client 是否有 Auth Keys 寫入權限與 `tag:ci`；tailnet 規則的 `tagOwners` 是否宣告 `tag:ci` |
-| `failed`，由 `run` 記錄，出口節點在線 | 來源本身出問題，或來源連臺灣家用網路也擋了 | 從桌機瀏覽器開來源網址（`docs/DATA-PIPELINE.md` 的介接網址）；`data.gov.tw` 資料集頁面是否有公告 |
+| `failed`，由 `run` 記錄，出口節點在線 | 來源本身出問題，或來源連臺灣家用網路也擋了 | 從筆電瀏覽器開來源網址（`docs/DATA-PIPELINE.md` 的介接網址）；`data.gov.tw` 資料集頁面是否有公告 |
 | 連續 3 列以上 `unchanged`，run 因 freshness 失敗 | 來源停止更新 | `data.gov.tw` 資料集頁面的更新時間；不是本專案的錯，記錄即可 |
 | 最近是 `stored`，但 `meta.json` 停在更早的日期 | 重建或部署失敗 | 該次 run 的 Rebuild site data 步驟；Actions 的 Deploy Pages workflow |
-| 過去的日期整列沒有紀錄（不只昨天） | 早上的檢查也沒跑 | Actions 頁面 Daily snapshot 是否被停用（repo 60 天無活動時 GitHub 會停用 cron）；GitHub 狀態頁 |
-| 只有昨天沒有紀錄 | 早上的檢查還沒跑 | 不用處理，中午後再看 |
-| 今天沒有紀錄 | 21:00 前是正常的 | 21:30 後還沒有，就照第一列檢查 |
+| 過去的日期整列沒有紀錄 | 下午的檢查也沒跑 | Actions 頁面 Daily snapshot 是否被停用（repo 60 天無活動時 GitHub 會停用 cron）；GitHub 狀態頁 |
+| 今天沒有紀錄 | 09:00 前是正常的；13 點後要等下午的檢查跑完才會有 `failed` | 09:30 後還沒有，先看 Actions 有沒有 09:00 的 `workflow_dispatch`；16 點後還沒有，照「整列沒有紀錄」那一列檢查 |
 
-判斷都是推測：repo 裡看不到 Actions 的 log、桌機與 Tailscale 的狀態。報告時寫明哪些是
+判斷都是推測：repo 裡看不到 Actions 的 log、筆電與 Tailscale 的狀態。報告時寫明哪些是
 從紀錄讀到的、哪些是推測。
 
 ## 報告格式

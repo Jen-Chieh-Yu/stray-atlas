@@ -169,6 +169,16 @@ def test_failed_rows_say_who_wrote_them() -> None:
     assert rows[date(2026, 10, 23)].recorded_by == "fetch"
 
 
+def test_watchdog_rows_are_same_day_in_the_morning_window() -> None:
+    rows = manifest_report.parse(
+        "date,status,rows,bytes,sha256,fetched_at_utc\n"
+        "2026-11-03,failed,0,0,,2026-11-03T01:05:00Z\n"
+        "2026-11-04,failed,0,0,,2026-11-04T06:40:00Z\n"
+    )
+    assert rows[0].recorded_by.startswith("run")
+    assert rows[1].recorded_by.startswith("watchdog")
+
+
 def test_streak_and_missing_days() -> None:
     rows = manifest_report.parse(MANIFEST)
     assert [row.day.day for row in manifest_report.streak(rows)] == [22, 23, 25]
@@ -185,16 +195,20 @@ def test_report_summarizes_freshness_and_gaps() -> None:
     assert "last stored: 2026-10-21 (5 day(s) ago" in text
     assert "not stored since: 2026-10-22 (3 row(s): 2 failed, 1 unchanged)" in text
     assert "days with no row: 2026-10-24" in text
-    assert "only yesterday is missing" not in text
-    assert "today (2026-10-26) has no row yet: expected after 21:00" in text
+    assert "today (2026-10-26) has no row yet: expected before 13:00" in text
 
 
-def test_report_calls_a_missing_yesterday_normal_in_the_morning() -> None:
-    rows = [row for row in manifest_report.parse(MANIFEST) if row.day <= date(2026, 10, 23)]
-    now = datetime(2026, 10, 25, 9, 0, tzinfo=manifest_report.TAIPEI)
-    text = manifest_report.report(rows, now)
-    assert "days with no row: 2026-10-24" in text
-    assert "only yesterday is missing" in text
+def test_report_says_when_today_is_due() -> None:
+    rows = manifest_report.parse(MANIFEST)
+
+    def due(hour: int) -> str:
+        now = datetime(2026, 10, 26, hour, 0, tzinfo=manifest_report.TAIPEI)
+        return manifest_report.report(rows, now)
+
+    assert "expected after 09:00" in due(8)
+    assert "expected before 13:00" in due(12)
+    assert "the watchdog should record it" in due(14)
+    assert "should exist by now" in due(18)
 
 
 def test_report_on_an_empty_manifest() -> None:

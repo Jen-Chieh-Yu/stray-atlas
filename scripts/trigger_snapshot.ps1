@@ -1,9 +1,9 @@
-# Start the Daily snapshot workflow on GitHub. Run at 21:00 by Windows Task
-# Scheduler on the desktop that serves as the Tailscale exit node; see
+# Start the Daily snapshot workflow on GitHub. Run at 09:00 by Windows Task
+# Scheduler on the laptop that serves as the Tailscale exit node; see
 # docs/DATA-PIPELINE.md.
 #
-# GitHub delays scheduled runs by hours, so the desktop, which is on at that
-# time anyway, asks for the run itself. The workflow's own cron is a backup.
+# GitHub delays scheduled runs by hours, so the laptop, which is on at that
+# time anyway, asks for the run itself. The workflow's own crons are backups.
 #
 # Needs a fine-grained personal access token for this repository only, with
 # "Actions: Read and write", in the user environment variable
@@ -11,14 +11,14 @@
 
 $ErrorActionPreference = 'Stop'
 
-# The workflow names the snapshot after the Taipei date it runs on, and skips
-# a day already archived. A run started after midnight, as when Task Scheduler
-# catches up on a start missed while the desktop was off, would take the next
-# day's date at the wrong time of day and make that evening's run skip it.
-# Fixed +08:00 rather than the desktop's time zone: Taiwan has no DST.
+# Snapshots are taken between 09:00 and 12:59 Taipei time, so each one shows
+# the feed at about the same time of day. Task Scheduler catches up on a start
+# missed while the laptop was off; past 12:59 the day is left to the backup
+# crons, the watchdog and a manual run.
+# Fixed +08:00 rather than the laptop's time zone: Taiwan has no DST.
 $taipei = [DateTime]::UtcNow.AddHours(8)
-if ($taipei.Hour -lt 21) {
-    Write-Output "it is $($taipei.ToString('HH:mm')) in Taipei, before 21:00; not dispatching"
+if ($taipei.Hour -lt 9 -or $taipei.Hour -ge 13) {
+    Write-Output "it is $($taipei.ToString('HH:mm')) in Taipei, outside 09:00-12:59; not dispatching"
     exit 0
 }
 
@@ -36,7 +36,7 @@ $headers = @{
 }
 $body = @{ ref = 'main' } | ConvertTo-Json
 
-# A few tries: a desktop that has only just woken may not have its network up.
+# A few tries: a laptop that has only just woken may not have its network up.
 for ($attempt = 1; $attempt -le 3; $attempt++) {
     try {
         Invoke-RestMethod -Method Post -Uri $uri -Headers $headers -Body $body -ContentType 'application/json' | Out-Null
