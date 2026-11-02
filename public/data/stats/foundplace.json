@@ -1,14 +1,14 @@
 {
-  "snapshot_date": "2026-10-21",
-  "generated_at_utc": "2026-10-21T03:06:25Z",
-  "rows": 8594,
+  "snapshot_date": "2026-11-02",
+  "generated_at_utc": "2026-11-02T12:18:49Z",
+  "rows": 8704,
   "district_reference": "loaded",
   "place_kinds": {
-    "blank": 1016,
-    "address": 5242,
-    "district": 1276,
-    "landmark": 944,
-    "non_place": 116
+    "blank": 1072,
+    "address": 5273,
+    "district": 1297,
+    "landmark": 947,
+    "non_place": 115
   },
   "confidence": {
     "high": {
@@ -16,27 +16,27 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 1941,
-      "share": 0.2259
+      "rows": 2001,
+      "share": 0.2299
     },
     "low": {
-      "rows": 5512,
-      "share": 0.6414
+      "rows": 5507,
+      "share": 0.6327
     },
     "none": {
-      "rows": 1132,
-      "share": 0.1317
+      "rows": 1187,
+      "share": 0.1364
     }
   },
   "county_source": {
-    "text": 189,
-    "shelter": 7273,
-    "none": 1132
+    "text": 187,
+    "shelter": 7330,
+    "none": 1187
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3222,
-    "verified_against_reference": 3219,
+    "extracted": 3303,
+    "verified_against_reference": 3300,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,25 +48,25 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
-      "五股區五股區中興路三段21-2號",
-      "大埤鄉中正路",
-      "四湖鄉中正路",
-      "三重區三和路四段",
-      "五股區外寮路"
+      "五股區五股區成泰路三段567號",
+      "三峽區介壽路三段101號",
+      "竹南鎮龍山路",
+      "三重區三重力行路一段151號",
+      "苗栗市聯大路"
     ],
     "low": [
-      "復興三路",
-      "自強路",
-      "再連路",
-      "合興路",
-      "健康路"
+      "中坡里福德街１７７巷",
+      "員山路三段",
+      "濱海路一段",
+      "坡城路",
+      "富貴一路"
     ],
     "none": [
-      "民眾不擬續養",
+      "認養退回",
       "臺北市動物之家",
+      "民眾不擬續養",
       "動物之家",
-      "所內生產，媽媽1110241",
-      "所內出生"
+      "所內生產，媽媽1110241"
     ]
   }
 }
