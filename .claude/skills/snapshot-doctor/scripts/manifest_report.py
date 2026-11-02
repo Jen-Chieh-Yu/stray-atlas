@@ -7,11 +7,12 @@
 Read-only. Reads the manifest from a file or stdin ("-"), so it can look at
 origin/main without touching the working tree.
 
-The one thing it infers is who wrote a failed row. A row written on its own
-Taipei date came from a run that reached the fetch and failed there. A row
-written on a later date came from the morning watchdog (the 08:17 cron in
-daily-snapshot.yml), which records a day nobody fetched: no run reached the
-source that evening at all.
+The one thing it infers is who wrote a failed row. The watchdog cron in
+daily-snapshot.yml records a day nobody fetched: no run reached the source
+that day at all. Until MORNING_FROM it ran the next morning, so its rows carry
+a later date; since then it runs the same afternoon, after the 09:00-12:59
+fetch window. Any other failed row came from a run that reached the fetch and
+failed there. A manual run that fails after 13:00 reads as the watchdog too.
 """
 
 from __future__ import annotations
@@ -25,6 +26,10 @@ from datetime import date, datetime, timedelta, timezone
 
 TAIPEI = timezone(timedelta(hours=8))
 GAP_WINDOW_DAYS = 30
+# Snapshots moved to a 09:00-12:59 window on this day, and the watchdog to the
+# same afternoon.
+MORNING_FROM = date(2026, 11, 3)
+WINDOW_END_HOUR = 13
 
 
 @dataclass(frozen=True)
@@ -40,7 +45,9 @@ class Row:
             return "fetch"
         if self.fetched is None:
             return "unknown"
-        if self.fetched.date() > self.day:
+        if self.fetched.date() > self.day or (
+            self.day >= MORNING_FROM and self.fetched.hour >= WINDOW_END_HOUR
+        ):
             return "watchdog: no run reached the fetch that day"
         return "run: the fetch was attempted and failed"
 
@@ -112,16 +119,17 @@ def report(rows: list[Row], now: datetime, recent: int = 10) -> str:
             lines.append("  3+ unchanged in a row: the source may have stopped updating")
 
     gaps = missing(rows, today)
-    yesterday = today - timedelta(days=1)
     if gaps:
         lines.append("days with no row: " + ", ".join(str(day) for day in gaps))
-        if gaps == [yesterday]:
-            lines.append(
-                "  only yesterday is missing: normal until the morning watchdog has run "
-                "(08:17 cron, often delayed to around noon)"
-            )
     if rows[-1].day != today:
-        when = "expected after 21:00" if now.hour < 21 else "should exist by now"
+        if now.hour < 9:
+            when = "expected after 09:00"
+        elif now.hour < WINDOW_END_HOUR:
+            when = "expected before 13:00"
+        elif now.hour < 17:
+            when = "the window has closed; the watchdog should record it by about 16:00"
+        else:
+            when = "should exist by now"
         lines.append(f"today ({today}) has no row yet: {when}")
 
     lines.append("")

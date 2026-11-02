@@ -124,7 +124,7 @@ stray-atlas/
 │   ├── common.py            共用：路徑、log、時間戳記、JSON 寫檔、快照清單
 │   ├── fetch_snapshot.py    每日抓取；驗證、確定性 gzip、manifest
 │   ├── check_freshness.py   manifest 最新連續 3 列都沒有新快照時回傳失敗
-│   ├── trigger_snapshot.ps1 每天 21:00 由桌機的工作排程器執行，觸發每日快照（見 DATA-PIPELINE.md〈來源封鎖海外連線〉）
+│   ├── trigger_snapshot.ps1 每天 09:00 由筆電的工作排程器執行，觸發每日快照（見 DATA-PIPELINE.md〈來源封鎖海外連線〉）
 │   ├── build_all.py         固定一份快照，依序跑下列九步並檢查輸出日期一致
 │   ├── clean.py             欄位清理，同時是其他腳本的載入函式庫
 │   ├── geocode.py           尋獲地分級（不呼叫 geocoder，見 METHODOLOGY.md〈尋獲地〉）
