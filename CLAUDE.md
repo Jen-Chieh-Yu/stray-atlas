@@ -398,11 +398,12 @@ ruff check .; python -m pytest -q
 必須能同時讀取既有的 CSV 快照與新格式，`data/raw/` 已存的快照不可改寫。
 評估時以 `docs/DATA-PIPELINE.md`〈儲存成本（觀察用）〉的實測數字為比較基準。
 
-2026-10-22 起此端點只接受臺灣來源的連線，GitHub 的 runner 直連一律逾時。
-每日抓取因此經 Tailscale 出口節點（人類的桌機）連線，由桌機在臺灣時間 21:00
-觸發，cron 只當備援；設定與判斷依據見 `docs/DATA-PIPELINE.md`〈來源封鎖海外連線〉。
-抓取若再失敗，先確認桌機是否開機、出口節點是否在線、觸發用的 token 是否到期，
-再懷疑來源。
+2026-10-22 起此端點只接受臺灣來源的連線，GitHub 的 runner 直連一律逾時；
+11-02 實測 runner 已可直連。每日抓取先直連，連不上才經 Tailscale 出口節點
+（人類的桌機）連線，由桌機在臺灣時間 21:00 觸發，cron 只當備援；設定與判斷依據見
+`docs/DATA-PIPELINE.md`〈來源封鎖海外連線〉。抓取若再失敗，先看 run 摘要是直連
+還是出口節點連不上，再確認桌機是否開機、出口節點是否在線、觸發用的 token 是否到期，
+最後才懷疑來源。
 
 **首頁示意照片**（2026-09-17 起）：Unsplash，依 Unsplash License 使用，由人類手動下載（雲端環境無法連線 Unsplash 圖片網址）。新增或更換前先確認照片頁標示 Unsplash License 而非 Unsplash+；照片只能用在首頁 Hero 並標示為示意，出處同步更新 `src/lib/heroPhotos.ts`、`THIRD-PARTY-LICENSES`。
 
