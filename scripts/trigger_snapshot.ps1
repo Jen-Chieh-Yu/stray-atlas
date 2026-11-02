@@ -7,9 +7,20 @@
 #
 # Needs a fine-grained personal access token for this repository only, with
 # "Actions: Read and write", in the user environment variable
-# STRAY_ATLAS_DISPATCH_TOKEN.
+# STRAY_ATLAS_DISPATCH_TOKEN, so the scheduled task must run as that user.
 
 $ErrorActionPreference = 'Stop'
+
+# The workflow names the snapshot after the Taipei date it runs on, and skips
+# a day already archived. A run started after midnight, as when Task Scheduler
+# catches up on a start missed while the desktop was off, would take the next
+# day's date at the wrong time of day and make that evening's run skip it.
+# Fixed +08:00 rather than the desktop's time zone: Taiwan has no DST.
+$taipei = [DateTime]::UtcNow.AddHours(8)
+if ($taipei.Hour -lt 21) {
+    Write-Output "it is $($taipei.ToString('HH:mm')) in Taipei, before 21:00; not dispatching"
+    exit 0
+}
 
 $token = [Environment]::GetEnvironmentVariable('STRAY_ATLAS_DISPATCH_TOKEN', 'User')
 if (-not $token) {
