@@ -150,11 +150,13 @@ jobs:
       # No dependency install step: the script is standard library only, which
       # keeps the daily job immune to package resolution breaking.
       #
-      #
       # Without the exit node the backup cron stops quietly, leaving the day to
-      # the watchdog. A dispatched run goes ahead and fails as the source blocks
-      # the runner, recording the day as failed; a later run that day can still
-      # overwrite that row.
+      # the watchdog. A dispatched run records the day as failed at once,
+      # without contacting the source: it drops packets from outside Taiwan, so
+      # a direct fetch would wait out every retry, about 13 minutes against the
+      # job's 15-minute limit. A later run that day can still overwrite that
+      # row. A forced run records nothing, so an archived or unchanged day is
+      # never turned into a failed one.
       - name: Fetch snapshot
         id: fetch
         if: >-
@@ -169,10 +171,18 @@ jobs:
           FORCE: ${{ inputs.force }}
           MODE: ${{ steps.plan.outputs.mode }}
           DATE: ${{ steps.plan.outputs.date }}
+          ONLINE: ${{ steps.route.outputs.online }}
+          EXIT_NODE: ${{ vars.TS_EXIT_NODE }}
         run: |
           if [ "${MODE}" = "mark-failed" ]; then
             python scripts/fetch_snapshot.py --date "${DATE}" \
               --mark-failed "no run archived ${DATE}; was the exit node offline all evening?"
+          elif [ "${ONLINE}" != "true" ] && [ "${FORCE}" = "true" ]; then
+            echo "::error::exit node ${EXIT_NODE} is offline; nothing was fetched or overwritten"
+            exit 1
+          elif [ "${ONLINE}" != "true" ]; then
+            python scripts/fetch_snapshot.py --date "${DATE}" \
+              --mark-failed "exit node ${EXIT_NODE} was offline"
           elif [ "${FORCE}" = "true" ]; then
             python scripts/fetch_snapshot.py --force
           else
@@ -285,13 +295,12 @@ jobs:
 
       # The fetch step writes the run summary itself: it is what holds the row
       # count, the digest and the manifest, and a workflow step could only echo
-      # back whatever was passed through GITHUB_OUTPUT. This catches the one
-      # path that leaves no summary behind, an unexpected crash.
+      # back whatever was passed through GITHUB_OUTPUT. This catches the paths
+      # that leave no summary behind: an unexpected crash, or the run failing
+      # before the fetch step wrote anything. A failure the fetch step recorded,
+      # a broken rebuild and a stale source each have their own summary.
       - name: Note an unrecorded failure
-        if: >-
-          failure()
-          && steps.rebuild.outcome != 'failure'
-          && steps.freshness.outcome != 'failure'
+        if: failure() && steps.fetch.outputs.status == ''
         run: |
           echo "### Snapshot" >> "${GITHUB_STEP_SUMMARY}"
           echo "" >> "${GITHUB_STEP_SUMMARY}"

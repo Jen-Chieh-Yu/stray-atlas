@@ -33,13 +33,13 @@
 
 2026-10-22 起，GitHub Actions 連 `data.moa.gov.tw` 一律 TCP 連線逾時，改用出口節點前的快照因此遺失（manifest 記為 `failed`）。10-27 以 check-host.net 從 40 個海外節點測試，39 個逾時；同時間同屬農業部的 `www.moa.gov.tw` 與 `data.gov.tw` 全部連得上，從臺灣的住宅網路則 4 秒內抓完。可見是開放資料這台主機只接受臺灣來源的連線，不是來源停擺。
 
-因應方式是讓 GitHub 的 runner 以臨時節點加入 Tailscale 網路，只在抓取那一步改走一台在臺灣、晚上開機的桌機出口，其餘步驟（push、部署）仍走 GitHub 自己的網路。tailnet 的存取規則只允許 `tag:ci` 經出口節點連外，碰不到桌機與其他裝置。正式抓取前先經出口節點連一次來源首頁，連不上就立刻切回，不必等抓取重試十分鐘才失敗。
+因應方式是讓 GitHub 的 runner 以臨時節點加入 Tailscale 網路，只在抓取那一步改走一台在臺灣、晚上開機的桌機出口，其餘步驟（push、部署）仍走 GitHub 自己的網路。tailnet 的存取規則只允許 `tag:ci` 經出口節點連外，碰不到桌機與其他裝置（規則見下）。正式抓取前先經出口節點連一次來源首頁，連不上就立刻切回，不必等抓取重試十分鐘才失敗。
 
 每天的執行由三個來源觸發：
 
 | 觸發 | 時間（臺灣） | 做什麼 |
 |---|---|---|
-| 桌機的 Windows 工作排程器執行 `scripts/trigger_snapshot.ps1` | 21:00 | 以 GitHub API 觸發 `workflow_dispatch`，主要的抓取 |
+| 桌機的 Windows 工作排程器執行 `scripts/trigger_snapshot.ps1` | 21:00 | 以 GitHub API 觸發 `workflow_dispatch`，主要的抓取；臺灣時間 21:00 前不觸發，免得工作排程器在午夜後補跑、佔掉隔天的檔名 |
 | cron `17 13 * * *` | 21:17，實際常延後 | 備援：當天還沒存檔、且實際執行時仍在 21:00–23:59 才抓；出口節點不在線就安靜結束 |
 | cron `17 0 * * *` | 08:17，實際常延後 | 檢查前一天：manifest 沒有紀錄就以 `fetch_snapshot.py --mark-failed` 記一列 `failed`，run 失敗、寄出通知 |
 
@@ -52,9 +52,29 @@
 | repo secret | `TS_OAUTH_CLIENT_ID`、`TS_OAUTH_SECRET` | Tailscale OAuth client，權限為可寫入的 Auth Keys，標籤 `tag:ci` |
 | repo variable | `TS_EXIT_NODE` | 出口節點（桌機）的 Tailscale IP（`100.x.y.z`） |
 | 桌機的使用者環境變數 | `STRAY_ATLAS_DISPATCH_TOKEN` | fine-grained personal access token，只限本 repo，權限 Actions: Read and write |
-| 桌機的工作排程器 | 每天 21:00 | `powershell.exe -NoProfile -ExecutionPolicy Bypass -File <repo>\scripts\trigger_snapshot.ps1` |
+| 桌機的工作排程器 | 每天 21:00 | 以自己的帳號、只在使用者登入時執行（token 存在使用者環境變數，SYSTEM 帳號讀不到）：`powershell.exe -NoProfile -ExecutionPolicy Bypass -File <repo>\scripts\trigger_snapshot.ps1` |
+| Tailscale 管理後台 | 桌機節點 | 開啟 Run exit node 並在後台核准；關閉 key expiry——節點金鑰預設 180 天到期，到期後出口節點會從 tailnet 消失，沒有任何提示 |
+| Tailscale 存取規則 | `tagOwners`、`acls` | 見下方 |
 
 token 有到期日，到期後 21:00 的觸發會失敗，只剩備援的 cron。
+
+Tailscale 預設的存取規則是所有裝置互通，`tag:ci` 也包含在內。要把規則裡 `"src": ["*"]` 那條改成只限自己的裝置（`autogroup:member`，帶標籤的節點不算在內），再另給 `tag:ci` 一條只能連外的規則：
+
+```jsonc
+{
+  "tagOwners": {
+    "tag:ci": ["autogroup:admin"],
+  },
+  "acls": [
+    // Your own devices still reach each other, as with the default policy.
+    {"action": "accept", "src": ["autogroup:member"], "dst": ["*:*"]},
+    // CI runners may use an exit node for the internet and reach nothing else.
+    {"action": "accept", "src": ["tag:ci"], "dst": ["autogroup:internet:*"]},
+  ],
+}
+```
+
+現有規則若用的是 `grants` 而不是 `acls`，同樣把 `"src": ["*"]` 改成 `autogroup:member`，再加上 `tag:ci` 那一條。
 
 為什麼排在晚上：來源是即時介接，收容所改一筆、CSV 就變一筆，任何時間抓到的都是當下狀態。比對 2026-09 到 10 月相鄰兩天的快照，平日上午 11 點時當天的修改只出現約 30%、新上架的動物約 22%，其餘發生在之後。晚上抓取更接近當天收盤的狀態。
 
