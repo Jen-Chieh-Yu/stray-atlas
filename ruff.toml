@@ -1,5 +1,6 @@
-# Lint for scripts/ and tests/. Checks only; formatting is not enforced here,
-# the same split as ESLint and Prettier on the front end.
+# Lint for scripts/, tests/ and .claude/skills/*/scripts/. Checks only;
+# formatting is not enforced here, the same split as ESLint and Prettier on
+# the front end.
 #
 # The oldest Python the scripts run on (Path.write_text(newline=) needs 3.10).
 # Both workflows install 3.12; this keeps the rules from suggesting syntax

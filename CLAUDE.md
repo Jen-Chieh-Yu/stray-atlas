@@ -200,6 +200,7 @@ public/data/
 | 文件、README、網頁 UI 文案 | 繁體中文（臺灣用語） |
 | 程式碼、變數命名、註解 | 英文 |
 | commit message、PR 標題與內文 | 英文 |
+| AI 協作者的 skill（`.claude/skills/` 的 `SKILL.md`） | 繁體中文；其中的指令與腳本照程式碼慣例用英文（2026-11-02 起） |
 
 commit message 與 PR 一律全英文，標題與內文皆然。理由：`git log` 全篇語言一致，且 GitHub 上的 diff、blame、PR 介面對英文 commit 的呈現最無摩擦；面試官掃 commit history 時不會遇到語言切換。
 
@@ -252,7 +253,7 @@ Assisted-by: Claude <noreply@anthropic.com>
 
 ### 6.3 `.gitignore`
 
-排除 `node_modules/`、`dist/`、`.venv/`、`__pycache__/`、`*.pyc`、`.env` 與 `.env.*`（`.env.example` 例外，要進版控）、`*.local`（含 `.env.local`）、`test-results/` 與 `playwright-report/`（Playwright 的失敗紀錄與報告）、`/tmp/`、`/assets-src/`（首頁照片原檔，可重新下載）。
+排除 `node_modules/`、`dist/`、`.venv/`、`__pycache__/`、`*.pyc`、`.env` 與 `.env.*`（`.env.example` 例外，要進版控）、`*.local`（含 `.env.local`）、`test-results/` 與 `playwright-report/`（Playwright 的失敗紀錄與報告）、`/tmp/`、`/assets-src/`（首頁照片原檔，可重新下載），以及 `.claude/` 底下 `skills/` 以外的內容（本機設定、啟動設定、桌面版建立的 worktree，2026-11-02 起）。
 
 **絕對不可排除 `data/`。** 每日快照 workflow 需要 commit 資料檔進 repo；若被 gitignore 擋掉，workflow 會安靜地什麼都沒存，且要數日後才會發現。
 
@@ -446,3 +447,4 @@ README 的截圖放在 `docs/images/`，從線上網站拍攝。動物照片的�
 - **改 repo 內的檔案前，先把改動整理成 diff 給人類審核**，同意後才套用。`.notes/` 不在此限
 - **畫面上看得到的改動，先出草稿圖**：在 `.notes/drafts/` 做 HTML 草稿並輸出 PNG（`.notes/drafts/png/`），確認方向後才實作
 - **開工前先看 `git status`**：可能有其他工作階段或另一台電腦同時在改，不要覆蓋別人的未提交改動
+- **專案 skills**（2026-11-02 起）：交付提交資料（`deliver`）、提交前檢查（`preflight`）、每日快照健康檢查（`snapshot-doctor`）寫在 `.claude/skills/`，可寫死的規則交給各自 `scripts/` 底下的腳本檢查。步驟以本檔為準，兩者不一致時改 skill；skill 同樣不執行 §6.5 禁止的 git 指令

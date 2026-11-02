@@ -107,6 +107,7 @@ python scripts/build_hero.py   # 產生 src/assets/hero/*.webp
 
 ```
 stray-atlas/
+├── .claude/skills/          AI 協作者的專案 skills：deliver、preflight、snapshot-doctor，各附 scripts/（見 CLAUDE.md §11）
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml               PR 的檢查：ESLint、Prettier、型別、vitest、build、Playwright；ruff、pytest、public/data 重建比對
@@ -123,6 +124,7 @@ stray-atlas/
 │   ├── common.py            共用：路徑、log、時間戳記、JSON 寫檔、快照清單
 │   ├── fetch_snapshot.py    每日抓取；驗證、確定性 gzip、manifest
 │   ├── check_freshness.py   manifest 最新連續 3 列都沒有新快照時回傳失敗
+│   ├── trigger_snapshot.ps1 每天 21:00 由桌機的工作排程器執行，觸發每日快照（見 DATA-PIPELINE.md〈來源封鎖海外連線〉）
 │   ├── build_all.py         固定一份快照，依序跑下列九步並檢查輸出日期一致
 │   ├── clean.py             欄位清理，同時是其他腳本的載入函式庫
 │   ├── geocode.py           尋獲地分級（不呼叫 geocoder，見 METHODOLOGY.md〈尋獲地〉）
@@ -159,7 +161,7 @@ stray-atlas/
 │   ├── components/          動物卡片與詳細資料、首頁照片輪播、縣市地圖、分析圖表、載入骨架、圖示
 │   ├── composables/         資料載入（useAtlasData）、動物名冊（useRoster）與候選清單（useShortlist）
 │   └── lib/                 共用函式：動物、在所天數、分享文字與分享頁、候選清單與它的動態、收容所地址與開放時間、詳細資料視窗路由、圖示資料、首頁照片與出處、捲動淡入
-├── tests/                   建置腳本的 pytest 測試（src/lib 的 vitest 測試在 src/lib/__tests__/）
+├── tests/                   建置腳本與 .claude/skills 輔助腳本的 pytest 測試（src/lib 的 vitest 測試在 src/lib/__tests__/）
 ├── e2e/                     Playwright 煙霧測試（playwright.config.ts）
 ├── docs/                    說明文件（METHODOLOGY、ARCHITECTURE、DEVELOPMENT、DATA-PIPELINE）與 README 的截圖（images/）
 ├── index.html、vite.config.ts、vitest.config.ts、tsconfig*.json、env.d.ts   vite.config.ts 在 build 時寫出 404.html 與每隻動物的分享頁 /a/<id>/

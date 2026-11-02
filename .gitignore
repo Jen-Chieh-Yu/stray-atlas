@@ -45,6 +45,11 @@ Thumbs.db
 .idea/
 .vscode/*
 !.vscode/extensions.json
+# Claude Code: only the project skills are shared. Local settings,
+# launch configurations and worktrees made by the desktop app are
+# per machine. See CLAUDE.md 6.3.
+.claude/*
+!.claude/skills/
 
 # ==================================================================
 # Reference source archives
