@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-02",
-  "generated_at_utc": "2026-11-02T12:18:49Z",
-  "rows": 8704,
+  "snapshot_date": "2026-11-03",
+  "generated_at_utc": "2026-11-03T03:28:36Z",
+  "rows": 8707,
   "district_reference": "loaded",
   "place_kinds": {
-    "blank": 1072,
-    "address": 5273,
-    "district": 1297,
-    "landmark": 947,
+    "address": 5279,
+    "landmark": 948,
+    "district": 1298,
+    "blank": 1067,
     "non_place": 115
   },
   "confidence": {
@@ -16,22 +16,22 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 2001,
-      "share": 0.2299
+      "rows": 2000,
+      "share": 0.2297
     },
     "low": {
-      "rows": 5507,
-      "share": 0.6327
+      "rows": 5516,
+      "share": 0.6335
     },
     "none": {
-      "rows": 1187,
-      "share": 0.1364
+      "rows": 1182,
+      "share": 0.1358
     }
   },
   "county_source": {
     "text": 187,
-    "shelter": 7330,
-    "none": 1187
+    "shelter": 7338,
+    "none": 1182
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
@@ -48,18 +48,18 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
+      "竹南鎮龍山路",
       "五股區五股區成泰路三段567號",
       "三峽區介壽路三段101號",
-      "竹南鎮龍山路",
       "三重區三重力行路一段151號",
       "苗栗市聯大路"
     ],
     "low": [
-      "中坡里福德街１７７巷",
-      "員山路三段",
-      "濱海路一段",
-      "坡城路",
-      "富貴一路"
+      "名松路二段",
+      "東興巷",
+      "珠海路",
+      "雲林路",
+      "欣欣瓦斯場附近"
     ],
     "none": [
       "認養退回",
