@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-03",
-  "generated_at_utc": "2026-11-03T03:28:36Z",
-  "rows": 8707,
+  "snapshot_date": "2026-11-04",
+  "generated_at_utc": "2026-11-04T02:21:11Z",
+  "rows": 8722,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5279,
-    "landmark": 948,
-    "district": 1298,
-    "blank": 1067,
+    "blank": 1064,
+    "district": 1314,
+    "address": 5282,
+    "landmark": 947,
     "non_place": 115
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 2000,
-      "share": 0.2297
+      "rows": 1999,
+      "share": 0.2292
     },
     "low": {
-      "rows": 5516,
-      "share": 0.6335
+      "rows": 5535,
+      "share": 0.6346
     },
     "none": {
-      "rows": 1182,
-      "share": 0.1358
+      "rows": 1179,
+      "share": 0.1352
     }
   },
   "county_source": {
-    "text": 187,
-    "shelter": 7338,
-    "none": 1182
+    "text": 186,
+    "shelter": 7357,
+    "none": 1179
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3303,
-    "verified_against_reference": 3300,
+    "extracted": 3318,
+    "verified_against_reference": 3315,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,23 +48,23 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
-      "竹南鎮龍山路",
+      "林口區後湖路56-28號",
+      "新莊區化成路",
       "五股區五股區成泰路三段567號",
-      "三峽區介壽路三段101號",
       "三重區三重力行路一段151號",
       "苗栗市聯大路"
     ],
     "low": [
-      "名松路二段",
-      "東興巷",
-      "珠海路",
-      "雲林路",
-      "欣欣瓦斯場附近"
+      "銅鑼鄉樟樹村",
+      "和平東路三段",
+      "麥寮鄉後安村",
+      "褒忠鄉田洋村",
+      "公館玉泉村"
     ],
     "none": [
+      "民眾不擬續養",
       "認養退回",
       "臺北市動物之家",
-      "民眾不擬續養",
       "動物之家",
       "所內生產，媽媽1110241"
     ]
