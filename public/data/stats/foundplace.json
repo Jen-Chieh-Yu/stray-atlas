@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-04",
-  "generated_at_utc": "2026-11-04T02:21:11Z",
-  "rows": 8722,
+  "snapshot_date": "2026-11-05",
+  "generated_at_utc": "2026-11-05T02:29:44Z",
+  "rows": 8733,
   "district_reference": "loaded",
   "place_kinds": {
     "blank": 1064,
-    "district": 1314,
-    "address": 5282,
-    "landmark": 947,
+    "address": 5285,
+    "district": 1321,
+    "landmark": 948,
     "non_place": 115
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 1999,
-      "share": 0.2292
+      "rows": 2011,
+      "share": 0.2303
     },
     "low": {
-      "rows": 5535,
-      "share": 0.6346
+      "rows": 5534,
+      "share": 0.6337
     },
     "none": {
       "rows": 1179,
-      "share": 0.1352
+      "share": 0.135
     }
   },
   "county_source": {
     "text": 186,
-    "shelter": 7357,
+    "shelter": 7368,
     "none": 1179
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3318,
-    "verified_against_reference": 3315,
+    "extracted": 3337,
+    "verified_against_reference": 3334,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
-      "林口區後湖路56-28號",
-      "新莊區化成路",
-      "五股區五股區成泰路三段567號",
-      "三重區三重力行路一段151號",
-      "苗栗市聯大路"
+      "金湖鎮新湖里市港路",
+      "金城鎮東門里伯玉路一段",
+      "三重區三重清傳街200號",
+      "鶯歌區鶯歌老街",
+      "信義區深澳坑路2-25號"
     ],
     "low": [
-      "銅鑼鄉樟樹村",
-      "和平東路三段",
-      "麥寮鄉後安村",
-      "褒忠鄉田洋村",
-      "公館玉泉村"
+      "港東街",
+      "富昌街",
+      "民生東路三段",
+      "中正路",
+      "金城鎮古城里金門城（金門酒廠）"
     ],
     "none": [
       "民眾不擬續養",
