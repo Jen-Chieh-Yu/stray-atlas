@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-05",
-  "generated_at_utc": "2026-11-05T02:29:44Z",
-  "rows": 8733,
+  "snapshot_date": "2026-11-06",
+  "generated_at_utc": "2026-11-06T02:27:39Z",
+  "rows": 8720,
   "district_reference": "loaded",
   "place_kinds": {
-    "blank": 1064,
-    "address": 5285,
-    "district": 1321,
-    "landmark": 948,
+    "address": 5273,
+    "blank": 1073,
+    "district": 1315,
+    "landmark": 944,
     "non_place": 115
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 2011,
-      "share": 0.2303
+      "rows": 2016,
+      "share": 0.2312
     },
     "low": {
-      "rows": 5534,
-      "share": 0.6337
+      "rows": 5507,
+      "share": 0.6315
     },
     "none": {
-      "rows": 1179,
-      "share": 0.135
+      "rows": 1188,
+      "share": 0.1362
     }
   },
   "county_source": {
     "text": 186,
-    "shelter": 7368,
-    "none": 1179
+    "shelter": 7346,
+    "none": 1188
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3337,
-    "verified_against_reference": 3334,
+    "extracted": 3336,
+    "verified_against_reference": 3333,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
-      "金湖鎮新湖里市港路",
-      "金城鎮東門里伯玉路一段",
-      "三重區三重清傳街200號",
-      "鶯歌區鶯歌老街",
-      "信義區深澳坑路2-25號"
+      "八里區中華路二段",
+      "三峽區三樹路276號",
+      "新店區玫瑰路",
+      "五股區凌雲路3段46號",
+      "金湖鎮新湖里市港路"
     ],
     "low": [
-      "港東街",
-      "富昌街",
-      "民生東路三段",
-      "中正路",
-      "金城鎮古城里金門城（金門酒廠）"
+      "埔頭路271巷",
+      "草衙二路",
+      "中華路一段(頭前溪橋上)",
+      "西藏街",
+      "八德西路"
     ],
     "none": [
       "民眾不擬續養",
