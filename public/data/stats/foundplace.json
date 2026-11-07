@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-06",
-  "generated_at_utc": "2026-11-06T02:27:39Z",
-  "rows": 8720,
+  "snapshot_date": "2026-11-07",
+  "generated_at_utc": "2026-11-07T01:56:29Z",
+  "rows": 8725,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5273,
-    "blank": 1073,
-    "district": 1315,
-    "landmark": 944,
+    "address": 5275,
+    "blank": 1069,
+    "district": 1317,
+    "landmark": 949,
     "non_place": 115
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 2016,
-      "share": 0.2312
+      "rows": 2018,
+      "share": 0.2313
     },
     "low": {
-      "rows": 5507,
-      "share": 0.6315
+      "rows": 5514,
+      "share": 0.632
     },
     "none": {
-      "rows": 1188,
-      "share": 0.1362
+      "rows": 1184,
+      "share": 0.1357
     }
   },
   "county_source": {
     "text": 186,
-    "shelter": 7346,
-    "none": 1188
+    "shelter": 7355,
+    "none": 1184
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3336,
-    "verified_against_reference": 3333,
+    "extracted": 3340,
+    "verified_against_reference": 3337,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
-      "八里區中華路二段",
-      "三峽區三樹路276號",
-      "新店區玫瑰路",
-      "五股區凌雲路3段46號",
-      "金湖鎮新湖里市港路"
+      "七堵區崇禮街4號",
+      "新店區安祥路",
+      "新店區溪洲路",
+      "新店區文中路",
+      "三重區三重重新路43號（派出所）"
     ],
     "low": [
-      "埔頭路271巷",
-      "草衙二路",
-      "中華路一段(頭前溪橋上)",
-      "西藏街",
-      "八德西路"
+      "太平路587號",
+      "愛國巷",
+      "竹坪巷",
+      "南崗三路11巷",
+      "新生路82巷排水溝"
     ],
     "none": [
       "民眾不擬續養",
