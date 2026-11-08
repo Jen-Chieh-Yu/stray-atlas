@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-07",
-  "generated_at_utc": "2026-11-07T01:56:29Z",
-  "rows": 8725,
+  "snapshot_date": "2026-11-08",
+  "generated_at_utc": "2026-11-08T01:27:06Z",
+  "rows": 8714,
   "district_reference": "loaded",
   "place_kinds": {
+    "blank": 1058,
     "address": 5275,
-    "blank": 1069,
-    "district": 1317,
-    "landmark": 949,
+    "landmark": 948,
+    "district": 1318,
     "non_place": 115
   },
   "confidence": {
@@ -16,22 +16,22 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 2018,
-      "share": 0.2313
+      "rows": 2017,
+      "share": 0.2315
     },
     "low": {
-      "rows": 5514,
-      "share": 0.632
+      "rows": 5515,
+      "share": 0.6329
     },
     "none": {
-      "rows": 1184,
-      "share": 0.1357
+      "rows": 1173,
+      "share": 0.1346
     }
   },
   "county_source": {
     "text": 186,
     "shelter": 7355,
-    "none": 1184
+    "none": 1173
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
@@ -48,18 +48,18 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
+      "南投縣仁愛鄉大同村仁和路",
       "七堵區崇禮街4號",
       "新店區安祥路",
       "新店區溪洲路",
-      "新店區文中路",
-      "三重區三重重新路43號（派出所）"
+      "新店區文中路"
     ],
     "low": [
-      "太平路587號",
-      "愛國巷",
-      "竹坪巷",
-      "南崗三路11巷",
-      "新生路82巷排水溝"
+      "城北路871巷對面河堤外",
+      "民生路",
+      "中山路",
+      "濱江街",
+      "民族東路(原拾獲地:庫倫街)"
     ],
     "none": [
       "民眾不擬續養",
