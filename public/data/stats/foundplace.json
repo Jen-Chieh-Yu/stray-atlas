@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-08",
-  "generated_at_utc": "2026-11-08T01:27:06Z",
-  "rows": 8714,
+  "snapshot_date": "2026-11-09",
+  "generated_at_utc": "2026-11-09T01:44:38Z",
+  "rows": 8723,
   "district_reference": "loaded",
   "place_kinds": {
-    "blank": 1058,
-    "address": 5275,
-    "landmark": 948,
-    "district": 1318,
+    "blank": 1056,
+    "landmark": 949,
+    "address": 5282,
+    "district": 1321,
     "non_place": 115
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 2017,
-      "share": 0.2315
+      "rows": 2026,
+      "share": 0.2323
     },
     "low": {
-      "rows": 5515,
-      "share": 0.6329
+      "rows": 5517,
+      "share": 0.6325
     },
     "none": {
-      "rows": 1173,
-      "share": 0.1346
+      "rows": 1171,
+      "share": 0.1342
     }
   },
   "county_source": {
     "text": 186,
-    "shelter": 7355,
-    "none": 1173
+    "shelter": 7366,
+    "none": 1171
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3340,
-    "verified_against_reference": 3337,
+    "extracted": 3352,
+    "verified_against_reference": 3349,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
-      "南投縣仁愛鄉大同村仁和路",
-      "七堵區崇禮街4號",
-      "新店區安祥路",
-      "新店區溪洲路",
-      "新店區文中路"
+      "新莊區自強街",
+      "新莊區萬安街",
+      "新莊區福美街",
+      "泰山區泰林路二段",
+      "泰山區漢口街"
     ],
     "low": [
-      "城北路871巷對面河堤外",
-      "民生路",
-      "中山路",
-      "濱江街",
-      "民族東路(原拾獲地:庫倫街)"
+      "東勢寮1-19號",
+      "忠義堂",
+      "關東路",
+      "中華路五段",
+      "新竹寵物公園"
     ],
     "none": [
       "民眾不擬續養",
