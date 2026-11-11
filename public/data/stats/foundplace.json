@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-10",
-  "generated_at_utc": "2026-11-10T04:08:06Z",
-  "rows": 8783,
+  "snapshot_date": "2026-11-11",
+  "generated_at_utc": "2026-11-11T01:57:00Z",
+  "rows": 8702,
   "district_reference": "loaded",
   "place_kinds": {
     "address": 5297,
-    "landmark": 952,
-    "blank": 1077,
-    "district": 1342,
+    "blank": 1071,
+    "district": 1272,
+    "landmark": 947,
     "non_place": 115
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 2032,
-      "share": 0.2314
+      "rows": 2025,
+      "share": 0.2327
     },
     "low": {
-      "rows": 5550,
-      "share": 0.6319
+      "rows": 5482,
+      "share": 0.63
     },
     "none": {
-      "rows": 1192,
-      "share": 0.1357
+      "rows": 1186,
+      "share": 0.1363
     }
   },
   "county_source": {
     "text": 186,
-    "shelter": 7405,
-    "none": 1192
+    "shelter": 7330,
+    "none": 1186
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3379,
-    "verified_against_reference": 3376,
+    "extracted": 3302,
+    "verified_against_reference": 3299,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
-      "新莊區西盛街",
-      "樹林區樹林區三俊街",
-      "金湖鎮新湖里市港路",
-      "新莊區天祥街",
-      "三峽區溪東路125巷"
+      "三芝區中正路三段17號",
+      "崙背鄉東興路",
+      "四湖鄉咯內路",
+      "大埤鄉中正路",
+      "斗六市福興路"
     ],
     "low": [
-      "北投",
-      "頂埔街33號",
-      "天母",
-      "中華路二段504巷",
-      "瑞芳區"
+      "萬丹路",
+      "康莊路",
+      "東昇路",
+      "五福路一段19巷",
+      "麥寮鄉山寮"
     ],
     "none": [
       "民眾不擬續養",
