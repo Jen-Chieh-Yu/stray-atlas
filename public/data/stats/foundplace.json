@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-11",
-  "generated_at_utc": "2026-11-11T01:57:00Z",
-  "rows": 8702,
+  "snapshot_date": "2026-11-12",
+  "generated_at_utc": "2026-11-12T03:00:26Z",
+  "rows": 8676,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5297,
-    "blank": 1071,
+    "landmark": 966,
     "district": 1272,
-    "landmark": 947,
+    "address": 5281,
+    "blank": 1042,
     "non_place": 115
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 2025,
-      "share": 0.2327
+      "rows": 2026,
+      "share": 0.2335
     },
     "low": {
-      "rows": 5482,
-      "share": 0.63
+      "rows": 5484,
+      "share": 0.6321
     },
     "none": {
-      "rows": 1186,
-      "share": 0.1363
+      "rows": 1157,
+      "share": 0.1334
     }
   },
   "county_source": {
     "text": 186,
-    "shelter": 7330,
-    "none": 1186
+    "shelter": 7333,
+    "none": 1157
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3302,
-    "verified_against_reference": 3299,
+    "extracted": 3303,
+    "verified_against_reference": 3300,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
-      "三芝區中正路三段17號",
-      "崙背鄉東興路",
-      "四湖鄉咯內路",
-      "大埤鄉中正路",
-      "斗六市福興路"
+      "新富里 研究院路一段(原救援地：內湖區金莊路和金豐街叉口涵洞旁人行道)",
+      "三峽區溪東路125巷",
+      "鶯歌區湖山路32巷33號",
+      "板橋區瑞安街33號1樓",
+      "三芝區中正路三段17號"
     ],
     "low": [
-      "萬丹路",
-      "康莊路",
-      "東昇路",
-      "五福路一段19巷",
-      "麥寮鄉山寮"
+      "彰師大校區",
+      "後龍鎮外埔里",
+      "西藏街",
+      "通安里信義路四段",
+      "湖山里勝利街(原拾獲地：陽金公路)"
     ],
     "none": [
       "民眾不擬續養",
