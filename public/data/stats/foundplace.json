@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-12",
-  "generated_at_utc": "2026-11-12T03:00:26Z",
-  "rows": 8676,
+  "snapshot_date": "2026-11-13",
+  "generated_at_utc": "2026-11-13T02:38:11Z",
+  "rows": 8696,
   "district_reference": "loaded",
   "place_kinds": {
-    "landmark": 966,
-    "district": 1272,
-    "address": 5281,
-    "blank": 1042,
+    "address": 5283,
+    "district": 1285,
+    "blank": 1049,
+    "landmark": 964,
     "non_place": 115
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 2026,
-      "share": 0.2335
+      "rows": 2038,
+      "share": 0.2344
     },
     "low": {
-      "rows": 5484,
-      "share": 0.6321
+      "rows": 5485,
+      "share": 0.6307
     },
     "none": {
-      "rows": 1157,
-      "share": 0.1334
+      "rows": 1164,
+      "share": 0.1339
     }
   },
   "county_source": {
     "text": 186,
-    "shelter": 7333,
-    "none": 1157
+    "shelter": 7346,
+    "none": 1164
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3303,
-    "verified_against_reference": 3300,
+    "extracted": 3328,
+    "verified_against_reference": 3325,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
-      "新富里 研究院路一段(原救援地：內湖區金莊路和金豐街叉口涵洞旁人行道)",
-      "三峽區溪東路125巷",
-      "鶯歌區湖山路32巷33號",
-      "板橋區瑞安街33號1樓",
-      "三芝區中正路三段17號"
+      "五股區成泰路1段",
+      "新莊區中正路",
+      "新莊區中港路",
+      "新店區安忠路25號",
+      "汐止區保一街"
     ],
     "low": [
-      "彰師大校區",
-      "後龍鎮外埔里",
-      "西藏街",
-      "通安里信義路四段",
-      "湖山里勝利街(原拾獲地：陽金公路)"
+      "湳雅街",
+      "平和巷",
+      "東昇路",
+      "中興巷",
+      "八仙里大業路"
     ],
     "none": [
       "民眾不擬續養",
