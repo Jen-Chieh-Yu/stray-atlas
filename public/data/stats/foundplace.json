@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-13",
-  "generated_at_utc": "2026-11-13T02:38:11Z",
-  "rows": 8696,
+  "snapshot_date": "2026-11-14",
+  "generated_at_utc": "2026-11-14T02:27:57Z",
+  "rows": 8727,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5283,
-    "district": 1285,
-    "blank": 1049,
-    "landmark": 964,
+    "address": 5312,
+    "landmark": 966,
+    "blank": 1053,
+    "district": 1281,
     "non_place": 115
   },
   "confidence": {
@@ -16,22 +16,22 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 2038,
-      "share": 0.2344
+      "rows": 2042,
+      "share": 0.234
     },
     "low": {
-      "rows": 5485,
-      "share": 0.6307
+      "rows": 5508,
+      "share": 0.6311
     },
     "none": {
-      "rows": 1164,
-      "share": 0.1339
+      "rows": 1168,
+      "share": 0.1338
     }
   },
   "county_source": {
     "text": 186,
-    "shelter": 7346,
-    "none": 1164
+    "shelter": 7373,
+    "none": 1168
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
@@ -48,18 +48,18 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
-      "五股區成泰路1段",
-      "新莊區中正路",
-      "新莊區中港路",
-      "新店區安忠路25號",
-      "汐止區保一街"
+      "崙背鄉東興路",
+      "四湖鄉咯內路",
+      "大埤鄉中正路",
+      "口湖鄉正義路",
+      "斗南鎮延平路"
     ],
     "low": [
-      "湳雅街",
-      "平和巷",
-      "東昇路",
-      "中興巷",
-      "八仙里大業路"
+      "振興街",
+      "新豐路",
+      "田坑路二段臨149",
+      "茄苳路二段36號",
+      "福德路"
     ],
     "none": [
       "民眾不擬續養",
