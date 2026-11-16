@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-15",
-  "generated_at_utc": "2026-11-15T01:56:29Z",
-  "rows": 8714,
+  "snapshot_date": "2026-11-16",
+  "generated_at_utc": "2026-11-16T02:09:45Z",
+  "rows": 8697,
   "district_reference": "loaded",
   "place_kinds": {
-    "blank": 1055,
-    "address": 5297,
-    "landmark": 965,
+    "address": 5281,
+    "blank": 1056,
     "district": 1282,
+    "landmark": 963,
     "non_place": 115
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 2046,
-      "share": 0.2348
+      "rows": 2049,
+      "share": 0.2356
     },
     "low": {
-      "rows": 5489,
-      "share": 0.6299
+      "rows": 5468,
+      "share": 0.6287
     },
     "none": {
-      "rows": 1170,
-      "share": 0.1343
+      "rows": 1171,
+      "share": 0.1346
     }
   },
   "county_source": {
     "text": 186,
-    "shelter": 7358,
-    "none": 1170
+    "shelter": 7340,
+    "none": 1171
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3333,
-    "verified_against_reference": 3330,
+    "extracted": 3336,
+    "verified_against_reference": 3333,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
-      "五股區五股區凌雲路一段69號",
+      "三重區三重區永福街15號",
       "五股區外寮路",
-      "崙背鄉東興路",
-      "四湖鄉咯內路",
-      "大埤鄉中正路"
+      "三重區 三重區文化北路22號",
+      "五股區五股區凌雲路一段69號",
+      "崙背鄉東興路"
     ],
     "low": [
-      "嘉興街",
-      "120鄉道",
-      "延平北路八段2巷200弄",
-      "林口區林口師大",
-      "更生路1188號"
+      "指南里指南路三段３４巷",
+      "塩安路28號",
+      "金湖鎮瓊林里瓊林",
+      "中山路(天公壇)",
+      "展業一路"
     ],
     "none": [
       "民眾不擬續養",
