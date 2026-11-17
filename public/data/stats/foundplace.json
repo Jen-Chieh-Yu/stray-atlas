@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-16",
-  "generated_at_utc": "2026-11-16T02:09:45Z",
-  "rows": 8697,
+  "snapshot_date": "2026-11-17",
+  "generated_at_utc": "2026-11-17T04:29:09Z",
+  "rows": 8713,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5281,
-    "blank": 1056,
-    "district": 1282,
-    "landmark": 963,
+    "address": 5279,
+    "blank": 1061,
+    "landmark": 966,
+    "district": 1292,
     "non_place": 115
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 2049,
-      "share": 0.2356
+      "rows": 2054,
+      "share": 0.2357
     },
     "low": {
-      "rows": 5468,
-      "share": 0.6287
+      "rows": 5474,
+      "share": 0.6283
     },
     "none": {
-      "rows": 1171,
-      "share": 0.1346
+      "rows": 1176,
+      "share": 0.135
     }
   },
   "county_source": {
     "text": 186,
-    "shelter": 7340,
-    "none": 1171
+    "shelter": 7351,
+    "none": 1176
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3336,
-    "verified_against_reference": 3333,
+    "extracted": 3351,
+    "verified_against_reference": 3348,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
-      "三重區三重區永福街15號",
-      "五股區外寮路",
-      "三重區 三重區文化北路22號",
-      "五股區五股區凌雲路一段69號",
-      "崙背鄉東興路"
+      "新店區安忠路25號",
+      "金湖鎮新湖里市港路",
+      "金寧鄉后盤村伯玉路二段",
+      "林口區林口大水湳路上",
+      "新店區北宜路一段39巷6號"
     ],
     "low": [
-      "指南里指南路三段３４巷",
-      "塩安路28號",
-      "金湖鎮瓊林里瓊林",
-      "中山路(天公壇)",
-      "展業一路"
+      "開南街275巷20弄",
+      "富昌街",
+      "萬興里新光路二段",
+      "西湖東禾鋼鐵",
+      "竹南鎮后厝漁港"
     ],
     "none": [
       "民眾不擬續養",
