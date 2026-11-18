@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-17",
-  "generated_at_utc": "2026-11-17T04:29:09Z",
-  "rows": 8713,
+  "snapshot_date": "2026-11-18",
+  "generated_at_utc": "2026-11-18T03:43:02Z",
+  "rows": 8683,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5279,
-    "blank": 1061,
-    "landmark": 966,
-    "district": 1292,
+    "address": 5259,
+    "blank": 1057,
+    "district": 1297,
+    "landmark": 955,
     "non_place": 115
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 2054,
-      "share": 0.2357
+      "rows": 2059,
+      "share": 0.2371
     },
     "low": {
-      "rows": 5474,
-      "share": 0.6283
+      "rows": 5443,
+      "share": 0.6269
     },
     "none": {
-      "rows": 1176,
+      "rows": 1172,
       "share": 0.135
     }
   },
   "county_source": {
     "text": 186,
-    "shelter": 7351,
-    "none": 1176
+    "shelter": 7325,
+    "none": 1172
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3351,
-    "verified_against_reference": 3348,
+    "extracted": 3361,
+    "verified_against_reference": 3358,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
-      "新店區安忠路25號",
-      "金湖鎮新湖里市港路",
-      "金寧鄉后盤村伯玉路二段",
-      "林口區林口大水湳路上",
-      "新店區北宜路一段39巷6號"
+      "三重區三重區環河北路三段502號親水公園",
+      "虎尾鎮大成十街",
+      "虎尾鎮青雲路",
+      "虎尾鎮復興路",
+      "八里區64快速道路"
     ],
     "low": [
-      "開南街275巷20弄",
-      "富昌街",
-      "萬興里新光路二段",
-      "西湖東禾鋼鐵",
-      "竹南鎮后厝漁港"
+      "永和路248號",
+      "卓蘭鎮內灣里",
+      "安平港龍岡國小路橋",
+      "和平一路",
+      "民權路"
     ],
     "none": [
       "民眾不擬續養",
