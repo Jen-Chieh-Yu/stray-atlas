@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-18",
-  "generated_at_utc": "2026-11-18T03:43:02Z",
-  "rows": 8683,
+  "snapshot_date": "2026-11-19",
+  "generated_at_utc": "2026-11-19T03:29:38Z",
+  "rows": 8689,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5259,
-    "blank": 1057,
-    "district": 1297,
-    "landmark": 955,
+    "address": 5261,
+    "district": 1308,
+    "landmark": 952,
+    "blank": 1053,
     "non_place": 115
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 2059,
-      "share": 0.2371
+      "rows": 2063,
+      "share": 0.2374
     },
     "low": {
-      "rows": 5443,
-      "share": 0.6269
+      "rows": 5449,
+      "share": 0.6271
     },
     "none": {
-      "rows": 1172,
-      "share": 0.135
+      "rows": 1168,
+      "share": 0.1344
     }
   },
   "county_source": {
     "text": 186,
-    "shelter": 7325,
-    "none": 1172
+    "shelter": 7335,
+    "none": 1168
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3361,
-    "verified_against_reference": 3358,
+    "extracted": 3376,
+    "verified_against_reference": 3373,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
-      "三重區三重區環河北路三段502號親水公園",
-      "虎尾鎮大成十街",
-      "虎尾鎮青雲路",
-      "虎尾鎮復興路",
-      "八里區64快速道路"
+      "苗栗市嘉盛里18鄰經國路4段79號(縣立體育場)",
+      "新莊區天祥街",
+      "新店區安康路二段287號",
+      "新店區安德街100號",
+      "三重區三重區環河北路三段502號親水公園"
     ],
     "low": [
-      "永和路248號",
-      "卓蘭鎮內灣里",
-      "安平港龍岡國小路橋",
-      "和平一路",
-      "民權路"
+      "446巷90弄39號",
+      "開南街275巷20弄",
+      "民安里中山北路一段(原拾獲地:南京西路262巷)",
+      "新港一路",
+      "雙溪區"
     ],
     "none": [
       "民眾不擬續養",
