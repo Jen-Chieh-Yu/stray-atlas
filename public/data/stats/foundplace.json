@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-20",
-  "generated_at_utc": "2026-11-20T03:16:55Z",
-  "rows": 8708,
+  "snapshot_date": "2026-11-21",
+  "generated_at_utc": "2026-11-21T03:14:03Z",
+  "rows": 8717,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5272,
-    "district": 1309,
-    "blank": 1059,
-    "landmark": 953,
+    "address": 5280,
+    "blank": 1061,
+    "district": 1304,
+    "landmark": 957,
     "non_place": 115
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 2059,
-      "share": 0.2364
+      "rows": 2058,
+      "share": 0.2361
     },
     "low": {
-      "rows": 5466,
-      "share": 0.6277
+      "rows": 5474,
+      "share": 0.628
     },
     "none": {
-      "rows": 1174,
-      "share": 0.1348
+      "rows": 1176,
+      "share": 0.1349
     }
   },
   "county_source": {
-    "text": 185,
-    "shelter": 7349,
-    "none": 1174
+    "text": 184,
+    "shelter": 7357,
+    "none": 1176
   },
   "county_from_text_differs_from_shelter": 12,
   "district": {
-    "extracted": 3373,
-    "verified_against_reference": 3370,
+    "extracted": 3367,
+    "verified_against_reference": 3364,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,25 +48,25 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
+      "虎尾鎮復興路",
+      "金城鎮西門里民權路",
       "新莊區天祥街",
       "新店區安康路二段287號",
-      "新店區安德街100號",
-      "三重區三重區環河北路三段502號親水公園",
-      "虎尾鎮大成十街"
+      "新店區安德街100號"
     ],
     "low": [
-      "長嶺路",
-      "竹南鎮營盤里",
-      "濱江街",
-      "康樂街",
-      "林泉里中山路"
+      "永安里明水路581巷",
+      "中華路二段504巷",
+      "松智路",
+      "彰鹿路六段",
+      "高山里高獅路"
     ],
     "none": [
+      "不擬續養",
       "所內出生",
       "民眾不擬續養",
       "認養退回",
-      "臺北市動物之家",
-      "動物之家"
+      "臺北市動物之家"
     ]
   }
 }

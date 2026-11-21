@@ -1,8 +1,8 @@
 {
-  "snapshot_date": "2026-11-20",
-  "generated_at_utc": "2026-11-20T03:16:54Z",
-  "source_file": "data/raw/2026-11-20.csv.gz",
-  "rows": 8708,
+  "snapshot_date": "2026-11-21",
+  "generated_at_utc": "2026-11-21T03:14:03Z",
+  "source_file": "data/raw/2026-11-21.csv.gz",
+  "rows": 8717,
   "columns_in_source": 28,
   "columns_after_clean": 20,
   "fields": {
@@ -83,7 +83,7 @@
   ],
   "cleaning_actions": {
     "opendate_sentinel_nulled": 90,
-    "opendate_in_the_future": 58,
+    "opendate_in_the_future": 68,
     "rows_without_createtime": 0
   },
   "coverage": {
@@ -95,21 +95,21 @@
     "animal_Variety": 0.9994,
     "animal_sex": 1.0,
     "animal_bodytype": 1.0,
-    "animal_colour": 0.9718,
+    "animal_colour": 0.9717,
     "animal_age": 0.9714,
     "animal_sterilization": 1.0,
-    "animal_foundplace": 0.8784,
-    "animal_remark": 0.3056,
-    "animal_opendate": 0.9577,
-    "animal_update": 0.7751,
+    "animal_foundplace": 0.8783,
+    "animal_remark": 0.3065,
+    "animal_opendate": 0.9576,
+    "animal_update": 0.776,
     "animal_createtime": 1.0,
     "shelter_name": 1.0,
-    "album_file": 0.7924,
+    "album_file": 0.7922,
     "shelter_address": 1.0,
     "shelter_tel": 1.0
   },
   "variety_groups": {
-    "mixed": 8235,
+    "mixed": 8244,
     "breed": 455,
     "unknown": 18
   },
@@ -169,18 +169,18 @@
     }
   ],
   "days_in_shelter": {
-    "median": 366,
+    "median": 365,
     "p75": 1228,
     "p90": 2676,
-    "max": 4754
+    "max": 4755
   },
   "foundplace": {
-    "rows": 8708,
-    "nonblank_rows": 7649,
-    "unique_values": 4854,
-    "rows_with_county_name": 189,
-    "share_of_all_rows_with_county_name": 0.0217,
-    "rows_with_county_or_city_character": 344,
-    "share_of_nonblank_rows_with_county_or_city_character": 0.045
+    "rows": 8717,
+    "nonblank_rows": 7656,
+    "unique_values": 4859,
+    "rows_with_county_name": 188,
+    "share_of_all_rows_with_county_name": 0.0216,
+    "rows_with_county_or_city_character": 345,
+    "share_of_nonblank_rows_with_county_or_city_character": 0.0451
   }
 }
