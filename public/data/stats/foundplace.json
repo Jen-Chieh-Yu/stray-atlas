@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-21",
-  "generated_at_utc": "2026-11-21T03:14:03Z",
-  "rows": 8717,
+  "snapshot_date": "2026-11-22",
+  "generated_at_utc": "2026-11-22T02:14:41Z",
+  "rows": 8716,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5280,
-    "blank": 1061,
-    "district": 1304,
-    "landmark": 957,
+    "address": 5279,
+    "blank": 1064,
+    "district": 1302,
+    "landmark": 956,
     "non_place": 115
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 2058,
-      "share": 0.2361
+      "rows": 2059,
+      "share": 0.2362
     },
     "low": {
-      "rows": 5474,
-      "share": 0.628
+      "rows": 5469,
+      "share": 0.6275
     },
     "none": {
-      "rows": 1176,
-      "share": 0.1349
+      "rows": 1179,
+      "share": 0.1353
     }
   },
   "county_source": {
-    "text": 184,
-    "shelter": 7357,
-    "none": 1176
+    "text": 185,
+    "shelter": 7352,
+    "none": 1179
   },
-  "county_from_text_differs_from_shelter": 12,
+  "county_from_text_differs_from_shelter": 13,
   "district": {
-    "extracted": 3367,
-    "verified_against_reference": 3364,
+    "extracted": 3366,
+    "verified_against_reference": 3363,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
+      "蘆洲區長安街267巷",
+      "台南市永康區勝利街",
       "虎尾鎮復興路",
       "金城鎮西門里民權路",
-      "新莊區天祥街",
-      "新店區安康路二段287號",
-      "新店區安德街100號"
+      "新莊區天祥街"
     ],
     "low": [
-      "永安里明水路581巷",
-      "中華路二段504巷",
-      "松智路",
-      "彰鹿路六段",
-      "高山里高獅路"
+      "南港里興中路(原拾獲地:興南街)",
+      "南港里興中路",
+      "延平北路七段106巷",
+      "為隨路",
+      "華西街"
     ],
     "none": [
       "不擬續養",
