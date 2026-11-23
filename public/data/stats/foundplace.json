@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-22",
-  "generated_at_utc": "2026-11-22T02:14:41Z",
-  "rows": 8716,
+  "snapshot_date": "2026-11-23",
+  "generated_at_utc": "2026-11-23T02:46:20Z",
+  "rows": 8699,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5279,
-    "blank": 1064,
-    "district": 1302,
-    "landmark": 956,
+    "address": 5268,
+    "district": 1309,
+    "blank": 1053,
+    "landmark": 954,
     "non_place": 115
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 2059,
-      "share": 0.2362
+      "rows": 2061,
+      "share": 0.2369
     },
     "low": {
-      "rows": 5469,
-      "share": 0.6275
+      "rows": 5461,
+      "share": 0.6278
     },
     "none": {
-      "rows": 1179,
-      "share": 0.1353
+      "rows": 1168,
+      "share": 0.1343
     }
   },
   "county_source": {
     "text": 185,
-    "shelter": 7352,
-    "none": 1179
+    "shelter": 7346,
+    "none": 1168
   },
   "county_from_text_differs_from_shelter": 13,
   "district": {
-    "extracted": 3366,
-    "verified_against_reference": 3363,
+    "extracted": 3375,
+    "verified_against_reference": 3372,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
+      "新店區直潭路92號",
+      "三重區重新路2段",
+      "萬里區瑪鍊路",
       "蘆洲區長安街267巷",
-      "台南市永康區勝利街",
-      "虎尾鎮復興路",
-      "金城鎮西門里民權路",
-      "新莊區天祥街"
+      "台南市永康區勝利街"
     ],
     "low": [
-      "南港里興中路(原拾獲地:興南街)",
-      "南港里興中路",
-      "延平北路七段106巷",
-      "為隨路",
-      "華西街"
+      "三重里惠民街",
+      "金雅六街",
+      "萬芳里木柵路四段9巷",
+      "三芝區埔坪里",
+      "石門區尖鹿里"
     ],
     "none": [
       "不擬續養",
