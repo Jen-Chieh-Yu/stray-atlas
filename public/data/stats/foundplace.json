@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-25",
-  "generated_at_utc": "2026-11-25T04:53:56Z",
-  "rows": 8715,
+  "snapshot_date": "2026-11-26",
+  "generated_at_utc": "2026-11-26T04:10:28Z",
+  "rows": 8748,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5276,
-    "blank": 1048,
-    "district": 1326,
-    "landmark": 951,
+    "blank": 1064,
+    "address": 5293,
+    "landmark": 953,
+    "district": 1324,
     "non_place": 114
   },
   "confidence": {
@@ -16,22 +16,22 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 2083,
-      "share": 0.239
+      "rows": 2085,
+      "share": 0.2383
     },
     "low": {
-      "rows": 5461,
-      "share": 0.6266
+      "rows": 5476,
+      "share": 0.626
     },
     "none": {
-      "rows": 1162,
-      "share": 0.1333
+      "rows": 1178,
+      "share": 0.1347
     }
   },
   "county_source": {
     "text": 184,
-    "shelter": 7369,
-    "none": 1162
+    "shelter": 7386,
+    "none": 1178
   },
   "county_from_text_differs_from_shelter": 13,
   "district": {
@@ -48,18 +48,18 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
-      "觀音區保生里電廠二路",
-      "林口區林口粉寮路一段149號",
-      "五股區五股五工路133號",
-      "金寧鄉榜林村伯玉路一段",
-      "金城鎮金水里金豐路"
+      "板橋區大觀路二段99號3樓",
+      "金湖鎮山外里士校路",
+      "斗六市北平路",
+      "斗六市永安路",
+      "斗六市重光東路"
     ],
     "low": [
-      "土場巷",
-      "成都路",
-      "崙坪里福祥路１段",
-      "三義鄉雙湖村",
-      "銅鑼鄉銅鑼村"
+      "55-2",
+      "東勢寮1-19號",
+      "安定國中網球場",
+      "中正路",
+      "望和巷"
     ],
     "none": [
       "不擬續養",
