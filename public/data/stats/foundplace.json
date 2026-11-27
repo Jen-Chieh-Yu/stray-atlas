@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-26",
-  "generated_at_utc": "2026-11-26T04:10:28Z",
-  "rows": 8748,
+  "snapshot_date": "2026-11-27",
+  "generated_at_utc": "2026-11-27T04:16:14Z",
+  "rows": 8772,
   "district_reference": "loaded",
   "place_kinds": {
-    "blank": 1064,
-    "address": 5293,
-    "landmark": 953,
-    "district": 1324,
+    "address": 5300,
+    "blank": 1074,
+    "district": 1332,
+    "landmark": 952,
     "non_place": 114
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 2085,
+      "rows": 2090,
       "share": 0.2383
     },
     "low": {
-      "rows": 5476,
-      "share": 0.626
+      "rows": 5485,
+      "share": 0.6253
     },
     "none": {
-      "rows": 1178,
-      "share": 0.1347
+      "rows": 1188,
+      "share": 0.1354
     }
   },
   "county_source": {
-    "text": 184,
-    "shelter": 7386,
-    "none": 1178
+    "text": 183,
+    "shelter": 7401,
+    "none": 1188
   },
   "county_from_text_differs_from_shelter": 13,
   "district": {
-    "extracted": 3414,
-    "verified_against_reference": 3411,
+    "extracted": 3427,
+    "verified_against_reference": 3424,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
-      "板橋區大觀路二段99號3樓",
-      "金湖鎮山外里士校路",
-      "斗六市北平路",
-      "斗六市永安路",
-      "斗六市重光東路"
+      "內湖區行善里里行善路",
+      "萬里區玉田路",
+      "林口區林口區忠福路573號",
+      "樹林區樹林區俊保路",
+      "林口區林口區醒吾新村路口"
     ],
     "low": [
-      "55-2",
-      "東勢寮1-19號",
-      "安定國中網球場",
-      "中正路",
-      "望和巷"
+      "金龍路",
+      "敦化北路",
+      "萬美里和平東路四段66巷",
+      "新光里昆陽街",
+      "南港路三段80巷"
     ],
     "none": [
       "不擬續養",
