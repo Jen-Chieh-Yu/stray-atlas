@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-11-27",
-  "generated_at_utc": "2026-11-27T04:16:14Z",
-  "rows": 8772,
+  "snapshot_date": "2026-11-28",
+  "generated_at_utc": "2026-11-28T03:54:51Z",
+  "rows": 8752,
   "district_reference": "loaded",
   "place_kinds": {
-    "address": 5300,
-    "blank": 1074,
-    "district": 1332,
-    "landmark": 952,
+    "address": 5298,
+    "district": 1336,
+    "blank": 1054,
+    "landmark": 950,
     "non_place": 114
   },
   "confidence": {
@@ -16,27 +16,27 @@
       "share": 0.001
     },
     "medium": {
-      "rows": 2090,
-      "share": 0.2383
+      "rows": 2093,
+      "share": 0.2391
     },
     "low": {
-      "rows": 5485,
-      "share": 0.6253
+      "rows": 5482,
+      "share": 0.6264
     },
     "none": {
-      "rows": 1188,
-      "share": 0.1354
+      "rows": 1168,
+      "share": 0.1335
     }
   },
   "county_source": {
     "text": 183,
     "shelter": 7401,
-    "none": 1188
+    "none": 1168
   },
   "county_from_text_differs_from_shelter": 13,
   "district": {
-    "extracted": 3427,
-    "verified_against_reference": 3424,
+    "extracted": 3434,
+    "verified_against_reference": 3431,
     "not_in_that_county": 3
   },
   "samples": {
@@ -48,18 +48,18 @@
       "桃園市平鎮區龍南路244號"
     ],
     "medium": [
-      "內湖區行善里里行善路",
+      "斗六市重光東路",
+      "斗六市永安路",
+      "斗六市北平路",
       "萬里區玉田路",
-      "林口區林口區忠福路573號",
-      "樹林區樹林區俊保路",
-      "林口區林口區醒吾新村路口"
+      "新店區民安路"
     ],
     "low": [
-      "金龍路",
-      "敦化北路",
-      "萬美里和平東路四段66巷",
-      "新光里昆陽街",
-      "南港路三段80巷"
+      "月眉里月桃路６１５巷",
+      "樟新街(原拾獲地:木新市場)",
+      "嘉興街",
+      "延平北路一段",
+      "延平北路七段"
     ],
     "none": [
       "不擬續養",
